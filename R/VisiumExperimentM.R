@@ -1,4 +1,4 @@
-
+#' @export
 setMethod(f="addScaleFactors",
           signature="VisiumExperiment",
           definition=function(ve, scaleFactors=list())
@@ -13,6 +13,7 @@ setMethod(f="addScaleFactors",
           }
 )
 
+#' @export
 setMethod(f="checkSpatialCoords",
           signature="VisiumExperiment",
           definition=function(ve, spatialCoords)
@@ -44,13 +45,13 @@ setMethod(f="checkSpatialCoords",
 })
 
 ### Getters/Setters
-
+#' @export
 setMethod(f="scaleFactors", signature="VisiumExperiment", function(x)
 {
     return(x@scaleFactors)
 })
 
-
+#' @export
 setReplaceMethod(f="scaleFactors", signature="VisiumExperiment", 
                 function(x, value)
 {
@@ -58,11 +59,13 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
     return(x)
 })
 
+#' @export
 setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 {
     return(int_colData(x)[, x@int_spcIdx])
 })
 
+#' @export
 setReplaceMethod(f="spatialCoords", signature="VisiumExperiment", 
                 function(x, value)
 {
@@ -83,12 +86,12 @@ setReplaceMethod(f="spatialCoords", signature="VisiumExperiment",
     
     return(x)
 })
-
+#' @export
 setMethod(f="isInTissue", signature="VisiumExperiment", function(x)
 {
     return( (int_colData(x)$in_tissue == 1) )
 })
-
+#' @export
 setMethod(f="spatialCoordsNames", signature="VisiumExperiment", function(x)
 {
     return(colnames(int_colData(x)[x@int_spcIdx]))
