@@ -13,7 +13,7 @@ setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
 setGeneric("scaleFactors<-", function(x, value) 
     standardGeneric("scaleFactors<-"))
 
-setGeneric("spatialCoords", function(x, value) standardGeneric("spatialCoords"))
+setGeneric("spatialCoords", function(x) standardGeneric("spatialCoords"))
 
 setGeneric("spatialCoords<-", function(x, value) 
     standardGeneric("spatialCoords<-"))
