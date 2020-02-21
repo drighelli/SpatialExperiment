@@ -19,7 +19,7 @@ setMethod(f="checkSpatialCoords",
 {
     stopifnot(is(ve, "VisiumExperiment"))
     stopifnot(("Barcodes" %in% colnames(colData(ve))))
-    stopifnot(("Barcodes" %in% colnames(spatialCoords)))
+    
     # stopifnot(nrow(colData(sce)) == nrow(spatialCoords))
     # stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
     #             == nrow(colData(sce)))
@@ -28,18 +28,18 @@ setMethod(f="checkSpatialCoords",
     # a partial match is possible
     # otherwhise (if 0 match) stop stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
     #             != 0))
+
+    stopifnot(("Barcodes" %in% colnames(spatialCoords)))
     stopifnot(sum(c("in_tissue", "array_row", "array_col", 
                     "pxl_col_in_fullres", "pxl_row_in_fullres")
                     %in% colnames(spatialCoords)) == 5)
       
     cDataIdx <- match(colData(ve)$Barcodes, spatialCoords$Barcodes)
-    colData(ve) <- cbind(spatialCoords[cDataIdx, 
-                            -c(which(colnames(spatialCoords)=="Barcodes"))],
-                            colData(ve))
-    idx <- which(colnames(colData(ve)) %in% c("in_tissue", 
+    
+    int_colData(ve) <- cbind(spatialCoords[cDataIdx,], int_colData(ve))
+    ve@int_spcIdx <- which(colnames(int_colData(ve)) %in% c("in_tissue", 
                                     "array_row", "array_col", 
                                     "pxl_col_in_fullres", "pxl_row_in_fullres"))
-    ve@int_spcIdx <- idx
     return(ve)
 })
 
@@ -60,7 +60,7 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
 
 setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 {
-    return(colData(x)[, x@int_spcIdx])
+    return(int_colData(x)[, x@int_spcIdx])
 })
 
 setReplaceMethod(f="spatialCoords", signature="VisiumExperiment", 
@@ -71,14 +71,14 @@ setReplaceMethod(f="spatialCoords", signature="VisiumExperiment",
                 "pxl_col_in_fullres", "pxl_row_in_fullres")
                 %in% colnames(value)) == 5)
     
-    cDataIdx <- match(value$Barcodes, colData(x)$Barcodes)
+    cDataIdx <- match(value$Barcodes, int_colData(x)$Barcodes)
     
     for (col in c("in_tissue", "array_row", "array_col", 
                 "pxl_col_in_fullres", "pxl_row_in_fullres"))
     {
-        colidx <- which(colnames(colData(x)) == col)
+        colidx <- which(colnames(int_colData(x)) == col)
         validx <- which(colnames(value) == col)
-        colData(x)[cDataIdx, colidx] <- value[,validx]
+        int_colData(x)[cDataIdx, colidx] <- value[,validx]
     }
     
     return(x)
@@ -86,5 +86,10 @@ setReplaceMethod(f="spatialCoords", signature="VisiumExperiment",
 
 setMethod(f="isInTissue", signature="VisiumExperiment", function(x)
 {
-  return( (colData(x)$in_tissue == 1) )
+    return( (int_colData(x)$in_tissue == 1) )
+})
+
+setMethod(f="spatialCoordsNames", signature="VisiumExperiment", function(x)
+{
+    return(colnames(int_colData(x)[x@int_spcIdx]))
 })

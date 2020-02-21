@@ -19,3 +19,6 @@ setGeneric("spatialCoords<-", function(x, value)
     standardGeneric("spatialCoords<-"))
 
 setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
+
+setGeneric("spatialCoordsNames", function(x) 
+    standardGeneric("spatialCoordsNames"))

@@ -1,11 +1,18 @@
 Package: VisiumExperiment
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: S4 Class for 10x Visium Spatial Gene Expression 
+Version: 0.0.99
+Date: 2020-02-18
+Authors@R: c(
+    person("Dario", "Righelli", role=c("aut", "cre"), 
+        email="dario.righelli@gmail.com"))
+Maintainer: Dario Righelli <dario.righelli@gmail.com>
+Description: Defines an S4 class for storing data from 10x Visium Spatial Gene
+    Expression experiments. 
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Depends: SingleCellExperiment
+Imports: S4Vectors
+RoxygenNote: 7.0.2
+git_url: https://github.com/drighelli/VisiumExperiment
