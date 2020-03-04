@@ -1,4 +1,4 @@
-Package: VisiumExperiment
+Package: SpatialExperiment
 Type: Package
 Title: S4 Class for 10x Visium Spatial Gene Expression 
 Version: 0.0.99
@@ -7,12 +7,12 @@ Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"))
 Maintainer: Dario Righelli <dario.righelli@gmail.com>
-Description: Defines an S4 class for storing data from 10x Visium Spatial Gene
-    Expression experiments. 
+Description: Defines an S4 class for storing data for spatial experiments, such
+    as seq-FISH and 10x Visium Gene Expression. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: SingleCellExperiment
 Imports: S4Vectors
 RoxygenNote: 7.0.2
-git_url: https://github.com/drighelli/VisiumExperiment
+git_url: https://github.com/drighelli/SpatialExperiment
