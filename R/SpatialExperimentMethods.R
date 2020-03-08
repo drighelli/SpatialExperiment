@@ -67,15 +67,11 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
                 function(x, value)
 {
-    stopifnot(("Barcodes" %in% colnames(value)))
-    stopifnot(sum(c("in_tissue", "array_row", "array_col", 
-                "pxl_col_in_fullres", "pxl_row_in_fullres")
-                %in% colnames(value)) == 5)
+    stopifnot(("ID" %in% colnames(value)))
     
-    cDataIdx <- match(value$Barcodes, int_colData(x)$Barcodes)
+    cDataIdx <- match(value$ID, int_colData(x)$ID)
     
-    for (col in c("in_tissue", "array_row", "array_col", 
-                "pxl_col_in_fullres", "pxl_row_in_fullres"))
+    for (col in colnames(value))
     {
         colidx <- which(colnames(int_colData(x)) == col)
         validx <- which(colnames(value) == col)
