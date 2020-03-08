@@ -1,0 +1,5 @@
+This repository creates the SpatialExperiment R class, providing basical setters/getters for
+spatial sequencing experiments.
+
+Look at https://github.com/drighelli/SpatialAnalysis/ repository to understand 
+how to use it.
