@@ -1,6 +1,6 @@
 Package: SpatialExperiment
 Type: Package
-Title: S4 Class for 10x Visium Spatial Gene Expression 
+Title: S4 Class for Spatial Experiments handling 
 Version: 0.0.99
 Date: 2020-02-18
 Authors@R: c(

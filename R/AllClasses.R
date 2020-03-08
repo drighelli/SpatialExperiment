@@ -1,5 +1,5 @@
 #' @export
-#' @rdname VisiumExperiment
+#' @rdname SpatialExperiment
 #' @slot scaleFactors list. 
 #' @slot int_spcIdx integer. 
 #' 
@@ -7,23 +7,17 @@
 #' @importClasses SingleCellExperiment
 #'
 #' @examples
-setClass("VisiumExperiment",
+setClass("SpatialExperiment",
          slots=c(
-             scaleFactors="list",
              int_spcIdx="integer"
          ),
          contains = "SingleCellExperiment"#,
-         # prototype = prototype(
-         #     int_metadata=list(
-         #         version=packageVersion("VisiumExperiment")
-         #     )
-         # )
 )
 
 
-#' The VisiumExperiment class
+#' The SpatialExperiment class
 #'
-#' The VisiumExperiment class is designed to represent 10x Visium spatial 
+#' The SpatialExperiment class is designed to represent 10x Visium spatial 
 #' Gene Expression data.
 #' It inherits from the \linkS4class{SingleCellExperiment} class and is used in 
 #' the same manner.
@@ -33,7 +27,6 @@ setClass("VisiumExperiment",
 #' @param ... arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #' constructor to fill the slots of the base class.
 #' @param spatialCoords the 10x Visium spatial coordinates
-#' @param scaleFactors the 10x Visium image scale factors
 #' 
 #' @author Dario Righelli
 #' @examples
@@ -42,35 +35,33 @@ setClass("VisiumExperiment",
 #' @export
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' 
-VisiumExperiment <- function(..., spatialCoords=data.frame(), 
-                             scaleFactors=list())
+SpatialExperiment <- function(..., spatialCoords=data.frame())
 {
     args <- list(...)
     stopifnot(sum(c("rowData", "colData", "assays") %in% names(args)) == 3)
+ 
     sce <- SingleCellExperiment::SingleCellExperiment(
         rowData=as(args$rowData, "DataFrame"),
         colData=as(args$colData, "DataFrame"),
         assays=args$assays)
-    return(.sce_to_ve(sce, spatialCoords=spatialCoords, 
-                        scaleFactors=scaleFactors))
+    return(.sce_to_se(sce, spatialCoords=spatialCoords))
 }
 
 
-.sce_to_ve <- function(sce, spatialCoords=data.frame(), scaleFactors=list()) 
+.sce_to_se <- function(sce, spatialCoords=data.frame()) 
 {
-    ve <- new("VisiumExperiment", sce)
+    se <- new("SpatialExperiment", sce)
     
-    .Object <- checkSpatialCoords(ve, spatialCoords)
-    .Object <- addScaleFactors(.Object, scaleFactors)
+    .Object <- checkSpatialCoords(se, spatialCoords)
     return(.Object)
 }
 
 
 #' @exportMethod coerce
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment 
-setAs("SingleCellExperiment", "VisiumExperiment", function(from) 
+setAs("SingleCellExperiment", "SpatialExperiment", function(from) 
 {
-    .sce_to_ve(from)
+    .sce_to_se(from)
 })
 
 

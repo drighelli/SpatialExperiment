@@ -1,5 +1,5 @@
 #' @importFrom S4Vectors coolcat
-.ve_show <- function(object) {
+.se_show <- function(object) {
     callNextMethod()
     coolcat("spatialCoordinates(%d): %s\n", spatialCoordsNames(object))
     coolcat("reducedDimNames(%d): %s\n", reducedDimNames(object))
@@ -8,4 +8,4 @@
 }
 
 #' @export
-setMethod("show", "VisiumExperiment", .ve_show)
+setMethod("show", "SpatialExperiment", .se_show)

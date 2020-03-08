@@ -1,24 +1,25 @@
+# 
+# setGeneric(name="addScaleFactors", valueClass="SpatialExperiment",
+#         def=function(ve, scaleFactors=NULL) standardGeneric("addScaleFactors"))
 
-setGeneric(name="addScaleFactors", valueClass="VisiumExperiment",
-        def=function(ve, scaleFactors=NULL) standardGeneric("addScaleFactors"))
-
-setGeneric("checkSpatialCoords", function(ve, spatialCoords) 
+setGeneric(name="checkSpatialCoords", def=function(se, spatialCoords) 
     standardGeneric("checkSpatialCoords"))
 
 
 #### Getters/Setters
+# 
+# setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
+# 
+# setGeneric("scaleFactors<-", function(x, value) 
+#     standardGeneric("scaleFactors<-"))
 
-setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
+setGeneric(name="spatialCoords", def=function(x) 
+    standardGeneric("spatialCoords"))
 
-setGeneric("scaleFactors<-", function(x, value) 
-    standardGeneric("scaleFactors<-"))
-
-setGeneric("spatialCoords", function(x) standardGeneric("spatialCoords"))
-
-setGeneric("spatialCoords<-", function(x, value) 
+setGeneric(name="spatialCoords<-", def=function(x, value) 
     standardGeneric("spatialCoords<-"))
 
-setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
+setGeneric(name="isInTissue", def=function(x) standardGeneric("isInTissue"))
 
-setGeneric("spatialCoordsNames", function(x) 
+setGeneric(name="spatialCoordsNames", def=function(x) 
     standardGeneric("spatialCoordsNames"))
