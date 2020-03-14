@@ -1,17 +1,3 @@
-# @export
-# setMethod(f="addScaleFactors",
-#           signature="SpatialExperiment",
-#           definition=function(se, scaleFactors=list())
-#           {
-#               stopifnot(is(se, "SpatialExperiment"))
-#               stopifnot(is(scaleFactors, "list"))
-#               stopifnot(sum(c("spot_diameter_fullres", "tissue_hires_scalef", 
-#                         "fiducial_diameter_fullres", "tissue_lowres_scalef")
-#                             %in% names(scaleFactors)) == 4)
-#               scaleFactors(se) <- scaleFactors
-#               return(se)
-#           }
-# )
 
 #' @export
 setMethod(f="checkSpatialCoords",
@@ -42,21 +28,6 @@ setMethod(f="checkSpatialCoords",
     return(se)
 })
 
-### Getters/Setters
-# @export
-# setMethod(f="scaleFactors", signature="SpatialExperiment", function(x)
-# {
-#     return(x@scaleFactors)
-# })
-# 
-# @export
-# setReplaceMethod(f="scaleFactors", signature="SpatialExperiment", 
-#                 function(x, value)
-# {
-#     x@scaleFactors <- value
-#     return(x)
-# })
-
 #' @export
 setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 {
@@ -80,12 +51,8 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
     
     return(x)
 })
-# @export
-# setMethod(f="isInTissue", signature="SpatialExperiment", function(x)
-# {
-#     return( (int_colData(x)$in_tissue == 1) )
-# })
-# @export
+
+#' @export
 setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 {
     return(colnames(int_colData(x)[x@int_spcIdx]))

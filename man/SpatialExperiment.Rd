@@ -25,8 +25,6 @@ coordinates and its scale factors.
 \section{Slots}{
 
 \describe{
-\item{\code{scaleFactors}}{list.}
-
 \item{\code{int_spcIdx}}{integer.}
 }}
 

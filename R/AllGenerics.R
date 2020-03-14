@@ -1,17 +1,19 @@
 # 
-# setGeneric(name="addScaleFactors", valueClass="SpatialExperiment",
-#         def=function(ve, scaleFactors=NULL) standardGeneric("addScaleFactors"))
+setGeneric(name="addScaleFactors",
+        def=function(ve, scaleFactors=NULL) standardGeneric("addScaleFactors"))
 
 setGeneric(name="checkSpatialCoords", def=function(se, spatialCoords) 
     standardGeneric("checkSpatialCoords"))
 
+setGeneric(name="checkVisiumSpatialCoords",
+    def=function(ve, spatialCoords) 
+    standardGeneric("checkVisiumSpatialCoords"))
 
 #### Getters/Setters
-# 
-# setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
-# 
-# setGeneric("scaleFactors<-", function(x, value) 
-#     standardGeneric("scaleFactors<-"))
+setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
+
+setGeneric("scaleFactors<-", function(x, value)
+    standardGeneric("scaleFactors<-"))
 
 setGeneric(name="spatialCoords", def=function(x) 
     standardGeneric("spatialCoords"))
