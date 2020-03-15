@@ -118,7 +118,7 @@ VisiumExperiment <- function(..., spatialCoords=data.frame(),
 {
     ve <- new("VisiumExperiment", se)
     
-    .Object <- checkVisumSpatialCoords(ve, spatialCoords)
+    .Object <- checkVisiumSpatialCoords(ve, spatialCoords)
     .Object <- addScaleFactors(.Object, scaleFactors)
     return(.Object)
 }
