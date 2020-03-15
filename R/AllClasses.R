@@ -51,7 +51,7 @@ SpatialExperiment <- function(..., spatialCoords=data.frame())
 {
     se <- new("SpatialExperiment", sce)
     
-    .Object <- checkVisiumSpatialCoords(se, spatialCoords)
+    .Object <- checkSpatialCoords(se, spatialCoords)
     return(.Object)
 }
 
