@@ -5,7 +5,8 @@ setMethod(f="checkSpatialCoords",
           definition=function(se, spatialCoords=data.frame())
 {
     stopifnot(is(se, "SpatialExperiment"))
-    stopifnot(("ID" %in% colnames(colData(se))))
+    stopifnot(("ID" %in% colnames(colData(se))) || 
+                  ("Barcodes" %in% colnames(colData(se))))
     
     # stopifnot(nrow(colData(sce)) == nrow(spatialCoords))
     # stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
@@ -20,8 +21,11 @@ setMethod(f="checkSpatialCoords",
     # stopifnot(sum(c("in_tissue", "array_row", "array_col", 
     #                 "pxl_col_in_fullres", "pxl_row_in_fullres")
     #                 %in% colnames(spatialCoords)) == 5)
-       
-    cDataIdx <- match(colData(se)$ID, spatialCoords$ID)
+    
+    if(("ID" %in% colnames(colData(se)))
+        cDataIdx <- match(colData(se)$ID, spatialCoords$ID)
+    else
+        cDataIdx <- match(colData(se)$Barcodes, spatialCoords$Barcodes)
     
     int_colData(se) <- cbind(spatialCoords[cDataIdx,], int_colData(se))
     se@int_spcIdx <- which(colnames(int_colData(se)) %in% colnames(spatialCoords))
