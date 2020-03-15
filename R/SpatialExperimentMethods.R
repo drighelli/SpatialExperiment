@@ -22,7 +22,7 @@ setMethod(f="checkSpatialCoords",
     #                 "pxl_col_in_fullres", "pxl_row_in_fullres")
     #                 %in% colnames(spatialCoords)) == 5)
     
-    if(("ID" %in% colnames(colData(se)))
+    if("ID" %in% colnames(colData(se)))
         cDataIdx <- match(colData(se)$ID, spatialCoords$ID)
     else
         cDataIdx <- match(colData(se)$Barcodes, spatialCoords$Barcodes)
