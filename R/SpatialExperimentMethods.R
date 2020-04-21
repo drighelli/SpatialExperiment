@@ -5,8 +5,8 @@ setMethod(f="checkSpatialCoords",
           definition=function(se, spatialCoords=data.frame())
 {
     stopifnot(is(se, "SpatialExperiment"))
-    stopifnot(("ID" %in% colnames(colData(se))) || 
-                  ("Barcodes" %in% colnames(colData(se))))
+    stopifnot(("ID" %in% colnames(colData(se))))# ||
+                  #("Barcodes" %in% colnames(colData(se))))
     
     # stopifnot(nrow(colData(sce)) == nrow(spatialCoords))
     # stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
