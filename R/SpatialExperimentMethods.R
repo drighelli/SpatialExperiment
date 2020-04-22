@@ -27,7 +27,8 @@ setMethod(f="checkSpatialCoords",
     else
         cDataIdx <- match(colData(se)$Barcodes, spatialCoords$Barcodes)
     
-    int_colData(se) <- cbind(spatialCoords[cDataIdx,], int_colData(se))
+    int_colData(se) <- as(cbind(spatialCoords[cDataIdx,], int_colData(se)), 
+                            "DataFrame")
     se@int_spcIdx <- which(colnames(int_colData(se)) %in% colnames(spatialCoords))
     return(se)
 })
