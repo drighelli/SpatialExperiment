@@ -1,5 +1,14 @@
 
+
+#' checkSpatialCoords
+#' @description checks if all the spatial parameters have the right fields.
+#' @param SpatialExperiment a SpatialExperiment class object
+#'
+#' @return the SpatialExperiment class object passed as input.
 #' @export
+#'
+#' @examples
+#' TBD
 setMethod(f="checkSpatialCoords",
           signature="SpatialExperiment",
           definition=function(se, spatialCoords=data.frame())
@@ -33,13 +42,32 @@ setMethod(f="checkSpatialCoords",
     return(se)
 })
 
+
+#' spatialCoords-getter
+#' @description a getter method which returns the spatial coordinates previously
+#' stored in a SpatialExperiment class object.
+#' @param x A SpatialExperiment class object.
+#'
+#' @return a DataFrame within the spatial coordinates.
 #' @export
+#'
+#' @examples
+#' TBD
 setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 {
     return(int_colData(x)[, x@int_spcIdx])
 })
 
+#' spatialCoords-setter
+#' @description a setter method which sets/replaces the spatial coordinate in a 
+#' SpatialExperiment class object.
+#' @param x a SpatialExperiment class object
+#' @param value a DataFrame with the new spatial coordinates to set.
+#'
+#' @return
 #' @export
+#'
+#' @examples
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
                 function(x, value)
 {
@@ -57,7 +85,17 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
     return(x)
 })
 
+
+#' spatialCoordsNames-getter
+#' @description getter method for the spatial coordinates names in a 
+#' SpatialExperiment class object.
+#' @param x a SpatialExperiment class object.
+#'
+#' @return a vector with the colnames of the spatial coordinates.
 #' @export
+#'
+#' @examples
+#' TBD
 setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 {
     return(colnames(int_colData(x)[x@int_spcIdx]))
