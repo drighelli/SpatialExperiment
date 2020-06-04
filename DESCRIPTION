@@ -10,11 +10,20 @@ Authors@R: c(
         email="risso.davide@gmail.com"))
 Maintainer: Dario Righelli <dario.righelli@gmail.com>
 Description: Defines an S4 class for storing data for spatial experiments, such
-    as seq-FISH and 10x Visium Gene Expression. 
+    as seqFISH and 10x-Visium Spatial Gene Expression. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: SingleCellExperiment
-Imports: S4Vectors
+Depends: 
+    R (>= 4.0.0),
+    methods,
+    SingleCellExperiment
+Imports: 
+    S4Vectors
+Suggests:
+    knitr,
+    rjson,
+    Matrix
+VignetteBuilder:
+    knitr
 RoxygenNote: 7.1.0
-git_url: https://github.com/drighelli/SpatialExperiment

@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setMethod(f="addScaleFactors",
           signature="VisiumExperiment",
           definition=function(ve, scaleFactors=list())
@@ -36,28 +36,22 @@ setMethod(f="addScaleFactors",
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setMethod(f="checkVisiumSpatialCoords",
           signature="VisiumExperiment",
           definition=function(ve, spatialCoords=DataFrame()) #data.frame())
 {
     stopifnot(is(ve, "VisiumExperiment"))
     stopifnot(("Barcodes" %in% colnames(colData(ve))))
-  
-    # stopifnot(nrow(colData(sce)) == nrow(spatialCoords))
-    # stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
-    #             == nrow(colData(sce)))
-    # a different approach is possible, 
-    # if they aren't equal
-    # a partial match is possible
-    # otherwhise (if 0 match) stop stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
-    #             != 0))
 
     stopifnot(("Barcodes" %in% colnames(spatialCoords)))
     stopifnot(sum(c("in_tissue", "array_row", "array_col",
                   "pxl_col_in_fullres", "pxl_row_in_fullres")
                     %in% colnames(spatialCoords)) == 5)
-
+    if(class(spatialCoords) == "data.frame")
+    {
+        spatialCoords <- as(spatialCoords, "DataFrame")
+    }
     cDataIdx <- match(colData(ve)$Barcodes, spatialCoords$Barcodes)
   
     int_colData(ve) <- cbind(spatialCoords[cDataIdx,], int_colData(ve))
@@ -76,7 +70,7 @@ setMethod(f="checkVisiumSpatialCoords",
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setMethod(f="scaleFactors", signature="VisiumExperiment", function(x)
 {
     return(x@scaleFactors)
@@ -91,7 +85,7 @@ setMethod(f="scaleFactors", signature="VisiumExperiment", function(x)
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
                 function(x, value)
 {
@@ -108,7 +102,7 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 {
     return(int_colData(x)[, x@int_spcIdx])
@@ -123,7 +117,7 @@ setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setReplaceMethod(f="spatialCoords", signature="VisiumExperiment", 
                  function(x, value)
 {
@@ -150,7 +144,7 @@ setReplaceMethod(f="spatialCoords", signature="VisiumExperiment",
 #' @export
 #'
 #' @examples
-#' TBD
+#' # TBD
 setMethod(f="isInTissue", signature="VisiumExperiment", function(x)
 {
     return( (int_colData(x)$in_tissue == 1) )

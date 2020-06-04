@@ -3,14 +3,12 @@
 #' @slot int_spcIdx integer. 
 #' 
 #' @importClassesFrom S4Vectors DataFrame
-#' @importClasses SingleCellExperiment
-#'
-#' @examples
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
-         slots=c(
-             int_spcIdx="integer"
-         ),
-         contains = "SingleCellExperiment"#,
+        slots=c(
+            int_spcIdx="integer"
+        ),
+        contains = "SingleCellExperiment"#,
 )
 
 
@@ -28,21 +26,40 @@ setClass("SpatialExperiment",
 #' @param spatialCoords the 10x Visium spatial coordinates
 #' 
 #' @author Dario Righelli
-#' @examples
-#' TBD
 #' @docType class
 #' @export
 #' @importFrom SingleCellExperiment SingleCellExperiment
+#' @examples
+#' fishCoordFile <- system.file(file.path("extdata", "seqFISH",
+#'                                "fcortex.coordinates.txt"), 
+#'                                package="SpatialExperiment")
+#' fishCoordinates <- read.table(fishCoordFile, header=FALSE, sep=" ")
+#' colnames(fishCoordinates) <- c("ID", "Irrelevant", "x", "y")
 #' 
+#' fishCellLabsFile <- system.file(file.path("extdata", "seqFISH", 
+#'                                          "seqfish_cell_labels.tsv"),
+#'                             package="SpatialExperiment")
+#' fishCellLabels <- read.table(file=fishCellLabsFile, header=FALSE, sep="\t")
+#' colnames(fishCellLabels) <- c("ID", "cluster", "class", "classID", 
+#'                               "Irrelevant", "Prob")
+#' fishFeatCountsFile <- system.file(file.path("extdata", "seqFISH",
+#'                              "seqfish_normalized_cortex_b2_testing.txt"), 
+#'                              package="SpatialExperiment")
+#' fishFeaturesCounts <- read.table(file=fishFeatCountsFile, 
+#'                                  header=FALSE, sep="\t", row.names=1)
+#'  se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+#'                      colData=fishCellLabels,
+#'                      assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+#'                      spatialCoords=fishCoordinates) 
 SpatialExperiment <- function(..., spatialCoords=data.frame())
 {
     args <- list(...)
     stopifnot(sum(c("rowData", "colData", "assays") %in% names(args)) == 3)
  
     sce <- SingleCellExperiment::SingleCellExperiment(
-        rowData=as(args$rowData, "DataFrame"),
-        colData=as(args$colData, "DataFrame"),
-        assays=args$assays)
+            rowData=as(args$rowData, "DataFrame"),
+            colData=as(args$colData, "DataFrame"),
+            assays=args$assays)
     return(.sce_to_se(sce, spatialCoords=spatialCoords))
 }
 
@@ -50,7 +67,6 @@ SpatialExperiment <- function(..., spatialCoords=data.frame())
 .sce_to_se <- function(sce, spatialCoords=data.frame()) 
 {
     se <- new("SpatialExperiment", sce)
-    
     .Object <- checkSpatialCoords(se, spatialCoords)
     return(.Object)
 }
@@ -69,14 +85,12 @@ setAs("SingleCellExperiment", "SpatialExperiment", function(from)
 #' @slot scaleFactors list
 #' 
 #' @importClassesFrom S4Vectors DataFrame
-#' @importClasses VisiumExperiment
-#'
-#' @examples
+
 setClass("VisiumExperiment",
         slots=c(
             scaleFactors="list"
         ),
-        contains = "SpatialExperiment"#,
+        contains = "SpatialExperiment"
 )
 
 
@@ -96,11 +110,10 @@ setClass("VisiumExperiment",
 #' @param scaleFactors the 10x Visium image scale factors
 #' 
 #' @author Dario Righelli
-#' @examples
-#' TBD
 #' @docType class
 #' @export
-#' 
+#' @examples
+#' # TBD
 VisiumExperiment <- function(..., spatialCoords=data.frame(), 
                              scaleFactors=list())
 {
@@ -117,7 +130,6 @@ VisiumExperiment <- function(..., spatialCoords=data.frame(),
 .se_to_ve <- function(se, spatialCoords, scaleFactors=list()) 
 {
     ve <- new("VisiumExperiment", se)
-    
     .Object <- checkVisiumSpatialCoords(ve, spatialCoords)
     .Object <- addScaleFactors(.Object, scaleFactors)
     return(.Object)

@@ -1,44 +1,29 @@
-
-
 #' checkSpatialCoords
 #' @description checks if all the spatial parameters have the right fields.
 #' @param SpatialExperiment a SpatialExperiment class object
 #'
 #' @return the SpatialExperiment class object passed as input.
-#' @export
-#'
-#' @examples
-#' TBD
+#' @keywords internal
 setMethod(f="checkSpatialCoords",
           signature="SpatialExperiment",
-          definition=function(se, spatialCoords=data.frame())
+          definition=function(se, spatialCoords=DataFrame())
 {
     stopifnot(is(se, "SpatialExperiment"))
-    stopifnot(("ID" %in% colnames(colData(se))))# ||
-                  #("Barcodes" %in% colnames(colData(se))))
+    stopifnot( (sum( c("Barcodes", "ID") %in% colnames(colData(se))) != 0)) 
     
-    # stopifnot(nrow(colData(sce)) == nrow(spatialCoords))
-    # stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
-    #             == nrow(colData(sce)))
-    # a different approach is possible, 
-    # if they aren't equal
-    # a partial match is possible
-    # otherwhise (if 0 match) stop stopifnot(sum(colData(sce)$Barcodes %in% spatialCoords$Barcodes) 
-    #             != 0))
-
-    # stopifnot(("Barcodes" %in% colnames(spatialCoords)))
-    # stopifnot(sum(c("in_tissue", "array_row", "array_col", 
-    #                 "pxl_col_in_fullres", "pxl_row_in_fullres")
-    #                 %in% colnames(spatialCoords)) == 5)
-    
+    if(class(spatialCoords) == "data.frame") 
+    {
+        spatialCoords <- as(spatialCoords, "DataFrame")
+    }
     if("ID" %in% colnames(colData(se)))
         cDataIdx <- match(colData(se)$ID, spatialCoords$ID)
     else
         cDataIdx <- match(colData(se)$Barcodes, spatialCoords$Barcodes)
-    
-    int_colData(se) <- as(cbind(spatialCoords[cDataIdx,], int_colData(se)), 
+    int_colData(se) <- as(cbind(spatialCoords[cDataIdx,], 
+                                           int_colData(se)), 
                             "DataFrame")
-    se@int_spcIdx <- which(colnames(int_colData(se)) %in% colnames(spatialCoords))
+    se@int_spcIdx <- which(colnames(int_colData(se)) %in% 
+                                colnames(spatialCoords))
     return(se)
 })
 
@@ -52,7 +37,14 @@ setMethod(f="checkSpatialCoords",
 #' @export
 #'
 #' @examples
-#' TBD
+#' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
+#'     "seqFISH.RData"), package="SpatialExperiment")
+#' load(spatialDataFile)
+#' se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+#'     colData=fishCellLabels,
+#'     assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+#'     spatialCoords=fishCoordinates)
+#' spatialCoords(se)
 setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 {
     return(int_colData(x)[, x@int_spcIdx])
@@ -68,6 +60,17 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' @export
 #'
 #' @examples
+#' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
+#'     "seqFISH.RData"), package="SpatialExperiment")
+#' load(spatialDataFile)
+#' se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+#'     colData=fishCellLabels,
+#'     assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+#'     spatialCoords=fishCoordinates)
+#' fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
+#'         colnames(fakeFishCoords) <- c("ID", "Irrelevant", "x", "y")
+#' spatialCoords(se) <- fakeFishCoords
+#' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
                 function(x, value)
 {
@@ -95,7 +98,14 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
 #' @export
 #'
 #' @examples
-#' TBD
+#' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
+#'     "seqFISH.RData"), package="SpatialExperiment")
+#' load(spatialDataFile)
+#' se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+#'     colData=fishCellLabels,
+#'     assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+#'     spatialCoords=fishCoordinates)
+#' spatialCoordsNames(se)
 setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 {
     return(colnames(int_colData(x)[x@int_spcIdx]))

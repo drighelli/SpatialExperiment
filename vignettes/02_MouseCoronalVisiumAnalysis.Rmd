@@ -1,0 +1,124 @@
+---
+title: "10x-Visum Spatial Data Analysis"
+author: "Dario Righelli"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    BiocStyle::html_document:
+      toc: true
+vignette: >
+    %\VignetteIndexEntry{10x-Visum Spatial Data Analysis}
+    %\VignetteEncoding{UTF-8}
+    %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+    chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Installation
+
+Installing and loading VisualExperiment class.
+
+<!-- ```{r} -->
+<!-- library(devtools) -->
+<!-- install_github("drighelli/SpatialExperiment", ref="spatialExperiment") -->
+<!-- ``` -->
+
+
+```{r}
+library("SpatialExperiment")
+library("Matrix")
+library("rjson")
+```
+
+
+# Data Loading
+
+Examples data files have been downloaded from the 10x site, [Mouse adult brain](https://support.10xgenomics.com/spatial-gene-expression/datasets/1.0.0/V1_Adult_Mouse_Brain)
+
+## Features
+
+Loading features and count matrix.
+
+```{r}
+barcodesFile <- system.file(file.path("extdata", "10x_visium",
+                            "barcodes.tsv"), package="SpatialExperiment")
+barcodesEx <- read.csv(barcodesFile, sep="\t", 
+                     header=FALSE, col.names=c("Barcodes"))
+featuresFile <- system.file(file.path("extdata", "10x_visium",
+                            "features.tsv"), package="SpatialExperiment")
+featuresEx <- read.csv(featuresFile, sep="\t", 
+                     header=FALSE, col.names=c("Barcodes", "Feature_name", 
+                                               "Feature_type"))
+
+countsFile <- system.file(file.path("extdata", "10x_visium",
+                            "matrix.mtx"), package="SpatialExperiment")
+countsEx <- readMM(file=countsFile)
+
+```
+
+## Spatial Coordinates
+
+Loading Spatial coordinates of the tissue section.
+
+```{r}
+posFile <- system.file(file.path("extdata", "10x_visium",
+                        "tissue_positions_list.tsv"), 
+                        package="SpatialExperiment")
+tissPosEx <- read.csv(posFile, 
+                        sep="\t", header=FALSE, 
+                        col.names=c("Barcodes", "in_tissue", 
+                                    "array_row", "array_col",
+                                    "pxl_col_in_fullres", "pxl_row_in_fullres"))
+```
+
+## Spatial Scale Factors
+
+Scale factors for the given three image formats transformations.
+
+```{r}
+scaleFile <- system.file(file.path("extdata", "10x_visium",
+                        "scalefactors_json.json"), 
+                        package="SpatialExperiment")
+
+scalefactors <- fromJSON(file=scaleFile)
+```
+
+
+# VisiumExperiment
+
+## Creation
+
+Creating VisiumExperiment class within 10x Visium data and testing the show method.
+
+```{r}
+ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx, 
+                           assays=c(counts=countsEx), 
+                           spatialCoords=tissPosEx,
+                           scaleFactors=scalefactors)
+ve
+```
+
+## Methods
+
+### Retrieving Spatial Coordinates
+
+The *spatialCoords* methods can be used to retrieve the spatial coordinates., 
+It can be used also to update the values.
+
+```{r}
+spatialCoords(ve)
+```
+
+### Number of array barcoded-spots covered by tissue
+
+The *isInTissue* method can be used to know which and how many spots are covered
+by the tissue.
+
+```{r}
+sum(isInTissue(ve))
+# ve[isInTissue(ve)] ## subset not defined yet
+```
+
