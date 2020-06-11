@@ -51,7 +51,7 @@ setMethod(f="checkVisiumSpatialCoords",
     cDataIdx <- match(colData(ve)$Barcodes, spatialCoords$Barcodes)
   
     int_colData(ve) <- cbind(spatialCoords[cDataIdx,], int_colData(ve))
-    ve@int_spcIdx <- which(colnames(int_colData(ve)) %in% 
+    ve@int_spcIdx <- base::which(colnames(int_colData(ve)) %in% 
                         c("in_tissue", "array_row", "array_col", 
                         "pxl_col_in_fullres", "pxl_row_in_fullres"))
     return(ve)
@@ -114,7 +114,7 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
 #' spatialCoords(ve)
 setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 {
-    idx1 <- which(colnames(int_colData(x)) == "Barcodes")
+    idx1 <- base::which(colnames(int_colData(x)) == "Barcodes")
     return(int_colData(x)[, c(idx1, x@int_spcIdx)])
 })
 
@@ -140,8 +140,8 @@ setReplaceMethod(f="spatialCoords", signature="VisiumExperiment",
     
     for (col in colnames(value))
     {
-        colidx <- which(colnames(int_colData(x)) == col)
-        validx <- which(colnames(value) == col)
+        colidx <- base::which(colnames(int_colData(x)) == col)
+        validx <- base::which(colnames(value) == col)
         int_colData(x)[cDataIdx, colidx] <- value[,validx]
     }
 

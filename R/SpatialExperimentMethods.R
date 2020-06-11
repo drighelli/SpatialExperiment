@@ -24,7 +24,7 @@ setMethod(f="checkSpatialCoords",
     int_colData(se) <- as(cbind(spatialCoords[cDataIdx,], 
                                            int_colData(se)), 
                             "DataFrame")
-    se@int_spcIdx <- which(colnames(int_colData(se)) %in% 
+    se@int_spcIdx <- base::which(colnames(int_colData(se)) %in% 
                                 colnames(spatialCoords))
     return(se)
 })
@@ -84,8 +84,8 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
     
     for (col in colnames(value))
     {
-        colidx <- which(colnames(int_colData(x)) == col)
-        validx <- which(colnames(value) == col)
+        colidx <- base::which(colnames(int_colData(x)) == col)
+        validx <- base::which(colnames(value) == col)
         int_colData(x)[cDataIdx, colidx] <- value[,validx]
     }
     
