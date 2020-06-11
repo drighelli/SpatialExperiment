@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{spatialCoords<-,VisiumExperiment-method}
 \alias{spatialCoords<-,VisiumExperiment-method}
+\alias{spatialCoords<-}
 \title{spatialCoords-setter}
 \usage{
 \S4method{spatialCoords}{VisiumExperiment}(x) <- value
@@ -11,12 +12,13 @@
 
 \item{value}{a DataFrame of spatial coordinates}
 }
-\value{
-
-}
 \description{
 sets the spatial coordinate to a VisiumExperiment class object.
 }
 \examples{
-TBD
+ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+                         "ve.RDS"), package="SpatialExperiment"))
+newSpCord <- spatialCoords(ve)
+newSpCord$in_tissue = 0
+spatialCoords(ve) <- newSpCord
 }

@@ -122,3 +122,7 @@ sum(isInTissue(ve))
 # ve[isInTissue(ve)] ## subset not defined yet
 ```
 
+```{r}
+sessionInfo()
+```
+

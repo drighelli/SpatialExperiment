@@ -1,7 +1,9 @@
 #' checkSpatialCoords
 #' @description checks if all the spatial parameters have the right fields.
 #' @param SpatialExperiment a SpatialExperiment class object
-#'
+#' @importFrom SingleCellExperiment colData int_colData int_colData<-
+#' @importFrom S4Vectors DataFrame
+#' @importFrom methods is as 
 #' @return the SpatialExperiment class object passed as input.
 #' @keywords internal
 setMethod(f="checkSpatialCoords",
@@ -34,8 +36,9 @@ setMethod(f="checkSpatialCoords",
 #' @param x A SpatialExperiment class object.
 #'
 #' @return a DataFrame within the spatial coordinates.
+#' 
 #' @export
-#'
+#' @aliases spatialCoords
 #' @examples
 #' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
 #'     "seqFISH.RData"), package="SpatialExperiment")
@@ -56,9 +59,8 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' @param x a SpatialExperiment class object
 #' @param value a DataFrame with the new spatial coordinates to set.
 #'
-#' @return
 #' @export
-#'
+#' @aliases spatialCoords<-
 #' @examples
 #' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
 #'     "seqFISH.RData"), package="SpatialExperiment")
@@ -74,8 +76,10 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
                 function(x, value)
 {
-    stopifnot(("ID" %in% colnames(value)))
-    
+    stopifnot(("ID" %in% colnames(value)),
+                ("Irrelevant" %in% colnames(value)),
+                ("x" %in% colnames(value)),
+                ("y" %in% colnames(value)))
     cDataIdx <- match(value$ID, int_colData(x)$ID)
     
     for (col in colnames(value))
@@ -96,7 +100,7 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
 #'
 #' @return a vector with the colnames of the spatial coordinates.
 #' @export
-#'
+#' @aliases spatialCoordsNames
 #' @examples
 #' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
 #'     "seqFISH.RData"), package="SpatialExperiment")

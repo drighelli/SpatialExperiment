@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{spatialCoords,VisiumExperiment-method}
 \alias{spatialCoords,VisiumExperiment-method}
+\alias{spatialCoords}
 \title{spatialCoords-getter}
 \usage{
 \S4method{spatialCoords}{VisiumExperiment}(x)
@@ -16,5 +17,7 @@ a DataFrame with the spatial coordinates.
 gets the spatial coordinate from a VisiumExperiment class object
 }
 \examples{
-TBD
+ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+                         "ve.RDS"), package="SpatialExperiment"))
+spatialCoords(ve)
 }

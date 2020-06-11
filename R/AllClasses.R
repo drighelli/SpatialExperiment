@@ -28,7 +28,8 @@ setClass("SpatialExperiment",
 #' @author Dario Righelli
 #' @docType class
 #' @export
-#' @importFrom SingleCellExperiment SingleCellExperiment
+#' @importClassesFrom S4Vectors DataFrame
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @examples
 #' fishCoordFile <- system.file(file.path("extdata", "seqFISH",
 #'                                "fcortex.coordinates.txt"), 
@@ -63,7 +64,7 @@ SpatialExperiment <- function(..., spatialCoords=data.frame())
     return(.sce_to_se(sce, spatialCoords=spatialCoords))
 }
 
-
+#' @importFrom methods new
 .sce_to_se <- function(sce, spatialCoords=data.frame()) 
 {
     se <- new("SpatialExperiment", sce)
@@ -83,9 +84,6 @@ setAs("SingleCellExperiment", "SpatialExperiment", function(from)
 #' @export
 #' @rdname VisiumExperiment
 #' @slot scaleFactors list
-#' 
-#' @importClassesFrom S4Vectors DataFrame
-
 setClass("VisiumExperiment",
         slots=c(
             scaleFactors="list"
@@ -108,12 +106,45 @@ setClass("VisiumExperiment",
 #' constructor to fill the slots of the base class.
 #' @param spatialCoords the 10x Visium spatial coordinates
 #' @param scaleFactors the 10x Visium image scale factors
-#' 
+#' @importFrom methods new
+#' @importClassesFrom S4Vectors DataFrame
 #' @author Dario Righelli
 #' @docType class
 #' @export
 #' @examples
-#' # TBD
+#' 
+#' barcodesFile <- system.file(file.path("extdata", "10x_visium",
+#'                         "barcodes.tsv"),
+#'                         package="SpatialExperiment")
+#' barcodesEx <- read.csv(barcodesFile, sep="\t",
+#'                         header=FALSE, col.names=c("Barcodes"))
+#' featuresFile <- system.file(file.path("extdata", "10x_visium",
+#'                         "features.tsv"), package="SpatialExperiment")
+#' featuresEx <- read.csv(featuresFile, sep="\t",
+#'                         header=FALSE, col.names=c("Barcodes", "Feature_name",
+#'                         "Feature_type"))
+#' countsFile <- system.file(file.path("extdata", "10x_visium",
+#'                         "matrix.mtx"), package="SpatialExperiment")
+#' countsEx <- Matrix::readMM(file=countsFile)
+#' posFile <- system.file(file.path("extdata", "10x_visium",
+#'                         "tissue_positions_list.tsv"),
+#'                         package="SpatialExperiment")
+#' tissPosEx <- read.csv(posFile,
+#'                         sep="\t", header=FALSE,
+#'                         col.names=c("Barcodes", "in_tissue",
+#'                          "array_row", "array_col",
+#'                          "pxl_col_in_fullres", "pxl_row_in_fullres"))
+#' scaleFile <- system.file(file.path("extdata", "10x_visium",
+#'                                    "scalefactors_json.json"), 
+#'                          package="SpatialExperiment")
+#' 
+#' scalefactors <- rjson::fromJSON(file=scaleFile)
+#' ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
+#'                          assays=c(counts=countsEx),
+#'                          spatialCoords=tissPosEx,
+#'                          scaleFactors=scalefactors)
+#' 
+#' ve
 VisiumExperiment <- function(..., spatialCoords=data.frame(), 
                              scaleFactors=list())
 {
@@ -127,7 +158,8 @@ VisiumExperiment <- function(..., spatialCoords=data.frame(),
 }
 
 
-.se_to_ve <- function(se, spatialCoords, scaleFactors=list()) 
+#' @importFrom methods new
+.se_to_ve <- function(se, spatialCoords, scaleFactors=NULL) 
 {
     ve <- new("VisiumExperiment", se)
     .Object <- checkVisiumSpatialCoords(ve, spatialCoords)

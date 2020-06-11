@@ -4,7 +4,7 @@
 \alias{checkSpatialCoords,SpatialExperiment-method}
 \title{checkSpatialCoords}
 \usage{
-\S4method{checkSpatialCoords}{SpatialExperiment}(se, spatialCoords = data.frame())
+\S4method{checkSpatialCoords}{SpatialExperiment}(se, spatialCoords = DataFrame())
 }
 \arguments{
 \item{SpatialExperiment}{a SpatialExperiment class object}
@@ -15,6 +15,4 @@ the SpatialExperiment class object passed as input.
 \description{
 checks if all the spatial parameters have the right fields.
 }
-\examples{
-TBD
-}
+\keyword{internal}

@@ -29,7 +29,27 @@ coordinates and its scale factors.
 }}
 
 \examples{
-TBD
+fishCoordFile <- system.file(file.path("extdata", "seqFISH",
+                               "fcortex.coordinates.txt"), 
+                               package="SpatialExperiment")
+fishCoordinates <- read.table(fishCoordFile, header=FALSE, sep=" ")
+colnames(fishCoordinates) <- c("ID", "Irrelevant", "x", "y")
+
+fishCellLabsFile <- system.file(file.path("extdata", "seqFISH", 
+                                         "seqfish_cell_labels.tsv"),
+                            package="SpatialExperiment")
+fishCellLabels <- read.table(file=fishCellLabsFile, header=FALSE, sep="\t")
+colnames(fishCellLabels) <- c("ID", "cluster", "class", "classID", 
+                              "Irrelevant", "Prob")
+fishFeatCountsFile <- system.file(file.path("extdata", "seqFISH",
+                             "seqfish_normalized_cortex_b2_testing.txt"), 
+                             package="SpatialExperiment")
+fishFeaturesCounts <- read.table(file=fishFeatCountsFile, 
+                                 header=FALSE, sep="\t", row.names=1)
+ se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+                     colData=fishCellLabels,
+                     assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+                     spatialCoords=fishCoordinates) 
 }
 \author{
 Dario Righelli

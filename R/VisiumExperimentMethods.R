@@ -6,10 +6,8 @@
 #' @param scaleFactors a list of 10x Visium scale factors.-
 #'
 #' @return a VisiumExperiment class object.
-#' @export
-#'
-#' @examples
-#' # TBD
+#' @keywords internal
+#' @aliases addScaleFactors
 setMethod(f="addScaleFactors",
           signature="VisiumExperiment",
           definition=function(ve, scaleFactors=list())
@@ -33,10 +31,8 @@ setMethod(f="addScaleFactors",
 #' @param spatialCoords a DataFrame with visium spatial coordinates
 #'
 #' @return a VisiumExperiment class object.
-#' @export
-#'
-#' @examples
-#' # TBD
+#' @keywords internal
+#' @aliases checkVisiumSpatialCoords
 setMethod(f="checkVisiumSpatialCoords",
           signature="VisiumExperiment",
           definition=function(ve, spatialCoords=DataFrame()) #data.frame())
@@ -68,9 +64,11 @@ setMethod(f="checkVisiumSpatialCoords",
 #'
 #' @return a DataFrame with the 10x Visium scale factors.
 #' @export
-#'
+#' @aliases scaleFactors
 #' @examples
-#' # TBD
+#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+#'                          "ve.RDS"), package="SpatialExperiment"))
+# scaleFactors(ve)
 setMethod(f="scaleFactors", signature="VisiumExperiment", function(x)
 {
     return(x@scaleFactors)
@@ -83,9 +81,18 @@ setMethod(f="scaleFactors", signature="VisiumExperiment", function(x)
 #'
 #' @return a VisiumExperiment class object.
 #' @export
-#'
+#' @aliases scaleFactors<-
 #' @examples
-#' # TBD
+#' 
+#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+#'                          "ve.RDS"), package="SpatialExperiment"))
+# scaleFactors(ve)
+# newscFactors <- list("spot_diameter_full_res"=100,
+#                      "tissue_hires_scalef"=0.5,
+#                      "fiducial_diameter_fullres"=144.49,
+#                      "tissue_lowres_scalef"=0.05)
+# scaleFactors(ve) <- newscFactors
+# scaleFactors(ve)
 setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
                 function(x, value)
 {
@@ -100,12 +107,15 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
 #'
 #' @return a DataFrame with the spatial coordinates.
 #' @export
-#'
+#' @aliases spatialCoords
 #' @examples
-#' # TBD
+#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+#'                          "ve.RDS"), package="SpatialExperiment"))
+#' spatialCoords(ve)
 setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 {
-    return(int_colData(x)[, x@int_spcIdx])
+    idx1 <- which(colnames(int_colData(x)) == "Barcodes")
+    return(int_colData(x)[, c(idx1, x@int_spcIdx)])
 })
 
 #' spatialCoords-setter
@@ -113,17 +123,20 @@ setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 #' @param x a VisiumExperiment class object.
 #' @param value a DataFrame of spatial coordinates
 #'
-#' @return
 #' @export
-#'
+#' @aliases spatialCoords<-
 #' @examples
-#' # TBD
+#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+#'                          "ve.RDS"), package="SpatialExperiment"))
+#' newSpCord <- spatialCoords(ve)
+#' newSpCord$in_tissue = 0
+#' spatialCoords(ve) <- newSpCord
 setReplaceMethod(f="spatialCoords", signature="VisiumExperiment", 
                  function(x, value)
 {
     stopifnot(("Barcodes" %in% colnames(value)))
     
-    cDataIdx <- match(value$ID, int_colData(x)$ID)
+    cDataIdx <- match(value$Barcodes, int_colData(x)$Barcodes)
     
     for (col in colnames(value))
     {
@@ -142,9 +155,12 @@ setReplaceMethod(f="spatialCoords", signature="VisiumExperiment",
 #'
 #' @return a TRUE/FALSE mask.
 #' @export
-#'
+#' @aliases isInTissue
 #' @examples
-#' # TBD
+#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+#'                          "ve.RDS"), package="SpatialExperiment"))
+#' isInTissue(ve)
+#' sum(isInTissue(ve))
 setMethod(f="isInTissue", signature="VisiumExperiment", function(x)
 {
     return( (int_colData(x)$in_tissue == 1) )

@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{addScaleFactors,VisiumExperiment-method}
 \alias{addScaleFactors,VisiumExperiment-method}
+\alias{addScaleFactors}
 \title{addScaleFactors}
 \usage{
 \S4method{addScaleFactors}{VisiumExperiment}(ve, scaleFactors = list())
@@ -18,6 +19,4 @@ a VisiumExperiment class object.
 sets the scale factors given as input to the VisiumExperiment
 class object.
 }
-\examples{
-TBD
-}
+\keyword{internal}

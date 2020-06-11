@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{checkVisiumSpatialCoords,VisiumExperiment-method}
 \alias{checkVisiumSpatialCoords,VisiumExperiment-method}
+\alias{checkVisiumSpatialCoords}
 \title{checkVisiumSpatialCoords}
 \usage{
 \S4method{checkVisiumSpatialCoords}{VisiumExperiment}(ve, spatialCoords = DataFrame())
@@ -19,6 +20,4 @@ checks if the VisiumExperiment class object has all the required
 fields for the integrity of the spatial coordinates and sets them 
 to the object.
 }
-\examples{
-TBD
-}
+\keyword{internal}

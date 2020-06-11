@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{scaleFactors,VisiumExperiment-method}
 \alias{scaleFactors,VisiumExperiment-method}
+\alias{scaleFactors}
 \title{scaleFactors-getter}
 \usage{
 \S4method{scaleFactors}{VisiumExperiment}(x)
@@ -16,5 +17,6 @@ a DataFrame with the 10x Visium scale factors.
 gets the scale factors from a VisiumExperiment class object.
 }
 \examples{
-TBD
+ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+                         "ve.RDS"), package="SpatialExperiment"))
 }

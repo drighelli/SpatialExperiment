@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{scaleFactors<-,VisiumExperiment-method}
 \alias{scaleFactors<-,VisiumExperiment-method}
+\alias{scaleFactors<-}
 \title{scaleFactors-setter}
 \usage{
 \S4method{scaleFactors}{VisiumExperiment}(x) <- value
@@ -18,5 +19,7 @@ a VisiumExperiment class object.
 sets the scale factors in a VisiumExperiment class object.
 }
 \examples{
-TBD
+
+ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+                         "ve.RDS"), package="SpatialExperiment"))
 }

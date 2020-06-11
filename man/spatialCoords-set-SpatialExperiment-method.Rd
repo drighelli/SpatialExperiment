@@ -2,6 +2,7 @@
 % Please edit documentation in R/SpatialExperimentMethods.R
 \name{spatialCoords<-,SpatialExperiment-method}
 \alias{spatialCoords<-,SpatialExperiment-method}
+\alias{spatialCoords<-}
 \title{spatialCoords-setter}
 \usage{
 \S4method{spatialCoords}{SpatialExperiment}(x) <- value
@@ -11,10 +12,20 @@
 
 \item{value}{a DataFrame with the new spatial coordinates to set.}
 }
-\value{
-
-}
 \description{
 a setter method which sets/replaces the spatial coordinate in a 
 SpatialExperiment class object.
+}
+\examples{
+spatialDataFile <- system.file(file.path("extdata", "seqFISH",
+    "seqFISH.RData"), package="SpatialExperiment")
+load(spatialDataFile)
+se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+    colData=fishCellLabels,
+    assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+    spatialCoords=fishCoordinates)
+fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
+        colnames(fakeFishCoords) <- c("ID", "Irrelevant", "x", "y")
+spatialCoords(se) <- fakeFishCoords
+spatialCoords(se)
 }

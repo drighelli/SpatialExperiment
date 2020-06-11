@@ -2,6 +2,7 @@
 % Please edit documentation in R/SpatialExperimentMethods.R
 \name{spatialCoordsNames,SpatialExperiment-method}
 \alias{spatialCoordsNames,SpatialExperiment-method}
+\alias{spatialCoordsNames}
 \title{spatialCoordsNames-getter}
 \usage{
 \S4method{spatialCoordsNames}{SpatialExperiment}(x)
@@ -17,5 +18,12 @@ getter method for the spatial coordinates names in a
 SpatialExperiment class object.
 }
 \examples{
-TBD
+spatialDataFile <- system.file(file.path("extdata", "seqFISH",
+    "seqFISH.RData"), package="SpatialExperiment")
+load(spatialDataFile)
+se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
+    colData=fishCellLabels,
+    assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
+    spatialCoords=fishCoordinates)
+spatialCoordsNames(se)
 }

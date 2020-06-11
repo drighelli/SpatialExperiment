@@ -101,7 +101,30 @@ se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
                         assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
                         spatialCoords=fishCoordinates)
 show(se)
+library(MultiAssayExperiment)
+mse <-  MultiAssayExperiment::MultiAssayExperiment(
+                                    experiments=c("seqFISH"=se, "scRNAseq"=sce))
 ```
+
+```{r}
+library(devtools)
+install_github("drighelli/SpatialExperiment", ref="spatialExperiment") 
+library(SpatialExperiment)
+library(SingleCellMultiModal)
+
+experiments(mse)$seqFISH
+experiments(mse)$scRNAseq
+
+experiments(mse)
+rownames(mse)
+sampleMap(mse)
+head(assay(mse, "seqFISH"))[,1:4]
+head(assay(mse, "scRNAseq"))[,1:4]
+
+
+
+```
+
 
 ## Spatial Coordinates
 
@@ -120,8 +143,12 @@ showing that the y coordinates are identical to the x ones.
 
 ```{r}
 fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
-colnames(fakeFishCoords) <- c("ID", "Unknown", "x", "y")
+colnames(fakeFishCoords) <- c("ID", "Irrelevant", "x", "y")
 spatialCoords(se) <- fakeFishCoords
 spatialCoords(se)
+```
+
+```{r}
+sessionInfo()
 ```
 

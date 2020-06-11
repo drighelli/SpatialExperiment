@@ -2,6 +2,7 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{isInTissue,VisiumExperiment-method}
 \alias{isInTissue,VisiumExperiment-method}
+\alias{isInTissue}
 \title{isInTissue}
 \usage{
 \S4method{isInTissue}{VisiumExperiment}(x)
@@ -17,5 +18,8 @@ returns a mask of TRUE/FALSE Barcodes spots, indicating which
 ones are in tissue and which ones are not.
 }
 \examples{
-TBD
+ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+                         "ve.RDS"), package="SpatialExperiment"))
+isInTissue(ve)
+sum(isInTissue(ve))
 }
