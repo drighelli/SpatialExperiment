@@ -107,7 +107,6 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
 #'
 #' @return a DataFrame with the spatial coordinates.
 #' @export
-#' @aliases spatialCoords
 #' @examples
 #' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
 #'                          "ve.RDS"), package="SpatialExperiment"))
@@ -124,7 +123,6 @@ setMethod(f="spatialCoords", signature="VisiumExperiment", function(x)
 #' @param value a DataFrame of spatial coordinates
 #'
 #' @export
-#' @aliases spatialCoords<-
 #' @examples
 #' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
 #'                          "ve.RDS"), package="SpatialExperiment"))

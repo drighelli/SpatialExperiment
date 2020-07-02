@@ -4,6 +4,7 @@
 \name{SpatialExperiment-class}
 \alias{SpatialExperiment-class}
 \alias{SpatialExperiment}
+\alias{coerce,SingleCellExperiment,SpatialExperiment-method}
 \title{The SpatialExperiment class}
 \usage{
 SpatialExperiment(..., spatialCoords = data.frame())

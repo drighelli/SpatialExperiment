@@ -7,7 +7,9 @@
 \S4method{checkSpatialCoords}{SpatialExperiment}(se, spatialCoords = DataFrame())
 }
 \arguments{
-\item{SpatialExperiment}{a SpatialExperiment class object}
+\item{se}{a SpatialExperiment class object}
+
+\item{spatialCoords}{a DataFrame with spatial coordinates (x,y,ID/Barcodes)}
 }
 \value{
 the SpatialExperiment class object passed as input.

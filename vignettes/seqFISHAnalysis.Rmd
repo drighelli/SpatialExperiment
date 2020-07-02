@@ -10,12 +10,8 @@ vignette: >
     %\VignetteEncoding{UTF-8}
     %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-    chunk_output_type: console
+    chunk_output_type: inline
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # Loading data and libraries
 
@@ -79,16 +75,6 @@ show(sce)
 
 # SpatialExperiment package
 
-<!-- ## Installation -->
-
-<!-- We install the SpatialExperiment package which is available through the github/drighelli -->
-<!-- repository on spatialExperiment branch. -->
-
-<!-- ```{r} -->
-<!-- library(devtools) -->
-
-<!-- install_github("drighelli/SpatialExperiment", ref="spatialExperiment") -->
-<!-- ``` -->
 
 ## Class handling
 
@@ -101,28 +87,6 @@ se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
                         assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
                         spatialCoords=fishCoordinates)
 show(se)
-library(MultiAssayExperiment)
-mse <-  MultiAssayExperiment::MultiAssayExperiment(
-                                    experiments=c("seqFISH"=se, "scRNAseq"=sce))
-```
-
-```{r}
-library(devtools)
-install_github("drighelli/SpatialExperiment", ref="spatialExperiment") 
-library(SpatialExperiment)
-library(SingleCellMultiModal)
-
-experiments(mse)$seqFISH
-experiments(mse)$scRNAseq
-
-experiments(mse)
-rownames(mse)
-sampleMap(mse)
-head(assay(mse, "seqFISH"))[,1:4]
-head(assay(mse, "scRNAseq"))[,1:4]
-
-
-
 ```
 
 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{spatialCoords,VisiumExperiment-method}
 \alias{spatialCoords,VisiumExperiment-method}
-\alias{spatialCoords}
 \title{spatialCoords-getter}
 \usage{
 \S4method{spatialCoords}{VisiumExperiment}(x)

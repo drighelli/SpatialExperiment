@@ -2,7 +2,6 @@
 % Please edit documentation in R/SpatialExperimentMethods.R
 \name{spatialCoords<-,SpatialExperiment-method}
 \alias{spatialCoords<-,SpatialExperiment-method}
-\alias{spatialCoords<-}
 \title{spatialCoords-setter}
 \usage{
 \S4method{spatialCoords}{SpatialExperiment}(x) <- value

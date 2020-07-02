@@ -1,6 +1,7 @@
 #' checkSpatialCoords
 #' @description checks if all the spatial parameters have the right fields.
-#' @param SpatialExperiment a SpatialExperiment class object
+#' @param se a SpatialExperiment class object
+#' @param spatialCoords a DataFrame with spatial coordinates (x,y,ID/Barcodes)
 #' @importFrom SingleCellExperiment colData int_colData int_colData<-
 #' @importFrom S4Vectors DataFrame
 #' @importFrom methods is as 
@@ -11,7 +12,10 @@ setMethod(f="checkSpatialCoords",
           definition=function(se, spatialCoords=DataFrame())
 {
     stopifnot(is(se, "SpatialExperiment"))
-    stopifnot( (sum( c("Barcodes", "ID") %in% colnames(colData(se))) != 0)) 
+    if(sum(dim(spatialCoords) == c(0,0)) != 2)
+    {
+        stopifnot( (sum( c("Barcodes", "ID") %in% colnames(colData(se))) != 0)) 
+    }
     
     if(class(spatialCoords) == "data.frame") 
     {
@@ -60,7 +64,6 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' @param value a DataFrame with the new spatial coordinates to set.
 #'
 #' @export
-#' @aliases spatialCoords<-
 #' @examples
 #' spatialDataFile <- system.file(file.path("extdata", "seqFISH",
 #'     "seqFISH.RData"), package="SpatialExperiment")
@@ -74,20 +77,57 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' spatialCoords(se) <- fakeFishCoords
 #' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
-                function(x, value)
+                function(x, value=DataFrame())
 {
-    stopifnot(("ID" %in% colnames(value)),
-                ("Irrelevant" %in% colnames(value)),
-                ("x" %in% colnames(value)),
-                ("y" %in% colnames(value)))
-    cDataIdx <- match(value$ID, int_colData(x)$ID)
-    
-    for (col in colnames(value))
+    if(is(value, "data.frame")) 
     {
-        colidx <- base::which(colnames(int_colData(x)) == col)
-        validx <- base::which(colnames(value) == col)
-        int_colData(x)[cDataIdx, colidx] <- value[,validx]
+        value <- DataFrame(value)
     }
+                    
+    dm <- dim(int_colData(x))
+    ## Case of base SingleCellExperiment 
+    ## (minimal dimensions are #ngenes x 3 with empty values)
+    if(dm[2] == 3) 
+    {
+        int_colData(x) <- cbind(int_colData(x),value)
+        x@int_spcIdx <- base::which(colnames(int_colData(x)) %in% 
+                                        colnames(value))
+    } else { ## case of already present spatial coordinates
+        
+        cDataIdx1 <- which(colnames(value) %in% colnames(int_colData(x)))
+        if(length(cDataIdx1) == 0)
+        {
+            stop("Spatial coordinates colnames differs from the stored ones!")
+        } else {
+            stopifnot(("ID" %in% colnames(value)))
+            cDataIdx <- match(value$ID, int_colData(x)$ID)
+            for (col in colnames(value))
+            {
+                colidx <- base::which(colnames(int_colData(x)) == col)
+                validx <- base::which(colnames(value) == col)
+                int_colData(x)[cDataIdx, colidx] <- value[,validx]
+            }
+        }
+    }  
+        # for (col in colnames(value))
+        # {
+        #     colidx <- base::which(colnames(int_colData(x)) == col)
+        #     validx <- base::which(colnames(value) == col)
+        #     int_colData(x)[cDataIdx, colidx] <- value[,validx]
+        # }
+    # }
+    # stopifnot(("ID" %in% colnames(value)),
+    #             ("Irrelevant" %in% colnames(value)),
+    #             ("x" %in% colnames(value)),
+    #             ("y" %in% colnames(value)))
+    # cDataIdx <- match(value$ID, int_colData(x)$ID)
+    # 
+    # for (col in colnames(value))
+    # {
+    #     colidx <- base::which(colnames(int_colData(x)) == col)
+    #     validx <- base::which(colnames(value) == col)
+    #     int_colData(x)[cDataIdx, colidx] <- value[,validx]
+    # }
     
     return(x)
 })
