@@ -20,6 +20,5 @@ sets the scale factors in a VisiumExperiment class object.
 }
 \examples{
 
-ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
-                         "ve.RDS"), package="SpatialExperiment"))
+example(VisiumExperiment)
 }

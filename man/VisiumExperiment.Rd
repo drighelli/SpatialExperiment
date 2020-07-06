@@ -4,17 +4,16 @@
 \name{VisiumExperiment-class}
 \alias{VisiumExperiment-class}
 \alias{VisiumExperiment}
+\alias{coerce,SpatialExperiment,VisiumExperiment-method}
 \title{The VisiumExperiment class}
 \usage{
-VisiumExperiment(..., spatialCoords = data.frame(), scaleFactors = list())
+VisiumExperiment(..., scaleFactors = list())
 }
 \arguments{
 \item{...}{arguments to be passed to the \code{\link{SpatialExperiment}} 
 constructor to fill the slots of the base class.}
 
-\item{spatialCoords}{the 10x Visium spatial coordinates}
-
-\item{scaleFactors}{the 10x Visium image scale factors}
+\item{scaleFactors}{the 10x Visium image scale factors.}
 }
 \description{
 The VisiumExperiment class is designed to represent 10x Visium spatial 
@@ -61,7 +60,7 @@ scalefactors <- rjson::fromJSON(file=scaleFile)
 ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
                          assays=c(counts=countsEx),
                          spatialCoords=tissPosEx,
-                         scaleFactors=scalefactors)
+                         scaleFactors=scalefactors, cellColID="Barcodes")
 
 ve
 }

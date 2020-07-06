@@ -1,14 +1,15 @@
-#' @export
 #' @rdname SpatialExperiment
+#' @slot int_cellID character.
 #' @slot int_spcIdx integer. 
 #' 
 #' @importClassesFrom S4Vectors DataFrame
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
         slots=c(
+            int_cellID="character",
             int_spcIdx="integer"
         ),
-        contains = "SingleCellExperiment"#,
+        contains = "SingleCellExperiment"
 )
 
 
@@ -23,63 +24,82 @@ setClass("SpatialExperiment",
 #'
 #' @param ... arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #' constructor to fill the slots of the base class.
-#' @param spatialCoords the 10x Visium spatial coordinates
+#' @param spatialCoords the spatial coordinates 
+#' @param cellColID the name of the spatialCoords column where the 
+#' cell identifiers are stored (default is "Cell_ID").
 #' 
 #' @author Dario Righelli
 #' @docType class
 #' @aliases
-#' coerce,SingleCellExperiment,SpatialExperiment-method
+#' coerce,SingleCellExperiment,SpatialExperiment-method 
 #' @export
 #' @importClassesFrom S4Vectors DataFrame
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
+#' @importFrom SingleCellExperiment SingleCellExperiment
 #' @examples
 #' ## building random seqFISH data coordinates
-#' fishCoords <- data.frame(ID=paste0("cell",c(1:30)), 
-#'                 Irrelevant=100, 
+#' fishCoordinates <- data.frame(Cell_ID=paste0("cell",c(1:30)),
+#'                 Irrelevant=100,
 #'                 x=sample(c(-4000:4000), size=30, replace=TRUE),
 #'                 y=sample(c(-4000:4000), size=30, replace=TRUE))
-#' ## building random seqFISH cell labels 
-#' fishCellLabels <- data.frame(ID=paste0("cell",c(1:30)), 
-#'                              class="neuron", 
+#' ## building random seqFISH cell labels
+#' fishCellLabels <- data.frame(Cell_ID=paste0("cell",c(1:30)),
+#'                              class="neuron",
 #'                              classID=sample(c(0:5), size=30, replace=TRUE))
 #' ## building random seqFISH count matrix
 #' fishCounts <- matrix(sample(0:100, size=(30*30), replace=TRUE),
 #'                      nrow=30, ncol=30,
-#'                      dimnames=list(paste0("gene",c(1:30)), 
+#'                      dimnames=list(paste0("gene",c(1:30)),
 #'                                    paste0("cell",c(1:30))))
 #' ## creating SpatialExperiment object
 #' se <- SpatialExperiment(rowData=rownames(fishCounts),
 #'                         colData=fishCellLabels,
 #'                         assays=SimpleList(counts=as.matrix(fishCounts)),
 #'                         spatialCoords=fishCoordinates)
-SpatialExperiment <- function(..., spatialCoords=data.frame())
+#' ##################
+#' ## Otherwise, it's possible to provide user-defined cell identifier column,
+#' ## by using the cellColID argument
+#' fishCoordinates <- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
+#'                 Irrelevant=100, 
+#'                 x=sample(c(-4000:4000), size=30, replace=TRUE),
+#'                 y=sample(c(-4000:4000), size=30, replace=TRUE))
+#'                 
+#' fishCellLabels <- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
+#'                              class="neuron", 
+#'                              classID=sample(c(0:5), size=30, replace=TRUE))
+#' se <- SpatialExperiment(rowData=rownames(fishCounts),
+#'                         colData=fishCellLabels,
+#'                         assays=SimpleList(counts=as.matrix(fishCounts)),
+#'                         spatialCoords=fishCoordinates,
+#'                         cellColID="MyCell_ID")
+#'                         
+SpatialExperiment <- function(..., spatialCoords=data.frame(), 
+                             cellColID="Cell_ID")
 {
-    args <- list(...)
-    stopifnot(sum(c("rowData", "colData", "assays") %in% names(args)) == 3)
- 
-    sce <- SingleCellExperiment::SingleCellExperiment(
-            rowData=as(args$rowData, "DataFrame"),
-            colData=as(args$colData, "DataFrame"),
-            assays=args$assays)
-    return(.sce_to_se(sce, spatialCoords=spatialCoords))
+    sce <- SingleCellExperiment::SingleCellExperiment(...)
+    return(.sce_to_se(sce, spatialCoords=spatialCoords, cellColID=cellColID))
 }
 
-#' coerce
-#' @description Converts a SingleCellExperiment into a SpatialExperiment
-#' @param sce a SingleCellExperiment object instance
-#' @importFrom S4Vectors DataFrame
+#' @importClassesFrom S4Vectors DataFrame
+#' @importFrom S4Vectors DataFrame isEmpty
 #' @importFrom methods new
-.sce_to_se <- function(sce, spatialCoords=DataFrame()) 
+.sce_to_se <- function(sce, spatialCoords=DataFrame(), cellColID="Cell_ID") 
 {
-    se <- new("SpatialExperiment", sce)
-    spatialCoords(se) <- spatialCoords
-    # .Object <- checkSpatialCoords(se, spatialCoords)
+    old <- S4Vectors:::disableValidity()
+    if (!isTRUE(old)) {
+        S4Vectors:::disableValidity(TRUE)
+        on.exit(S4Vectors:::disableValidity(old))
+    }
+    se <- new("SpatialExperiment", sce) 
+    ## here it calls the validity ?
+    se@int_cellID=cellColID
+    if(!sum(S4Vectors::isEmpty(spatialCoords))) 
+        spatialCoords(se) <- spatialCoords
     return(se)
 }
-
 #' @exportMethod coerce
-#' @importClassesFrom SingleCellExperiment SingleCellExperiment 
-setAs("SingleCellExperiment", "SpatialExperiment", function(from) 
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
+setAs(from="SingleCellExperiment", to="SpatialExperiment", function(from) 
 {
     .sce_to_se(from)
 })
@@ -106,8 +126,9 @@ setClass("VisiumExperiment",
 #'
 #' @param ... arguments to be passed to the \code{\link{SpatialExperiment}} 
 #' constructor to fill the slots of the base class.
-#' @param spatialCoords the 10x Visium spatial coordinates
-#' @param scaleFactors the 10x Visium image scale factors
+#' @param scaleFactors the 10x Visium image scale factors.
+#' @aliases
+#' coerce,SpatialExperiment,VisiumExperiment-method
 #' @importFrom methods new
 #' @importClassesFrom S4Vectors DataFrame
 #' @author Dario Righelli
@@ -144,30 +165,26 @@ setClass("VisiumExperiment",
 #' ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
 #'                          assays=c(counts=countsEx),
 #'                          spatialCoords=tissPosEx,
-#'                          scaleFactors=scalefactors)
+#'                          scaleFactors=scalefactors, cellColID="Barcodes")
 #' 
 #' ve
-VisiumExperiment <- function(..., spatialCoords=data.frame(), 
-                             scaleFactors=list())
+VisiumExperiment <- function(..., scaleFactors=list())
 {
-    args <- list(...)
-    stopifnot(sum(c("rowData", "colData", "assays") %in% names(args)) == 3)
-    se <- SpatialExperiment::SpatialExperiment(
-        rowData=as(args$rowData, "DataFrame"),
-        colData=as(args$colData, "DataFrame"),
-        assays=args$assays)
-    return(.se_to_ve(se, spatialCoords, scaleFactors=scaleFactors))
+    se <- SpatialExperiment::SpatialExperiment(...)
+    return(.se_to_ve(se, scaleFactors=scaleFactors))
 }
 
-#' coerce
-#' @description Converts a SpatialExperiment to a VisiumExperiment
 #' @importFrom methods new
-.se_to_ve <- function(se, spatialCoords, scaleFactors=NULL) 
+.se_to_ve <- function(se, scaleFactors=list()) 
 {
+    old <- S4Vectors:::disableValidity()
+    if (!isTRUE(old)) {
+        S4Vectors:::disableValidity(TRUE)
+        on.exit(S4Vectors:::disableValidity(old))
+    }
     ve <- new("VisiumExperiment", se)
-    .Object <- checkVisiumSpatialCoords(ve, spatialCoords)
-    .Object <- addScaleFactors(.Object, scaleFactors)
-    return(.Object)
+    if(length(scaleFactors)>0) scaleFactors(ve) <- scaleFactors
+    return(ve)
 }
 
 #' @exportMethod coerce

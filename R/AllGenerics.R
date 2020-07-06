@@ -1,15 +1,14 @@
-#' @export
-setGeneric(name="addScaleFactors",
-        def=function(ve, scaleFactors=NULL) standardGeneric("addScaleFactors"))
-#' @export
-setGeneric(name="checkSpatialCoords", def=function(se, spatialCoords) 
-    standardGeneric("checkSpatialCoords"))
-#' @export
-setGeneric(name="checkVisiumSpatialCoords",
-    def=function(ve, spatialCoords) 
-    standardGeneric("checkVisiumSpatialCoords"))
+#  @export
+# setGeneric(name="checkSpatialCoords", def=function(se, spatialCoords) 
+#     standardGeneric("checkSpatialCoords"))
+#  @export
+# setGeneric(name="checkVisiumSpatialCoords",
+#     def=function(ve, spatialCoords) 
+#     standardGeneric("checkVisiumSpatialCoords"))
 
 #### Getters/Setters
+#' @export
+setGeneric("getCellID", function(x) standardGeneric("getCellID"))
 #' @export
 setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
 #' @export
@@ -19,10 +18,10 @@ setGeneric("scaleFactors<-", function(x, value)
 setGeneric(name="spatialCoords", def=function(x) 
     standardGeneric("spatialCoords"))
 #' @export
-setGeneric(name="spatialCoords<-", def=function(x, value) 
+setGeneric("spatialCoords<-", function(x, value)
     standardGeneric("spatialCoords<-"))
 #' @export
-setGeneric(name="isInTissue", def=function(x) standardGeneric("isInTissue"))
+setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
 #' @export
-setGeneric(name="spatialCoordsNames", def=function(x) 
+setGeneric("spatialCoordsNames", function(x) 
     standardGeneric("spatialCoordsNames"))

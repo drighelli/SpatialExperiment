@@ -46,11 +46,11 @@ Loading features and count matrix.
 barcodesFile <- system.file(file.path("extdata", "10x_visium",
                             "barcodes.tsv"), package="SpatialExperiment")
 barcodesEx <- read.csv(barcodesFile, sep="\t", 
-                     header=FALSE, col.names=c("Barcodes"))
+                     header=FALSE, col.names=c("Cell_ID"))
 featuresFile <- system.file(file.path("extdata", "10x_visium",
                             "features.tsv"), package="SpatialExperiment")
 featuresEx <- read.csv(featuresFile, sep="\t", 
-                     header=FALSE, col.names=c("Barcodes", "Feature_name", 
+                     header=FALSE, col.names=c("Feature_ID", "Feature_name", 
                                                "Feature_type"))
 
 countsFile <- system.file(file.path("extdata", "10x_visium",
@@ -69,7 +69,7 @@ posFile <- system.file(file.path("extdata", "10x_visium",
                         package="SpatialExperiment")
 tissPosEx <- read.csv(posFile, 
                         sep="\t", header=FALSE, 
-                        col.names=c("Barcodes", "in_tissue", 
+                        col.names=c("Cell_ID", "in_tissue", 
                                     "array_row", "array_col",
                                     "pxl_col_in_fullres", "pxl_row_in_fullres"))
 ```
@@ -95,9 +95,9 @@ Creating VisiumExperiment class within 10x Visium data and testing the show meth
 
 ```{r}
 ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx, 
-                           assays=c(counts=countsEx), 
-                           spatialCoords=tissPosEx,
-                           scaleFactors=scalefactors)
+                            assays=c(counts=countsEx), 
+                            spatialCoords=tissPosEx,
+                            scaleFactors=scalefactors)
 ve
 ```
 
@@ -119,7 +119,7 @@ by the tissue.
 
 ```{r}
 sum(isInTissue(ve))
-# ve[isInTissue(ve)] ## subset not defined yet
+ve[isInTissue(ve)]
 ```
 
 ```{r}

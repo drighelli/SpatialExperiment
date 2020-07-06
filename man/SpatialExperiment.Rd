@@ -7,13 +7,16 @@
 \alias{coerce,SingleCellExperiment,SpatialExperiment-method}
 \title{The SpatialExperiment class}
 \usage{
-SpatialExperiment(..., spatialCoords = data.frame())
+SpatialExperiment(..., spatialCoords = data.frame(), cellColID = "Cell_ID")
 }
 \arguments{
 \item{...}{arguments to be passed to the \code{\link{SingleCellExperiment}} 
 constructor to fill the slots of the base class.}
 
-\item{spatialCoords}{the 10x Visium spatial coordinates}
+\item{spatialCoords}{the spatial coordinates}
+
+\item{cellColID}{the name of the spatialCoords column where the 
+cell identifiers are stored (default is "Cell_ID").}
 }
 \description{
 The SpatialExperiment class is designed to represent 10x Visium spatial 
@@ -26,31 +29,48 @@ coordinates and its scale factors.
 \section{Slots}{
 
 \describe{
+\item{\code{int_cellID}}{character.}
+
 \item{\code{int_spcIdx}}{integer.}
 }}
 
 \examples{
-fishCoordFile <- system.file(file.path("extdata", "seqFISH",
-                               "fcortex.coordinates.txt"), 
-                               package="SpatialExperiment")
-fishCoordinates <- read.table(fishCoordFile, header=FALSE, sep=" ")
-colnames(fishCoordinates) <- c("ID", "Irrelevant", "x", "y")
-
-fishCellLabsFile <- system.file(file.path("extdata", "seqFISH", 
-                                         "seqfish_cell_labels.tsv"),
-                            package="SpatialExperiment")
-fishCellLabels <- read.table(file=fishCellLabsFile, header=FALSE, sep="\t")
-colnames(fishCellLabels) <- c("ID", "cluster", "class", "classID", 
-                              "Irrelevant", "Prob")
-fishFeatCountsFile <- system.file(file.path("extdata", "seqFISH",
-                             "seqfish_normalized_cortex_b2_testing.txt"), 
-                             package="SpatialExperiment")
-fishFeaturesCounts <- read.table(file=fishFeatCountsFile, 
-                                 header=FALSE, sep="\t", row.names=1)
- se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
-                     colData=fishCellLabels,
-                     assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
-                     spatialCoords=fishCoordinates) 
+## building random seqFISH data coordinates
+fishCoordinates <- data.frame(Cell_ID=paste0("cell",c(1:30)),
+                Irrelevant=100,
+                x=sample(c(-4000:4000), size=30, replace=TRUE),
+                y=sample(c(-4000:4000), size=30, replace=TRUE))
+## building random seqFISH cell labels
+fishCellLabels <- data.frame(Cell_ID=paste0("cell",c(1:30)),
+                             class="neuron",
+                             classID=sample(c(0:5), size=30, replace=TRUE))
+## building random seqFISH count matrix
+fishCounts <- matrix(sample(0:100, size=(30*30), replace=TRUE),
+                     nrow=30, ncol=30,
+                     dimnames=list(paste0("gene",c(1:30)),
+                                   paste0("cell",c(1:30))))
+## creating SpatialExperiment object
+se <- SpatialExperiment(rowData=rownames(fishCounts),
+                        colData=fishCellLabels,
+                        assays=SimpleList(counts=as.matrix(fishCounts)),
+                        spatialCoords=fishCoordinates)
+##################
+## Otherwise, it's possible to provide user-defined cell identifier column,
+## by using the cellColID argument
+fishCoordinates <- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
+                Irrelevant=100, 
+                x=sample(c(-4000:4000), size=30, replace=TRUE),
+                y=sample(c(-4000:4000), size=30, replace=TRUE))
+                
+fishCellLabels <- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
+                             class="neuron", 
+                             classID=sample(c(0:5), size=30, replace=TRUE))
+se <- SpatialExperiment(rowData=rownames(fishCounts),
+                        colData=fishCellLabels,
+                        assays=SimpleList(counts=as.matrix(fishCounts)),
+                        spatialCoords=fishCoordinates,
+                        cellColID="MyCell_ID")
+                        
 }
 \author{
 Dario Righelli

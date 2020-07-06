@@ -10,7 +10,7 @@ vignette: >
     %\VignetteEncoding{UTF-8}
     %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
-    chunk_output_type: inline
+    chunk_output_type: console
 ---
 
 # Loading data and libraries
@@ -30,13 +30,13 @@ fishCoordFile <- system.file(file.path("extdata", "seqFISH",
                             "fcortex.coordinates.txt"), 
                             package="SpatialExperiment")
 fishCoordinates <- read.table(fishCoordFile, header=FALSE, sep=" ")
-colnames(fishCoordinates) <- c("ID", "Irrelevant", "x", "y")
+colnames(fishCoordinates) <- c("Cell_ID", "Irrelevant", "x", "y")
 
 fishCellLabsFile <- system.file(file.path("extdata", "seqFISH", 
                             "seqfish_cell_labels.tsv"),
                             package="SpatialExperiment")
 fishCellLabels <- read.table(file=fishCellLabsFile, header=FALSE, sep="\t")
-colnames(fishCellLabels) <- c("ID", "cluster", "class", "classID", 
+colnames(fishCellLabels) <- c("Cell_ID", "cluster", "class", "classID", 
                                 "Irrelevant", "Prob")
 fishFeatCountsFile <- system.file(file.path("extdata", "seqFISH",
                             "seqfish_normalized_cortex_b2_testing.txt"), 
@@ -107,7 +107,7 @@ showing that the y coordinates are identical to the x ones.
 
 ```{r}
 fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
-colnames(fakeFishCoords) <- c("ID", "Irrelevant", "x", "y")
+colnames(fakeFishCoords) <- c("Cell_ID", "Irrelevant", "x", "y")
 spatialCoords(se) <- fakeFishCoords
 spatialCoords(se)
 ```

@@ -18,12 +18,6 @@ a getter method which returns the spatial coordinates previously
 stored in a SpatialExperiment class object.
 }
 \examples{
-spatialDataFile <- system.file(file.path("extdata", "seqFISH",
-    "seqFISH.RData"), package="SpatialExperiment")
-load(spatialDataFile)
-se <- SpatialExperiment(rowData=rownames(fishFeaturesCounts),
-    colData=fishCellLabels,
-    assays=SimpleList(counts=as.matrix(fishFeaturesCounts)),
-    spatialCoords=fishCoordinates)
+example(SpatialExperiment)
 spatialCoords(se)
 }
