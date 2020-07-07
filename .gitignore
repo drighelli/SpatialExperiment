@@ -1,6 +1,15 @@
+Meta
+doc
 .Rproj.user
-.Rproj
 .Rhistory
 .RData
 .Ruserdata
 .DS_Store
+inst/doc
+src/*\.*o
+config\.status
+config\.log
+DEScan2_cache
+Makevars
+._*
+DEScan2.Rproj
