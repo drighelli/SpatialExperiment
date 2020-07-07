@@ -51,7 +51,12 @@ jobs:
         run: |
           install.packages('remotes')
         shell: Rscript {0}
-
+        
+      - name: Install rmarkdown
+        run: |
+          install.packages('rmarkdown')
+        shell: Rscript {0}
+        
       - name: Set BiocManager version
         if: matrix.config.image == null
         run: |
