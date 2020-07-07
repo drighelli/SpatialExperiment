@@ -55,6 +55,8 @@ jobs:
       - name: Install rmarkdown
         run: |
           install.packages('rmarkdown')
+          install.packages('BiocManager')
+          BiocManager::install("BiocStyle")
         shell: Rscript {0}
         
       - name: Set BiocManager version
@@ -62,7 +64,6 @@ jobs:
         run: |
           install.packages('BiocManager')
           BiocManager::install(version = "${{ matrix.config.bioc }}", ask = FALSE)
-          BiocManager::install("BiocStyle")
         shell: Rscript {0}
 
       - name: Query dependencies
