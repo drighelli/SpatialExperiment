@@ -18,6 +18,9 @@ constructor to fill the slots of the base class.}
 \item{cellColID}{the name of the spatialCoords column where the 
 cell identifiers are stored (default is "Cell_ID").}
 }
+\value{
+none
+}
 \description{
 The SpatialExperiment class is designed to represent 10x Visium spatial 
 Gene Expression data.

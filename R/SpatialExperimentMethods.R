@@ -1,10 +1,13 @@
-
 #' getCellID
+#' @description returns the column name where the cell identifiers are be stored
+#' @param x a SpatialExperiment object instance
+#' @aliases getCellID
+#' @return the cellID
+#' @export
 #'
-#' @param SpatialExperiment A SpatialExperiment object
-#'
-#' @return the column name used for the Cell Identifiers 
-#' @keywords internal
+#' @examples
+#' example(SpatialExperiment)
+#' getCellID(se)
 setMethod(f="getCellID", signature="SpatialExperiment", function(x)
 {
     return(x@int_cellID)
@@ -32,6 +35,7 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' SpatialExperiment class object.
 #' @param x a SpatialExperiment class object
 #' @param value a DataFrame with the new spatial coordinates to set.
+#' @return none
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom methods is
 #' @aliases spatialCoords<-

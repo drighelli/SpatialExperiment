@@ -15,6 +15,9 @@ constructor to fill the slots of the base class.}
 
 \item{scaleFactors}{the 10x Visium image scale factors.}
 }
+\value{
+none
+}
 \description{
 The VisiumExperiment class is designed to represent 10x Visium spatial 
 Gene Expression data.

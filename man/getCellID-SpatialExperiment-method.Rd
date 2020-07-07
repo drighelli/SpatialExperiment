@@ -2,17 +2,21 @@
 % Please edit documentation in R/SpatialExperimentMethods.R
 \name{getCellID,SpatialExperiment-method}
 \alias{getCellID,SpatialExperiment-method}
+\alias{getCellID}
 \title{getCellID}
 \usage{
 \S4method{getCellID}{SpatialExperiment}(x)
 }
 \arguments{
-\item{SpatialExperiment}{A SpatialExperiment object}
+\item{x}{a SpatialExperiment object instance}
 }
 \value{
-the CellID name
+the cellID
 }
 \description{
-getCellID
+returns the column name where the cell identifiers are be stored
 }
-\keyword{internal}
+\examples{
+example(SpatialExperiment)
+getCellID(se)
+}

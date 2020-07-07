@@ -12,6 +12,9 @@
 
 \item{value}{a DataFrame with the new spatial coordinates to set.}
 }
+\value{
+none
+}
 \description{
 a setter method which sets/replaces the spatial coordinate in a 
 SpatialExperiment class object.

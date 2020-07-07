@@ -15,17 +15,10 @@ Description: Defines a S4 classes for storing data for spatial experiments, such
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-biocViews: DataRepresentation, DataImport, Infrastructure, SingleCell
-Depends: 
-    R (>= 4.0.0),
-    methods,
-    SingleCellExperiment
-Imports: 
-    S4Vectors
-Suggests:
-    knitr,
-    rjson,
-    Matrix
-VignetteBuilder:
-    knitr
+biocViews: DataRepresentation, DataImport, Infrastructure, SingleCell, 
+    ImmunoOncology
+Depends: R (>= 4.0.0), methods, SingleCellExperiment
+Imports: S4Vectors
+Suggests: testthat, knitr, rjson, Matrix
+VignetteBuilder: knitr
 RoxygenNote: 7.1.1

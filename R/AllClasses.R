@@ -27,7 +27,7 @@ setClass("SpatialExperiment",
 #' @param spatialCoords the spatial coordinates 
 #' @param cellColID the name of the spatialCoords column where the 
 #' cell identifiers are stored (default is "Cell_ID").
-#' 
+#' @return none
 #' @author Dario Righelli
 #' @docType class
 #' @aliases
@@ -127,6 +127,7 @@ setClass("VisiumExperiment",
 #' @param ... arguments to be passed to the \code{\link{SpatialExperiment}} 
 #' constructor to fill the slots of the base class.
 #' @param scaleFactors the 10x Visium image scale factors.
+#' @return none
 #' @aliases
 #' coerce,SpatialExperiment,VisiumExperiment-method
 #' @importFrom methods new
