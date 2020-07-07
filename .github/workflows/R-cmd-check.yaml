@@ -19,13 +19,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - { os: windows-latest, r: 'release', bioc: '3.11'}
-        - { os: macOS-latest, r: 'release', bioc: '3.11'}
+        - { os: windows-latest, r: 'release', bioc: 'devel'}
         - { os: macOS-latest, r: 'release', bioc: 'devel'}
-        - { os: ubuntu-16.04, r: 'release', bioc: '3.11', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+        - { os: macOS-latest, r: 'release', bioc: 'devel'}
+        - { os: ubuntu-16.04, r: 'release', bioc: 'devel', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
         - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:devel'}
-        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_11'}
-        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_10'}
+#        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_11'}
+#        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_10'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -62,6 +62,7 @@ jobs:
         run: |
           install.packages('BiocManager')
           BiocManager::install(version = "${{ matrix.config.bioc }}", ask = FALSE)
+          BiocManager::install("BiocStyle")
         shell: Rscript {0}
 
       - name: Query dependencies
