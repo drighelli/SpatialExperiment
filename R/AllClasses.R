@@ -97,8 +97,10 @@ SpatialExperiment <- function(..., spatialCoords=data.frame(),
         spatialCoords(se) <- spatialCoords
     return(se)
 }
+
 #' @exportMethod coerce
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
+#' @import SingleCellExperiment
 setAs(from="SingleCellExperiment", to="SpatialExperiment", function(from) 
 {
     .sce_to_se(from)
