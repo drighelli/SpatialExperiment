@@ -80,7 +80,7 @@ SpatialExperiment <- function(..., spatialCoords=data.frame(),
     return(.sce_to_se(sce, spatialCoords=spatialCoords, cellColID=cellColID))
 }
 
-#' @importClassesFrom S4Vectors DataFrame
+#' @importClassesFrom S4Vectors DataFrame disabeValidity
 #' @importFrom S4Vectors DataFrame isEmpty
 #' @importFrom methods new
 .sce_to_se <- function(sce, spatialCoords=DataFrame(), cellColID="Cell_ID") 
