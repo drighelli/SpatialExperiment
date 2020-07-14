@@ -28,6 +28,7 @@ setMethod(f="getCellID", signature="SpatialExperiment", function(x)
 setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 {
     return(int_colData(x)[, x@int_spcIdx])
+    
 })
 
 #' spatialCoords-setter
