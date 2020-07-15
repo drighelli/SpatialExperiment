@@ -70,15 +70,15 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
             x@int_spcIdx <- base::which(colnames(int_colData(x)) %in% 
                                             colnames(value))
         } else { ## case of already present spatial coordinates
-            cDataIdx1 <- which(colnames(value) %in% colnames(int_colData(x)))
-            if(length(cDataIdx1) == 0)
-            {
-                stop(paste0("Spatial coordinates colnames differ from the ", 
-                            "stored ones. Given colnames are ",
-                            paste0(colnames(value), collapse=" "),
-                            ". Already present are: ", 
-                            paste0(colnames(int_colData(x)), collapse=" "))
-            } else {
+            # cDataIdx1 <- which(colnames(int_colData(x)) %in% colnames(value) )
+            # if(length(cDataIdx1) == 0)
+            # {
+            #     stop(paste0("Spatial coordinates colnames differ from the ", 
+            #                 "stored ones. Given colnames are ",
+            #                 paste0(colnames(value), collapse=" "),
+            #                 ". Already present are: ", 
+            #                 paste0(colnames(int_colData(x)), collapse=" "))
+            # } else {
                 cDataIdx <- match(value[[x@int_cellID]], 
                                 int_colData(x)[[x@int_cellID]])
                 for (col in colnames(value))
@@ -87,7 +87,7 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
                     validx <- base::which(colnames(value) == col)
                     int_colData(x)[cDataIdx, colidx] <- value[,validx]
                 }
-            }
+            # }
         }
     } else {
         stop("Please specify a different identifier")
