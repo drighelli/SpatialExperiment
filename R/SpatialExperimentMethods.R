@@ -74,7 +74,10 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
             if(length(cDataIdx1) == 0)
             {
                 stop(paste0("Spatial coordinates colnames differ from the ", 
-                            "stored ones. Given colnames are ",colnames(value)))
+                            "stored ones. Given colnames are ",
+                            paste0(colnames(value), collapse=" "),
+                            ". Already present are: ", 
+                            paste0(colnames(int_colData(x)), collapse=" "))
             } else {
                 cDataIdx <- match(value[[x@int_cellID]], 
                                 int_colData(x)[[x@int_cellID]])
