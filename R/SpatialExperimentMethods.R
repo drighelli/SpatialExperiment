@@ -63,32 +63,27 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
         }
         dm <- dim(int_colData(x))
         ## Case of base SingleCellExperiment 
-        ## (minimal dimensions are #ngenes x 3 with empty values)
-        if(dm[2] == 3) 
+        ## (minimal dimensions are #ngenes x 2 with empty values)
+        if(dm[2] == 2) 
         {
             int_colData(x) <- cbind(int_colData(x),value)
             x@int_spcIdx <- base::which(colnames(int_colData(x)) %in% 
                                             colnames(value))
         } else { ## case of already present spatial coordinates
-            int_colData(x)[,x@int_spIdx] <- value
-            # cDataIdx1 <- which(colnames(int_colData(x)) %in% colnames(value) )
-            # if(length(cDataIdx1) == 0)
-            # {
-            #     stop(paste0("Spatial coordinates colnames differ from the ", 
-            #                 "stored ones. Given colnames are ",
-            #                 paste0(colnames(value), collapse=" "),
-            #                 ". Already present are: ", 
-            #                 paste0(colnames(int_colData(x)), collapse=" "))
-            # } else {
-                # cDataIdx <- match(value[[x@int_cellID]], 
-                #                 int_colData(x)[[x@int_cellID]])
-                # for (col in colnames(value))
-                # {
-                #     colidx <- base::which(colnames(int_colData(x)) == col)
-                #     validx <- base::which(colnames(value) == col)
-                #     int_colData(x)[cDataIdx, colidx] <- value[,validx]
-                # }
-            # }
+            cDataIdx1 <- which(colnames(int_colData(x)) %in% colnames(value) )
+            if(length(cDataIdx1) == 0)
+            {
+                stop("Spatial coordinates colnames differ from the stored ones")
+            } else {
+                cDataIdx <- match(value[[x@int_cellID]], 
+                                int_colData(x)[[x@int_cellID]])
+                for (col in colnames(value))
+                {
+                    colidx <- base::which(colnames(int_colData(x)) == col)
+                    validx <- base::which(colnames(value) == col)
+                    int_colData(x)[cDataIdx, colidx] <- value[,validx]
+                }
+            }
         }
     } else {
         stop("Please specify a different identifier")
