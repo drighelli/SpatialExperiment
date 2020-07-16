@@ -70,6 +70,7 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
             x@int_spcIdx <- base::which(colnames(int_colData(x)) %in% 
                                             colnames(value))
         } else { ## case of already present spatial coordinates
+            int_colData(x)[,x@int_spIdx] <- value
             # cDataIdx1 <- which(colnames(int_colData(x)) %in% colnames(value) )
             # if(length(cDataIdx1) == 0)
             # {
@@ -79,14 +80,14 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
             #                 ". Already present are: ", 
             #                 paste0(colnames(int_colData(x)), collapse=" "))
             # } else {
-                cDataIdx <- match(value[[x@int_cellID]], 
-                                int_colData(x)[[x@int_cellID]])
-                for (col in colnames(value))
-                {
-                    colidx <- base::which(colnames(int_colData(x)) == col)
-                    validx <- base::which(colnames(value) == col)
-                    int_colData(x)[cDataIdx, colidx] <- value[,validx]
-                }
+                # cDataIdx <- match(value[[x@int_cellID]], 
+                #                 int_colData(x)[[x@int_cellID]])
+                # for (col in colnames(value))
+                # {
+                #     colidx <- base::which(colnames(int_colData(x)) == col)
+                #     validx <- base::which(colnames(value) == col)
+                #     int_colData(x)[cDataIdx, colidx] <- value[,validx]
+                # }
             # }
         }
     } else {
