@@ -67,7 +67,7 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", function(x, v
 
         ## Case of base SingleCellExperiment
         ## (minimal dimensions are #ngenes x 3 with empty values)
-        if(dm[2] == 2)
+        if(dm[2] == 3)
         {
             int_colData(x) <- cbind(int_colData(x),value)
             x@int_spcIdx <- base::which(colnames(int_colData(x)) %in%
