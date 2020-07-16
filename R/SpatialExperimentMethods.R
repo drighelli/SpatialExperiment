@@ -83,13 +83,10 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", function(x, v
 
                 for (col in colnames(value))
                 {
-                    colidx <- base::which(colnames(colData(x)) == col)
+                    colidx <- base::which(colnames(int_colData(x)) == col)
                     validx <- base::which(colnames(value) == col)
                     int_colData(x)[cDataIdx, colidx] <- value[,validx]
                 }
-
-                x@int_spcIdx <- base::which(colnames(colData(x)) %in%
-                                                colnames(value))
             }
         }
     } else {
