@@ -63,6 +63,6 @@ setReplaceMethod(f="scaleFactors", signature="VisiumExperiment",
 #' sum(isInTissue(ve))
 setMethod(f="isInTissue", signature="VisiumExperiment", function(x)
 {
-    return( (int_colData(x)$in_tissue == 1) )
+    return( (int_colData(x)$spatial$in_tissue == 1) )
 })
 

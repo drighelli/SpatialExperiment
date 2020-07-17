@@ -29,7 +29,7 @@ test_that("Visium Experiment methods testing", {
     ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
                            assays=c(counts=countsEx),
                            spatialCoords=tissPosEx,
-                           scaleFactors=scalefactors, cellColID="Barcodes")
+                           scaleFactors=scalefactors)
     ## testing scale factors
     expect_identical(scalefactors, scaleFactors(ve))
     
