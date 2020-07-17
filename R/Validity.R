@@ -1,11 +1,6 @@
 .spe_validity <- function(object)
 {
     msg <- NULL
-    idx <- which( colnames(spatialCoords(object)) == object@int_cellID )
-    if(length(idx) == 0)
-    {
-        msg <- c(msg, "'cellID' not present in 'spatialCoords(object)'")
-    }
     
     if( length(msg) ) { return(msg) }
     

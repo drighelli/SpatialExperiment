@@ -1,18 +1,3 @@
-#' getCellID
-#' @description returns the column name where the cell identifiers are be stored
-#' @param x a SpatialExperiment object instance
-#' @aliases getCellID
-#' @return the cellID
-#' @export
-#'
-#' @examples
-#' example(SpatialExperiment)
-#' getCellID(se)
-setMethod(f="getCellID", signature="SpatialExperiment", function(x)
-{
-    return(x@int_cellID)
-})
-
 #' spatialCoords-getter
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
@@ -27,7 +12,7 @@ setMethod(f="getCellID", signature="SpatialExperiment", function(x)
 #' spatialCoords(se)
 setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 {
-    return(int_colData(x)[, x@int_spcIdx])
+    return(int_colData(x)$spatial)
     
 })
 
@@ -50,45 +35,12 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
                 function(x, value=DataFrame())
 {
-    if(is(value, "data.frame")) 
+    stopifnot(!sum(S4Vectors::isEmpty(value)))
+    if(!is(value, "DataFrame")) 
     {
         value <- DataFrame(value)
     }
-    if(x@int_cellID != "rownames")
-    {
-        if(!(x@int_cellID %in% colnames(value)))
-        {
-            stop(paste0("Spatial coordinates haven't the defined cellColID. ",
-                    "Expected: ", x@int_cellID))
-        }
-        dm <- dim(int_colData(x))
-        ## Case of base SingleCellExperiment 
-        ## (minimal dimensions are #ngenes x 2 with empty values)
-        if(dm[2] == 2) 
-        {
-            int_colData(x) <- cbind(int_colData(x),value)
-            x@int_spcIdx <- base::which(colnames(int_colData(x)) %in% 
-                                            colnames(value))
-        } else { ## case of already present spatial coordinates
-            cDataIdx1 <- which(colnames(int_colData(x)) %in% colnames(value) )
-            if(length(cDataIdx1) == 0)
-            {
-                stop("Spatial coordinates colnames differ from the stored ones")
-            } else {
-                cDataIdx <- match(value[[x@int_cellID]], 
-                                int_colData(x)[[x@int_cellID]])
-                for (col in colnames(value))
-                {
-                    colidx <- base::which(colnames(int_colData(x)) == col)
-                    validx <- base::which(colnames(value) == col)
-                    int_colData(x)[cDataIdx, colidx] <- value[,validx]
-                }
-            }
-        }
-    } else {
-        stop("Please specify a different identifier")
-    }
-    
+    int_colData(x)$spatial <- value
     return(x)
 })
 
@@ -106,5 +58,5 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
 #' spatialCoordsNames(se)
 setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 {
-    return(colnames(int_colData(x)[x@int_spcIdx]))
+    return(colnames(int_colData(x)$spatial))
 })

@@ -7,16 +7,13 @@
 \alias{coerce,SingleCellExperiment,SpatialExperiment-method}
 \title{The SpatialExperiment class}
 \usage{
-SpatialExperiment(..., spatialCoords = data.frame(), cellColID = "Cell_ID")
+SpatialExperiment(..., spatialCoords = data.frame())
 }
 \arguments{
 \item{...}{arguments to be passed to the \code{\link{SingleCellExperiment}} 
 constructor to fill the slots of the base class.}
 
 \item{spatialCoords}{the spatial coordinates}
-
-\item{cellColID}{the name of the spatialCoords column where the 
-cell identifiers are stored (default is "Cell_ID").}
 }
 \value{
 none
@@ -29,14 +26,6 @@ the same manner.
 In addition, the class supports the integration with 10x Visium spatial 
 coordinates and its scale factors.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{int_cellID}}{character.}
-
-\item{\code{int_spcIdx}}{integer.}
-}}
-
 \examples{
 ## building random seqFISH data coordinates
 fishCoordinates <- data.frame(Cell_ID=paste0("cell",c(1:30)),
@@ -71,8 +60,7 @@ fishCellLabels <- data.frame(MyCell_ID=paste0("cell",c(1:30)),
 se <- SpatialExperiment(rowData=rownames(fishCounts),
                         colData=fishCellLabels,
                         assays=SimpleList(counts=as.matrix(fishCounts)),
-                        spatialCoords=fishCoordinates,
-                        cellColID="MyCell_ID")
+                        spatialCoords=fishCoordinates)
                         
 }
 \author{

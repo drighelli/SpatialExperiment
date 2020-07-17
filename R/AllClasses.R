@@ -1,14 +1,8 @@
 #' @rdname SpatialExperiment
-#' @slot int_cellID character.
-#' @slot int_spcIdx integer. 
 #' 
 #' @importClassesFrom S4Vectors DataFrame
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
-        slots=c(
-            int_cellID="character",
-            int_spcIdx="integer"
-        ),
         contains = "SingleCellExperiment"
 )
 
@@ -25,8 +19,6 @@ setClass("SpatialExperiment",
 #' @param ... arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #' constructor to fill the slots of the base class.
 #' @param spatialCoords the spatial coordinates 
-#' @param cellColID the name of the spatialCoords column where the 
-#' cell identifiers are stored (default is "Cell_ID").
 #' @return none
 #' @author Dario Righelli
 #' @docType class
@@ -70,31 +62,26 @@ setClass("SpatialExperiment",
 #' se <- SpatialExperiment(rowData=rownames(fishCounts),
 #'                         colData=fishCellLabels,
 #'                         assays=SimpleList(counts=as.matrix(fishCounts)),
-#'                         spatialCoords=fishCoordinates,
-#'                         cellColID="MyCell_ID")
+#'                         spatialCoords=fishCoordinates)
 #'                         
-SpatialExperiment <- function(..., spatialCoords=data.frame(), 
-                             cellColID="Cell_ID")
+SpatialExperiment <- function(..., spatialCoords=data.frame())
 {
     sce <- SingleCellExperiment::SingleCellExperiment(...)
-    return(.sce_to_se(sce, spatialCoords=spatialCoords, cellColID=cellColID))
+    return(.sce_to_se(sce, spatialCoords=spatialCoords))
 }
 
 #' @importClassesFrom S4Vectors DataFrame 
 #' @importFrom S4Vectors DataFrame isEmpty 
 #' @importFrom methods new
-.sce_to_se <- function(sce, spatialCoords=DataFrame(), cellColID="Cell_ID") 
+.sce_to_se <- function(sce, spatialCoords=DataFrame()) 
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
-    se <- new("SpatialExperiment", sce) 
-    ## here it calls the validity ?
-    se@int_cellID=cellColID
-    if(!sum(S4Vectors::isEmpty(spatialCoords))) 
-        spatialCoords(se) <- spatialCoords
+    se <- new("SpatialExperiment", sce) ## here it calls the validity 
+    spatialCoords(se) <- spatialCoords
     return(se)
 }
 
@@ -168,7 +155,7 @@ setClass("VisiumExperiment",
 #' ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
 #'                          assays=c(counts=countsEx),
 #'                          spatialCoords=tissPosEx,
-#'                          scaleFactors=scalefactors, cellColID="Barcodes")
+#'                          scaleFactors=scalefactors)
 #' 
 #' ve
 VisiumExperiment <- function(..., scaleFactors=list())

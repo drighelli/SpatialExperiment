@@ -63,7 +63,7 @@ scalefactors <- rjson::fromJSON(file=scaleFile)
 ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
                          assays=c(counts=countsEx),
                          spatialCoords=tissPosEx,
-                         scaleFactors=scalefactors, cellColID="Barcodes")
+                         scaleFactors=scalefactors)
 
 ve
 }
