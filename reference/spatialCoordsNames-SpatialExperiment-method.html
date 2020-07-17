@@ -168,25 +168,7 @@ SpatialExperiment class object.</p>
 #&gt; SptlEx&gt; se &lt;- SpatialExperiment(rowData=rownames(fishCounts),
 #&gt; SptlEx+                         colData=fishCellLabels,
 #&gt; SptlEx+                         assays=SimpleList(counts=as.matrix(fishCounts)),
-#&gt; SptlEx+                         spatialCoords=fishCoordinates)
-#&gt; 
-#&gt; SptlEx&gt; ##################
-#&gt; SptlEx&gt; ## Otherwise, it's possible to provide user-defined cell identifier column,
-#&gt; SptlEx&gt; ## by using the cellColID argument
-#&gt; SptlEx&gt; fishCoordinates &lt;- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
-#&gt; SptlEx+                 Irrelevant=100, 
-#&gt; SptlEx+                 x=sample(c(-4000:4000), size=30, replace=TRUE),
-#&gt; SptlEx+                 y=sample(c(-4000:4000), size=30, replace=TRUE))
-#&gt; 
-#&gt; SptlEx&gt; fishCellLabels &lt;- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
-#&gt; SptlEx+                              class="neuron", 
-#&gt; SptlEx+                              classID=sample(c(0:5), size=30, replace=TRUE))
-#&gt; 
-#&gt; SptlEx&gt; se &lt;- SpatialExperiment(rowData=rownames(fishCounts),
-#&gt; SptlEx+                         colData=fishCellLabels,
-#&gt; SptlEx+                         assays=SimpleList(counts=as.matrix(fishCounts)),
-#&gt; SptlEx+                         spatialCoords=fishCoordinates,
-#&gt; SptlEx+                         cellColID="MyCell_ID")</div><div class='input'><span class='fu'>spatialCoordsNames</span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; [1] "MyCell_ID"  "Irrelevant" "x"          "y"         </div></pre>
+#&gt; SptlEx+                         spatialCoords=fishCoordinates)</div><div class='input'><span class='fu'>spatialCoordsNames</span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; [1] "Cell_ID"    "Irrelevant" "x"          "y"         </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

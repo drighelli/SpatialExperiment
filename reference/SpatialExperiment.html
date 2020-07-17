@@ -137,7 +137,7 @@ In addition, the class supports the integration with 10x Visium spatial
 coordinates and its scale factors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>SpatialExperiment</span>(<span class='kw'>...</span>, spatialCoords = <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(), cellColID = <span class='st'>"Cell_ID"</span>)</pre>
+    <pre class="usage"><span class='fu'>SpatialExperiment</span>(<span class='kw'>...</span>, spatialCoords = <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,26 +151,11 @@ constructor to fill the slots of the base class.</p></td>
       <th>spatialCoords</th>
       <td><p>the spatial coordinates</p></td>
     </tr>
-    <tr>
-      <th>cellColID</th>
-      <td><p>the name of the spatialCoords column where the 
-cell identifiers are stored (default is "Cell_ID").</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>none</p>
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
-
-    
-
-<dl>
-<dt><code>int_cellID</code></dt><dd><p>character.</p></dd>
-
-<dt><code>int_spcIdx</code></dt><dd><p>integer.</p></dd>
-
-</dl>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Dario Righelli</p>
@@ -194,24 +179,7 @@ cell identifiers are stored (default is "Cell_ID").</p></td>
 <span class='kw'>se</span> <span class='op'>&lt;-</span> <span class='fu'>SpatialExperiment</span>(rowData=<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>fishCounts</span>),
                         colData=<span class='kw'>fishCellLabels</span>,
                         assays=<span class='fu'>SimpleList</span>(counts=<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>fishCounts</span>)),
-                        spatialCoords=<span class='kw'>fishCoordinates</span>)
-<span class='co'>##################</span>
-<span class='co'>## Otherwise, it's possible to provide user-defined cell identifier column,</span>
-<span class='co'>## by using the cellColID argument</span>
-<span class='kw'>fishCoordinates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(MyCell_ID=<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"cell"</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>30</span>)), 
-                Irrelevant=<span class='fl'>100</span>, 
-                x=<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>4000</span><span class='op'>:</span><span class='fl'>4000</span>), size=<span class='fl'>30</span>, replace=<span class='fl'>TRUE</span>),
-                y=<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>4000</span><span class='op'>:</span><span class='fl'>4000</span>), size=<span class='fl'>30</span>, replace=<span class='fl'>TRUE</span>))
-                
-<span class='kw'>fishCellLabels</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(MyCell_ID=<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"cell"</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>30</span>)), 
-                             class=<span class='st'>"neuron"</span>, 
-                             classID=<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span><span class='op'>:</span><span class='fl'>5</span>), size=<span class='fl'>30</span>, replace=<span class='fl'>TRUE</span>))
-<span class='kw'>se</span> <span class='op'>&lt;-</span> <span class='fu'>SpatialExperiment</span>(rowData=<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='kw'>fishCounts</span>),
-                        colData=<span class='kw'>fishCellLabels</span>,
-                        assays=<span class='fu'>SimpleList</span>(counts=<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>fishCounts</span>)),
-                        spatialCoords=<span class='kw'>fishCoordinates</span>,
-                        cellColID=<span class='st'>"MyCell_ID"</span>)
-                        </div></pre>
+                        spatialCoords=<span class='kw'>fishCoordinates</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

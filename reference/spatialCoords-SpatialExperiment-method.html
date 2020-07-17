@@ -168,38 +168,20 @@ stored in a SpatialExperiment class object.</p>
 #&gt; SptlEx&gt; se &lt;- SpatialExperiment(rowData=rownames(fishCounts),
 #&gt; SptlEx+                         colData=fishCellLabels,
 #&gt; SptlEx+                         assays=SimpleList(counts=as.matrix(fishCounts)),
-#&gt; SptlEx+                         spatialCoords=fishCoordinates)
-#&gt; 
-#&gt; SptlEx&gt; ##################
-#&gt; SptlEx&gt; ## Otherwise, it's possible to provide user-defined cell identifier column,
-#&gt; SptlEx&gt; ## by using the cellColID argument
-#&gt; SptlEx&gt; fishCoordinates &lt;- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
-#&gt; SptlEx+                 Irrelevant=100, 
-#&gt; SptlEx+                 x=sample(c(-4000:4000), size=30, replace=TRUE),
-#&gt; SptlEx+                 y=sample(c(-4000:4000), size=30, replace=TRUE))
-#&gt; 
-#&gt; SptlEx&gt; fishCellLabels &lt;- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
-#&gt; SptlEx+                              class="neuron", 
-#&gt; SptlEx+                              classID=sample(c(0:5), size=30, replace=TRUE))
-#&gt; 
-#&gt; SptlEx&gt; se &lt;- SpatialExperiment(rowData=rownames(fishCounts),
-#&gt; SptlEx+                         colData=fishCellLabels,
-#&gt; SptlEx+                         assays=SimpleList(counts=as.matrix(fishCounts)),
-#&gt; SptlEx+                         spatialCoords=fishCoordinates,
-#&gt; SptlEx+                         cellColID="MyCell_ID")</div><div class='input'><span class='fu'>spatialCoords</span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
-#&gt;       MyCell_ID Irrelevant         x         y
+#&gt; SptlEx+                         spatialCoords=fishCoordinates)</div><div class='input'><span class='fu'>spatialCoords</span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
+#&gt;         Cell_ID Irrelevant         x         y
 #&gt;     &lt;character&gt;  &lt;numeric&gt; &lt;integer&gt; &lt;integer&gt;
-#&gt; 1         cell1        100     -2898     -3709
-#&gt; 2         cell2        100      -838     -3382
-#&gt; 3         cell3        100      1909      3809
-#&gt; 4         cell4        100     -2379      1361
-#&gt; 5         cell5        100      -394      2912
+#&gt; 1         cell1        100      2652     -3004
+#&gt; 2         cell2        100      3074     -1977
+#&gt; 3         cell3        100     -1010      3559
+#&gt; 4         cell4        100      2750      3465
+#&gt; 5         cell5        100     -1497     -1030
 #&gt; ...         ...        ...       ...       ...
-#&gt; 26       cell26        100      -673      -802
-#&gt; 27       cell27        100      3987       876
-#&gt; 28       cell28        100      2904      1898
-#&gt; 29       cell29        100      -771      2326
-#&gt; 30       cell30        100       947      3175</div></pre>
+#&gt; 26       cell26        100      2912      2541
+#&gt; 27       cell27        100     -3409      2648
+#&gt; 28       cell28        100     -3818      2260
+#&gt; 29       cell29        100      3630     -2213
+#&gt; 30       cell30        100      1705       306</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
