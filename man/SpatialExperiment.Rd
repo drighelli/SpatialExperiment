@@ -46,22 +46,6 @@ se <- SpatialExperiment(rowData=rownames(fishCounts),
                         colData=fishCellLabels,
                         assays=SimpleList(counts=as.matrix(fishCounts)),
                         spatialCoords=fishCoordinates)
-##################
-## Otherwise, it's possible to provide user-defined cell identifier column,
-## by using the cellColID argument
-fishCoordinates <- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
-                Irrelevant=100, 
-                x=sample(c(-4000:4000), size=30, replace=TRUE),
-                y=sample(c(-4000:4000), size=30, replace=TRUE))
-                
-fishCellLabels <- data.frame(MyCell_ID=paste0("cell",c(1:30)), 
-                             class="neuron", 
-                             classID=sample(c(0:5), size=30, replace=TRUE))
-se <- SpatialExperiment(rowData=rownames(fishCounts),
-                        colData=fishCellLabels,
-                        assays=SimpleList(counts=as.matrix(fishCounts)),
-                        spatialCoords=fishCoordinates)
-                        
 }
 \author{
 Dario Righelli
