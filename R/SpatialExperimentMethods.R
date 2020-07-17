@@ -64,7 +64,7 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
         dm <- dim(int_colData(x))
         ## Case of base SingleCellExperiment 
         ## (minimal dimensions are #ngenes x 2 with empty values)
-        if(dm[2] == 2) 
+        if(dm[2] == 2) ## this is set to 2 for working with BIRSBIOVignette
         {
             int_colData(x) <- cbind(int_colData(x),value)
             x@int_spcIdx <- base::which(colnames(int_colData(x)) %in% 
