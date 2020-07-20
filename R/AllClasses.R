@@ -66,6 +66,7 @@ SpatialExperiment <- function(..., spatialCoords=data.frame())
     }
     se <- new("SpatialExperiment", sce) ## here it calls the validity 
     spatialCoords(se) <- spatialCoords
+    
     return(se)
 }
 

@@ -16,7 +16,7 @@
 none
 }
 \description{
-a setter method which sets/replaces the spatial coordinate in a 
+a setter method which sets/replaces the spatial coordinate in a
 SpatialExperiment class object.
 }
 \examples{

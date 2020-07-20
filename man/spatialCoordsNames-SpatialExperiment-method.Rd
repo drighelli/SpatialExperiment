@@ -14,7 +14,7 @@
 a vector with the colnames of the spatial coordinates.
 }
 \description{
-getter method for the spatial coordinates names in a 
+getter method for the spatial coordinates names in a
 SpatialExperiment class object.
 }
 \examples{

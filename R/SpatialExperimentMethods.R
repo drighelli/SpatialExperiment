@@ -23,6 +23,7 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' @param value a DataFrame with the new spatial coordinates to set.
 #' @return none
 #' @importFrom SingleCellExperiment int_colData int_colData<-
+#' @importFrom S4Vectors nrow SimpleList
 #' @importFrom methods is
 #' @aliases spatialCoords<-
 #' @export
@@ -34,12 +35,19 @@ setMethod(f="spatialCoords", signature="SpatialExperiment", function(x)
 #' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", function(x, value=DataFrame())
 {
-    stopifnot(!sum(S4Vectors::isEmpty(value)))
+    # stopifnot(!sum(S4Vectors::isEmpty(value)))
     if(!is(value, "DataFrame")) 
     {
         value <- DataFrame(value)
     }
-    int_colData(x)$spatial <- value
+    if(sum(dim(value)==c(0,0))<2)
+    {
+        int_colData(x)$spatial <- value
+    } else {
+        int_colData(x)$spatial <- S4Vectors::SimpleList(
+                                    length=S4Vectors::nrow(int_colData(x)))
+    }
+    
 
     return(x)
 })
