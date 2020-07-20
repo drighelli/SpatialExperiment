@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="spatialCoords-setter — spatialCoords&lt;-,SpatialExperiment-method" />
-<meta property="og:description" content="a setter method which sets/replaces the spatial coordinate in a 
+<meta property="og:description" content="a setter method which sets/replaces the spatial coordinate in a
 SpatialExperiment class object." />
 
 
@@ -73,7 +73,7 @@ SpatialExperiment class object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.2</span>
       </span>
     </div>
 
@@ -125,12 +125,12 @@ SpatialExperiment class object." />
     </div>
 
     <div class="ref-description">
-    <p>a setter method which sets/replaces the spatial coordinate in a 
+    <p>a setter method which sets/replaces the spatial coordinate in a
 SpatialExperiment class object.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for SpatialExperiment</span>
-<span class='fu'>spatialCoords</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,8 +174,8 @@ SpatialExperiment class object.</p>
 #&gt; SptlEx+                         assays=SimpleList(counts=as.matrix(fishCounts)),
 #&gt; SptlEx+                         spatialCoords=fishCoordinates)</div><div class='input'><span class='kw'>fakeFishCoords</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='kw'>fishCoordinates</span>[,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>)], <span class='kw'>fishCoordinates</span>[,<span class='fl'>3</span>])
         <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>fakeFishCoords</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MyCell_ID"</span>, <span class='st'>"Irrelevant"</span>, <span class='st'>"x"</span>, <span class='st'>"y"</span>)
-<span class='fu'>spatialCoords</span>(<span class='kw'>se</span>) <span class='op'>&lt;-</span> <span class='kw'>fakeFishCoords</span>
-<span class='fu'>spatialCoords</span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>) <span class='op'>&lt;-</span> <span class='kw'>fakeFishCoords</span>
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
 #&gt;       MyCell_ID Irrelevant         x         y
 #&gt;     &lt;character&gt;  &lt;numeric&gt; &lt;integer&gt; &lt;integer&gt;
 #&gt; 1         cell1        100      2901      2901
