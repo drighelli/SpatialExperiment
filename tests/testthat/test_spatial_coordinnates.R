@@ -18,6 +18,9 @@ test_that("spatial coordinates methods are functioninng", {
                             colData=fishCellLabels,
                             assays=SimpleList(counts=as.matrix(fishCounts)),
                             spatialCoords=fishCoordinates)
+    expect_s4_class(object=SpatialExperiment(assays=SimpleList(
+                        counts=as.matrix(fishCounts))), 
+                    class="SpatialExperiment")
     ## SpatialExperiment automatically loads data in DataFrame format
     ## expect_false(is.data.frame(spatialCoords(se)))
     expect_error(expect_identical(fishCoordinates, spatialCoords(se)))
