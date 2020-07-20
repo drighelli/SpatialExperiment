@@ -44,8 +44,7 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", function(x, v
     {
         int_colData(x)$spatial <- value
     } else {
-        int_colData(x)$spatial <- S4Vectors::SimpleList(
-                                    length=S4Vectors::nrow(int_colData(x)))
+        int_colData(x)$spatial <- DataFrame(row.names=colnames(x))
     }
     
 
