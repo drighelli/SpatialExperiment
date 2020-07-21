@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VisiumExperiment show method — show,VisiumExperiment-method • SpatialExperiment</title>
+<title>imagePaths-setter — imagePaths&lt;-,VisiumExperiment-method • SpatialExperiment</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="VisiumExperiment show method — show,VisiumExperiment-method" />
-<meta property="og:description" content="a method for showing the VisiumExperiment" />
+<meta property="og:title" content="imagePaths-setter — imagePaths&lt;-,VisiumExperiment-method" />
+<meta property="og:description" content="sets the list of image paths for the VisiumExperiment class 
+object." />
 
 
 
@@ -118,24 +119,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>VisiumExperiment show method</h1>
+    <h1>imagePaths-setter</h1>
     
-    <div class="hidden name"><code>show-VisiumExperiment-method.Rd</code></div>
+    <div class="hidden name"><code>imagePaths-set-VisiumExperiment-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>a method for showing the VisiumExperiment</p>
+    <p>sets the list of image paths for the VisiumExperiment class 
+object.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for VisiumExperiment</span>
-<span class='fu'><a href='show,SpatialExperiment-method.html'>show</a></span>(<span class='kw'>object</span>)</pre>
+<span class='fu'><a href='imagePaths,VisiumExperiment-method.html'>imagePaths</a></span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>a VisiumExperiment object instance</p></td>
+      <th>x</th>
+      <td><p>a VisiumExperiment class object</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>a list within the paths of the images of a 10x Visium experiment</p></td>
     </tr>
     </table>
 
@@ -144,8 +150,54 @@
     <p>none</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/example.html'>example</a></span>(<span class='kw'>VisiumExperiment</span>, echo=<span class='fl'>FALSE</span>) <span class='co'>#using class example</span>
-<span class='fu'><a href='show,SpatialExperiment-method.html'>show</a></span>(<span class='kw'>ve</span>)</div><div class='output co'>#&gt; class: VisiumExperiment 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/example.html'>example</a></span>(<span class='kw'>VisiumExperiment</span>)</div><div class='output co'>#&gt; 
+#&gt; VsmExp&gt; barcodesFile &lt;- system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                         "barcodes.tsv"),
+#&gt; VsmExp+                         package="SpatialExperiment")
+#&gt; 
+#&gt; VsmExp&gt; barcodesEx &lt;- read.csv(barcodesFile, sep="\t",
+#&gt; VsmExp+                         header=FALSE, col.names=c("Barcodes"))
+#&gt; 
+#&gt; VsmExp&gt; featuresFile &lt;- system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                         "features.tsv"), package="SpatialExperiment")
+#&gt; 
+#&gt; VsmExp&gt; featuresEx &lt;- read.csv(featuresFile, sep="\t",
+#&gt; VsmExp+                         header=FALSE, col.names=c("Barcodes", "Feature_name",
+#&gt; VsmExp+                         "Feature_type"))
+#&gt; 
+#&gt; VsmExp&gt; countsFile &lt;- system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                         "matrix.mtx"), package="SpatialExperiment")
+#&gt; 
+#&gt; VsmExp&gt; countsEx &lt;- Matrix::readMM(file=countsFile)
+#&gt; 
+#&gt; VsmExp&gt; posFile &lt;- system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                         "tissue_positions_list.tsv"),
+#&gt; VsmExp+                         package="SpatialExperiment")
+#&gt; 
+#&gt; VsmExp&gt; tissPosEx &lt;- read.csv(posFile,
+#&gt; VsmExp+                         sep="\t", header=FALSE,
+#&gt; VsmExp+                         col.names=c("Barcodes", "in_tissue",
+#&gt; VsmExp+                          "array_row", "array_col",
+#&gt; VsmExp+                          "pxl_col_in_fullres", "pxl_row_in_fullres"))
+#&gt; 
+#&gt; VsmExp&gt; scaleFile &lt;- system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                                    "scalefactors_json.json"), 
+#&gt; VsmExp+                          package="SpatialExperiment")
+#&gt; 
+#&gt; VsmExp&gt; scalefactors &lt;- rjson::fromJSON(file=scaleFile)
+#&gt; 
+#&gt; VsmExp&gt; imagePaths &lt;- list.files(system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                          "images"), 
+#&gt; VsmExp+                          package="SpatialExperiment"), full.names=TRUE)
+#&gt; 
+#&gt; VsmExp&gt; ve &lt;- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
+#&gt; VsmExp+                          assays=c(counts=countsEx),
+#&gt; VsmExp+                          spatialCoords=tissPosEx,
+#&gt; VsmExp+                          scaleFactors=scalefactors, 
+#&gt; VsmExp+                          imagePaths=imagePaths)
+#&gt; 
+#&gt; VsmExp&gt; ve
+#&gt; class: VisiumExperiment 
 #&gt; dim: 50 50 
 #&gt; metadata(0):
 #&gt; assays(1): counts
@@ -159,7 +211,10 @@
 #&gt;   pxl_row_in_fullres
 #&gt; inTissue(1): 22
 #&gt; imagePaths(1):
-#&gt;   /Users/runner/work/_temp/Library/SpatialExperiment/extdata/10x_visium/images/tissue_lowres_image.png</div></pre>
+#&gt;   /Users/runner/work/_temp/Library/SpatialExperiment/extdata/10x_visium/images/tissue_lowres_image.png</div><div class='input'><span class='kw'>imagePaths</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"10x_visium"</span>,
+                                   <span class='st'>"images"</span>), 
+                         package=<span class='st'>"SpatialExperiment"</span>), full.names=<span class='fl'>TRUE</span>)
+<span class='fu'><a href='imagePaths,VisiumExperiment-method.html'>imagePaths</a></span>(<span class='kw'>ve</span>) <span class='op'>&lt;-</span> <span class='kw'>imagePaths</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

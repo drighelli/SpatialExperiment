@@ -185,10 +185,15 @@
 #&gt; 
 #&gt; VsmExp&gt; scalefactors &lt;- rjson::fromJSON(file=scaleFile)
 #&gt; 
+#&gt; VsmExp&gt; imagePaths &lt;- list.files(system.file(file.path("extdata", "10x_visium",
+#&gt; VsmExp+                          "images"), 
+#&gt; VsmExp+                          package="SpatialExperiment"), full.names=TRUE)
+#&gt; 
 #&gt; VsmExp&gt; ve &lt;- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
 #&gt; VsmExp+                          assays=c(counts=countsEx),
 #&gt; VsmExp+                          spatialCoords=tissPosEx,
-#&gt; VsmExp+                          scaleFactors=scalefactors)
+#&gt; VsmExp+                          scaleFactors=scalefactors, 
+#&gt; VsmExp+                          imagePaths=imagePaths)
 #&gt; 
 #&gt; VsmExp&gt; ve
 #&gt; class: VisiumExperiment 
@@ -203,7 +208,9 @@
 #&gt; altExpNames(0):
 #&gt; spatialCoordinates(6): Barcodes in_tissue ... pxl_col_in_fullres
 #&gt;   pxl_row_in_fullres
-#&gt; inTissue(1): 22</div></pre>
+#&gt; inTissue(1): 22
+#&gt; imagePaths(1):
+#&gt;   /Users/runner/work/_temp/Library/SpatialExperiment/extdata/10x_visium/images/tissue_lowres_image.png</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

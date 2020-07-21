@@ -137,7 +137,7 @@ In addition, the class supports the integration with 10x Visium spatial
 coordinates and its scale factors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>VisiumExperiment</span>(<span class='kw'>...</span>, scaleFactors = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>())</pre>
+    <pre class="usage"><span class='fu'>VisiumExperiment</span>(<span class='kw'>...</span>, scaleFactors = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(), imagePaths = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,6 +151,10 @@ constructor to fill the slots of the base class.</p></td>
       <th>scaleFactors</th>
       <td><p>the 10x Visium image scale factors.</p></td>
     </tr>
+    <tr>
+      <th>imagePaths</th>
+      <td><p>the list of the paths for the 10x Visium images.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -162,6 +166,8 @@ constructor to fill the slots of the base class.</p></td>
 
 <dl>
 <dt><code>scaleFactors</code></dt><dd><p>list</p></dd>
+
+<dt><code>imagePaths</code></dt><dd><p>list</p></dd>
 
 </dl>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
@@ -196,10 +202,15 @@ constructor to fill the slots of the base class.</p></td>
                          package=<span class='st'>"SpatialExperiment"</span>)
 
 <span class='kw'>scalefactors</span> <span class='op'>&lt;-</span> <span class='kw'>rjson</span>::<span class='fu'><a href='https://rdrr.io/pkg/rjson/man/fromJSON.html'>fromJSON</a></span>(file=<span class='kw'>scaleFile</span>)
+<span class='kw'>imagePaths</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"10x_visium"</span>,
+                         <span class='st'>"images"</span>), 
+                         package=<span class='st'>"SpatialExperiment"</span>), full.names=<span class='fl'>TRUE</span>)
+                         
 <span class='kw'>ve</span> <span class='op'>&lt;-</span> <span class='fu'>VisiumExperiment</span>(rowData=<span class='kw'>featuresEx</span>, colData=<span class='kw'>barcodesEx</span>,
                          assays=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(counts=<span class='kw'>countsEx</span>),
                          spatialCoords=<span class='kw'>tissPosEx</span>,
-                         scaleFactors=<span class='kw'>scalefactors</span>)
+                         scaleFactors=<span class='kw'>scalefactors</span>, 
+                         imagePaths=<span class='kw'>imagePaths</span>)
 
 <span class='kw'>ve</span></div><div class='output co'>#&gt; class: VisiumExperiment 
 #&gt; dim: 50 50 
@@ -213,7 +224,9 @@ constructor to fill the slots of the base class.</p></td>
 #&gt; altExpNames(0):
 #&gt; spatialCoordinates(6): Barcodes in_tissue ... pxl_col_in_fullres
 #&gt;   pxl_row_in_fullres
-#&gt; inTissue(1): 22</div></pre>
+#&gt; inTissue(1): 22
+#&gt; imagePaths(1):
+#&gt;   /Users/runner/work/_temp/Library/SpatialExperiment/extdata/10x_visium/images/tissue_lowres_image.png</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
