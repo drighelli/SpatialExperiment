@@ -2,9 +2,13 @@
 % Please edit documentation in R/VisiumExperimentMethods.R
 \name{imagePaths,VisiumExperiment-method}
 \alias{imagePaths,VisiumExperiment-method}
+\alias{imagePaths}
 \title{imagePaths-getter}
 \usage{
 \S4method{imagePaths}{VisiumExperiment}(x)
+}
+\arguments{
+\item{x}{a VisiumExperiment class object}
 }
 \value{
 a list of paths of 10x Visium images

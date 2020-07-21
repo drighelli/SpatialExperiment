@@ -3,6 +3,7 @@
 #' imagePaths-setter
 #' @description sets the list of image paths for the VisiumExperiment class 
 #' object.
+#' @param x a VisiumExperiment class object
 #' @param value a list within the paths of the images of a 10x Visium experiment
 #'
 #' @return none
@@ -26,8 +27,9 @@ setReplaceMethod(f="imagePaths", signature="VisiumExperiment",
 #' imagePaths-getter
 #' @description getter for the list of imagePaths stored into the 
 #' VisiumExperiment class object.
-#'
+#' @param x a VisiumExperiment class object
 #' @return a list of paths of 10x Visium images
+#' @aliases imagePaths
 #' @export
 #'
 #' @examples

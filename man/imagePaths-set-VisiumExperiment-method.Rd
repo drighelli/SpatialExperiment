@@ -8,6 +8,8 @@
 \S4method{imagePaths}{VisiumExperiment}(x) <- value
 }
 \arguments{
+\item{x}{a VisiumExperiment class object}
+
 \item{value}{a list within the paths of the images of a 10x Visium experiment}
 }
 \value{
