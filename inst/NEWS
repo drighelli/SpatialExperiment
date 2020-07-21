@@ -1,3 +1,6 @@
+changes in versionn 0.99.3 (2020-21-07)
++ implementing imagePaths in VisiumExperiment class
++ SpatialExperiment can now be created also without spatial coordinates
 changes in versionn 0.99.2 (2020-17-07)
 + adding version 0.99.2
 changes in versionn 0.99.1 (2020-09-07)

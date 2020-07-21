@@ -1,8 +1,8 @@
 Package: SpatialExperiment
 Type: Package
 Title: S4 Class for Spatial Experiments handling 
-Version: 0.99.2
-Date: 2020-07-17
+Version: 0.99.3
+Date: 2020-07-21
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
