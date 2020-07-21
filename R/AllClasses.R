@@ -82,9 +82,11 @@ setAs(from="SingleCellExperiment", to="SpatialExperiment", function(from)
 #' @export
 #' @rdname VisiumExperiment
 #' @slot scaleFactors list
+#' @slot imagePaths list
 setClass("VisiumExperiment",
         slots=c(
-            scaleFactors="list"
+            scaleFactors="list",
+            imagePaths="character"
         ),
         contains = "SpatialExperiment"
 )
@@ -101,6 +103,7 @@ setClass("VisiumExperiment",
 #' @param ... arguments to be passed to the \code{\link{SpatialExperiment}} 
 #' constructor to fill the slots of the base class.
 #' @param scaleFactors the 10x Visium image scale factors.
+#' @param imagePaths the list of the paths for the 10x Visium images.
 #' @return none
 #' @aliases
 #' coerce,SpatialExperiment,VisiumExperiment-method
@@ -137,20 +140,26 @@ setClass("VisiumExperiment",
 #'                          package="SpatialExperiment")
 #' 
 #' scalefactors <- rjson::fromJSON(file=scaleFile)
+#' imagePaths <- list.files(system.file(file.path("extdata", "10x_visium",
+#'                          "images"), 
+#'                          package="SpatialExperiment"), full.names=TRUE)
+#'                          
 #' ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
 #'                          assays=c(counts=countsEx),
 #'                          spatialCoords=tissPosEx,
-#'                          scaleFactors=scalefactors)
+#'                          scaleFactors=scalefactors, 
+#'                          imagePaths=imagePaths)
 #' 
 #' ve
-VisiumExperiment <- function(..., scaleFactors=list())
+VisiumExperiment <- function(..., scaleFactors=list(), imagePaths=list())
 {
     se <- SpatialExperiment::SpatialExperiment(...)
-    return(.se_to_ve(se, scaleFactors=scaleFactors))
+    return(.se_to_ve(se, scaleFactors=scaleFactors, imagePaths=imagePaths))
 }
 
 #' @importFrom methods new
-.se_to_ve <- function(se, scaleFactors=list()) 
+.se_to_ve <- function(se, scaleFactors=S4Vectors::SimpleList(), 
+                    imagePaths=S4Vectors::SimpleList()) 
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -159,6 +168,7 @@ VisiumExperiment <- function(..., scaleFactors=list())
     }
     ve <- new("VisiumExperiment", se)
     if(length(scaleFactors)>0) scaleFactors(ve) <- scaleFactors
+    if(length(imagePaths)>0) imagePaths(ve) <- imagePaths
     return(ve)
 }
 

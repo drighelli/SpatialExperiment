@@ -1,5 +1,46 @@
 
 ### Getters/Setters
+#' imagePaths-setter
+#' @description sets the list of image paths for the VisiumExperiment class 
+#' object.
+#' @param value a list within the paths of the images of a 10x Visium experiment
+#'
+#' @return none
+#' @aliases imagePaths<-
+#' @export
+#'
+#' @examples
+#' example(VisiumExperiment)
+#' imagePaths <- list.files(system.file(file.path("extdata", "10x_visium",
+#'                                    "images"), 
+#'                          package="SpatialExperiment"), full.names=TRUE)
+#' imagePaths(ve) <- imagePaths
+setReplaceMethod(f="imagePaths", signature="VisiumExperiment", 
+                     function(x, value)
+{
+    stopifnot(sum(file.exists(value))==length(value))
+    x@imagePaths <- value
+    return(x)
+})
+
+#' imagePaths-getter
+#' @description getter for the list of imagePaths stored into the 
+#' VisiumExperiment class object.
+#'
+#' @return a list of paths of 10x Visium images
+#' @export
+#'
+#' @examples
+#' example(VisiumExperiment)
+#' imagePaths <- list.files(system.file(file.path("extdata", "10x_visium",
+#'                                    "images"), 
+#'                          package="SpatialExperiment"), full.names=TRUE)
+#' imagePaths(ve)
+setMethod(f="imagePaths", signature="VisiumExperiment", function(x)
+{
+    return(x@imagePaths)
+})
+
 #' scaleFactors-getter
 #' @description gets the scale factors from a VisiumExperiment class object.
 #' @param x a VisiumExperiment class object. 

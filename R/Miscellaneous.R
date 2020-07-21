@@ -20,6 +20,7 @@ setMethod("show", "SpatialExperiment", .se_show)
 .ve_show <- function(object) {
     callNextMethod()
     coolcat("inTissue(%d): %s\n", sum(isInTissue(object)))
+    coolcat("imagePaths(%d): %s\n", imagePaths(object))
 }
 
 #' VisiumExperiment show method

@@ -7,13 +7,15 @@
 \alias{coerce,SpatialExperiment,VisiumExperiment-method}
 \title{The VisiumExperiment class}
 \usage{
-VisiumExperiment(..., scaleFactors = list())
+VisiumExperiment(..., scaleFactors = list(), imagePaths = list())
 }
 \arguments{
 \item{...}{arguments to be passed to the \code{\link{SpatialExperiment}} 
 constructor to fill the slots of the base class.}
 
 \item{scaleFactors}{the 10x Visium image scale factors.}
+
+\item{imagePaths}{the list of the paths for the 10x Visium images.}
 }
 \value{
 none
@@ -30,6 +32,8 @@ coordinates and its scale factors.
 
 \describe{
 \item{\code{scaleFactors}}{list}
+
+\item{\code{imagePaths}}{list}
 }}
 
 \examples{
@@ -60,10 +64,15 @@ scaleFile <- system.file(file.path("extdata", "10x_visium",
                          package="SpatialExperiment")
 
 scalefactors <- rjson::fromJSON(file=scaleFile)
+imagePaths <- list.files(system.file(file.path("extdata", "10x_visium",
+                         "images"), 
+                         package="SpatialExperiment"), full.names=TRUE)
+                         
 ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx,
                          assays=c(counts=countsEx),
                          spatialCoords=tissPosEx,
-                         scaleFactors=scalefactors)
+                         scaleFactors=scalefactors, 
+                         imagePaths=imagePaths)
 
 ve
 }

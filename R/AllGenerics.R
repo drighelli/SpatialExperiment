@@ -15,3 +15,10 @@ setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
 #' @export
 setGeneric("spatialCoordsNames", function(x) 
     standardGeneric("spatialCoordsNames"))
+#' @export
+setGeneric(name="imagePaths", def=function(x) standardGeneric("imagePaths"))
+#' @export
+setGeneric("imagePaths", function(x, value) standardGeneric("imagePaths"))
+#' @export
+setGeneric("imagePaths<-", function(x, value)
+    standardGeneric("imagePaths<-"))
