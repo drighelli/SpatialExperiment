@@ -17,17 +17,30 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introduction
+The SpatialExperiment package provides classes and methods for single cell 
+spatial data handling.
+
+The VisiumExperiment class exteds the SpatialExperiment class
+by providing more specific attributes and methods for the 10x-Genomics Visium
+experiments data.
+
+This vignettes shows how to create a VisiumExperiment class by loading a 
+[Mouse Coronal 10x-Genomics Visium spatial dataset](https://support.10xgenomics.com/spatial-gene-expression/datasets/1.1.0/V1_Adult_Mouse_Brain_Coronal_Section_1).
+
+Dataset downloaded from 10x-Genomics website .
+
 # Installation
 
-Installing and loading VisualExperiment class.
+```{r, eval=FALSE}
+if(!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SpatialExperiment")
+```
 
-<!-- ```{r} -->
-<!-- library(devtools) -->
-<!-- install_github("drighelli/SpatialExperiment", ref="spatialExperiment") -->
-<!-- ``` -->
+# Loading required libraries
 
-
-```{r}
+```{r, message=FALSE}
 library("SpatialExperiment")
 library("Matrix")
 library("rjson")
@@ -74,9 +87,22 @@ tissPosEx <- read.csv(posFile,
                                     "pxl_col_in_fullres", "pxl_row_in_fullres"))
 ```
 
+
+## Image paths 
+
+10x-Genomics Visium experiments comes out with images in different resolutions
+for tissue spots locations.
+
+```{r}
+imageFilePath <- list.files(system.file(file.path("extdata", "10x_visium", 
+                              "images"), package="SpatialExperiment"), 
+                            full.names=TRUE)
+```
+
+
 ## Spatial Scale Factors
 
-Scale factors for the given three image formats transformations.
+Scale factors for the given three 10x Visium image formats transformations.
 
 ```{r}
 scaleFile <- system.file(file.path("extdata", "10x_visium",
@@ -91,7 +117,7 @@ scalefactors <- fromJSON(file=scaleFile)
 
 ## Creation
 
-Creating VisiumExperiment class within 10x Visium data and testing the show method.
+Creating VisiumExperiment class within 10x Visium data.
 
 ```{r}
 ve <- VisiumExperiment(rowData=featuresEx, colData=barcodesEx, 
@@ -112,6 +138,26 @@ It can be used also to update the values.
 spatialCoords(ve)
 ```
 
+### Image get/set
+
+
+Image paths can be handled with the VisiumExperiment class by aid of the 
+`imagePaths` methods.
+
+```{r}
+imagePaths(ve) <- imageFilePath
+imagePaths(ve)
+```
+
+### Scale Factors
+
+Scale Factors stored during VisiumExperiment class creation can be get/set 
+with `scaleFactors` method.
+
+```{r}
+scaleFactors(ve)
+```
+
 ### Number of array barcoded-spots covered by tissue
 
 The *isInTissue* method can be used to know which and how many spots are covered
@@ -121,6 +167,9 @@ by the tissue.
 sum(isInTissue(ve))
 ve[isInTissue(ve)]
 ```
+
+
+# Session Info
 
 ```{r}
 sessionInfo()

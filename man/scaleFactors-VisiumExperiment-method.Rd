@@ -19,4 +19,5 @@ gets the scale factors from a VisiumExperiment class object.
 \examples{
 ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
                          "ve.RDS"), package="SpatialExperiment"))
+scaleFactors(ve)
 }

@@ -13,12 +13,33 @@ editor_options:
     chunk_output_type: console
 ---
 
+# Introduction
+
+The SpatialExperiment package provides classes and methods for single cell 
+spatial data handling.
+
+This vignettes shows how to create a SpatialExperiment class by loading a 
+seqFISH spatial dataset.
+
+The seqFISH data are part of the [BIRS Biointegration Workshop Hackathon](https://github.com/BIRSBiointegration/Hackathon/tree/master/seqFISH) 
+previously published in [Zhu et al. 2018](https://www.nature.com/articles/nbt.4260).
+
+
+# Installation 
+
+```{r, eval=FALSE}
+if(!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SpatialExperiment")
+```
+
+
 # Loading data and libraries
 
 We stored the provided seqFish and scRNA-seq data inside the SpatialExperiment
 external data seqFISH folder.
 
-```{r}
+```{r, message=FALSE}
 library(SpatialExperiment)
 ```
 
@@ -43,33 +64,6 @@ fishFeatCountsFile <- system.file(file.path("extdata", "seqFISH",
                             package="SpatialExperiment")
 fishFeaturesCounts <- read.table(file=fishFeatCountsFile, 
                                 header=FALSE, sep="\t", row.names=1)
-```
-
-## Single Cell RNA-seq data
-
-```{r}
-scRNACountsFile <- system.file(file.path("extdata", "seqFISH", 
-                            "tasic_scRNAseq_training_b2.txt"),
-                            package="SpatialExperiment")
-scRNASeqCounts <- read.table(file=scRNACountsFile, header=FALSE, 
-                            sep="\t", row.names=1)
-scRNASeqCounts <-  as.matrix(scRNASeqCounts)
-scRNALabsFile <- system.file(file.path("extdata", "seqFISH", 
-                            "tasic_scRNAseq_labels.tsv"),
-                            package="SpatialExperiment")
-scRNASeqLabels <- read.table(file=scRNALabsFile, header=FALSE, sep="\t")
-```
-
-# SingleCellExperiment package
-
-We load the scRNA-seq data into a SingleCellExperiment class, so we can use it
-for further joint analysis with the seqFISH data.
-
-```{r}
-sce <- SingleCellExperiment(rowData=rownames(scRNASeqCounts), 
-                    colData=scRNASeqLabels,
-                    assays=SimpleList(counts=as.matrix(scRNASeqCounts)))
-show(sce)
 ```
 
 

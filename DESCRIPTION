@@ -8,11 +8,13 @@ Authors@R: c(
         email="dario.righelli@gmail.com"),
         person("Davide", "Risso", role=c("aut"), 
         email="risso.davide@gmail.com"))
-Description: Defines a S4 classes for storing data for spatial experiments, such
-    as seqFISH and 10x-Visium Spatial Gene Expression. 
+Description: Defines S4 classes for storing data for spatial experiments.
+    Main examples are reported by using seqFISH and 10x-Visium Spatial Gene 
+    Expression data. 
     This includes specialized methods for storing, retrieving 
-    spatial coordinates, 10x dedicated parameters and their handling.  
+    spatial coordinates, 10x dedicated parameters and their handling.
 License: GPL-3
+BugReports: https://github.com/drighelli/SpatialExperiment/issues
 Encoding: UTF-8
 LazyData: true
 biocViews: DataRepresentation, DataImport, Infrastructure, SingleCell, 

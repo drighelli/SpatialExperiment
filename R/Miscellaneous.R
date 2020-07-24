@@ -1,4 +1,3 @@
-#' @export
 .se_show <- function(object) {
     callNextMethod()
     coolcat("spatialCoordinates(%d): %s\n", spatialCoordsNames(object))
@@ -16,7 +15,6 @@
 #' show(se)
 setMethod("show", "SpatialExperiment", .se_show)
 
-#' @export
 .ve_show <- function(object) {
     callNextMethod()
     coolcat("inTissue(%d): %s\n", sum(isInTissue(object)))

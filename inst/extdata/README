@@ -1,0 +1,8 @@
+Data present in this directory are divided in two sections:
+- seqFish data
+    - provided from https://github.com/BIRSBiointegration/Hackathon/tree/master/seqFISH
+        in the occasion of the BIRS Hackathon workshop.
+        All the data were already preprocessed
+- 10x_visium data
+    - provided data are part of the 10x Genomics visium website, datasets section.
+        They are provided as they are present at https://support.10xgenomics.com/spatial-gene-expression/datasets/1.1.0/V1_Adult_Mouse_Brain_Coronal_Section_1

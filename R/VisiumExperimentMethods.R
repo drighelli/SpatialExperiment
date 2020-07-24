@@ -53,7 +53,7 @@ setMethod(f="imagePaths", signature="VisiumExperiment", function(x)
 #' @examples
 #' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
 #'                          "ve.RDS"), package="SpatialExperiment"))
-# scaleFactors(ve)
+#' scaleFactors(ve)
 setMethod(f="scaleFactors", signature="VisiumExperiment", function(x)
 {
     return(x@scaleFactors)
