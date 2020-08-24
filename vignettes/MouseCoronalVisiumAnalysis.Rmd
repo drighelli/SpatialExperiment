@@ -85,12 +85,9 @@ posFile <- system.file(file.path("extdata", "10x_visium",
                         package="SpatialExperiment")
 tissPosEx <- read.csv(posFile, 
                         sep="\t", header=FALSE, 
-                        col.names=c("Cell_ID", "in_tissue", 
+                        col.names=c("barcode_id", "in_tissue", 
                                     "array_row", "array_col",
                                     "pxl_col_in_fullres", "pxl_row_in_fullres"))
-
-# update column names
-colnames(tissPosEx)[1] <- "barcode_id"
 ```
 
 
