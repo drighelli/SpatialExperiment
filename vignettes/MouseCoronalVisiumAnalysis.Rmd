@@ -72,7 +72,7 @@ countsEx <- readMM(file=countsFile)
 
 # update column names
 colnames(featuresEx) <- c("gene_id", "gene_name", "feature_type")
-colnames(barcodesEx) <- c("barcode")
+colnames(barcodesEx) <- c("barcode_id")
 ```
 
 ## Spatial Coordinates
@@ -90,7 +90,7 @@ tissPosEx <- read.csv(posFile,
                                     "pxl_col_in_fullres", "pxl_row_in_fullres"))
 
 # update column names
-colnames(tissPosEx)[1] <- "barcode"
+colnames(tissPosEx)[1] <- "barcode_id"
 ```
 
 
