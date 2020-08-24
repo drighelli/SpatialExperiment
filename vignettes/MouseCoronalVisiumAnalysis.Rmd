@@ -1,5 +1,5 @@
 ---
-title: "10x-Visum Spatial Data Analysis"
+title: "10x-Visium Spatial Data Analysis"
 author: "Dario Righelli"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 The SpatialExperiment package provides classes and methods for single cell 
 spatial data handling.
 
-The VisiumExperiment class exteds the SpatialExperiment class
+The VisiumExperiment class extends the SpatialExperiment class
 by providing more specific attributes and methods for the 10x-Genomics Visium
 experiments data.
 
@@ -77,7 +77,7 @@ colnames(barcodesEx) <- c("barcode")
 
 ## Spatial Coordinates
 
-Loading Spatial coordinates of the tissue section.
+Loading spatial coordinates of the tissue section.
 
 ```{r}
 posFile <- system.file(file.path("extdata", "10x_visium",
