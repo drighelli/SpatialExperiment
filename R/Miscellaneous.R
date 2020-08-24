@@ -1,6 +1,6 @@
 .se_show <- function(object) {
     callNextMethod()
-    coolcat("spatialCoordinates(%d): %s\n", spatialCoordsNames(object))
+    coolcat("spatialCoords(%d): %s\n", spatialCoordsNames(object))
 }
 
 #' SpatialExperiment show method
