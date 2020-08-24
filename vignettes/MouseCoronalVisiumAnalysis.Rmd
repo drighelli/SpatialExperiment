@@ -70,6 +70,9 @@ countsFile <- system.file(file.path("extdata", "10x_visium",
                             "matrix.mtx"), package="SpatialExperiment")
 countsEx <- readMM(file=countsFile)
 
+# update column names
+colnames(featuresEx) <- c("gene_id", "gene_name", "feature_type")
+colnames(barcodesEx) <- c("barcode")
 ```
 
 ## Spatial Coordinates
@@ -85,6 +88,9 @@ tissPosEx <- read.csv(posFile,
                         col.names=c("Cell_ID", "in_tissue", 
                                     "array_row", "array_col",
                                     "pxl_col_in_fullres", "pxl_row_in_fullres"))
+
+# update column names
+colnames(tissPosEx)[1] <- "barcode"
 ```
 
 
