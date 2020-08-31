@@ -15,12 +15,12 @@ setValidity2("SpatialExperiment", .spe_validity)
 {
     msg <- NULL
     if( sum(c("in_tissue", "array_row", "array_col",
-            "pxl_col_in_fullres", "pxl_row_in_fullres")
+            "pxl_col_fullres", "pxl_row_fullres")
             %in% colnames(spatialCoords(object))) != 5 ) 
     {
         msg <- c(msg, paste0("Please use the 10x Visium colnames for the",
             " spatial coordinates. (Defaults are 'in_tissue, 'array_row'", 
-            " 'array_col', 'pxl_col_in_fullres', 'pxl_row_in_fullres')"))
+            " 'array_col', 'pxl_col_fullres', 'pxl_row_fullres')"))
     }
     
     if( sum(c("spot_diameter_fullres", "tissue_hires_scalef",
