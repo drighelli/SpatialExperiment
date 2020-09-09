@@ -73,7 +73,7 @@ ones are in tissue and which ones are not." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@ ones are in tissue and which ones are not." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/MouseCoronalVisiumAnalysis.html">10x-Visum Spatial Data Analysis</a>
+      <a href="../articles/MouseCoronalVisiumAnalysis.html">10x-Visium Spatial Data Analysis</a>
     </li>
     <li>
       <a href="../articles/seqFISHAnalysis.html">seqFISH Spatial Data Workflow</a>
@@ -105,7 +105,12 @@ ones are in tissue and which ones are not." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/drighelli/SpatialExperiment/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -120,7 +125,7 @@ ones are in tissue and which ones are not." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>isInTissue</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/drighelli/SpatialExperiment/blob/master/R/VisiumExperimentMethods.R'><code>R/VisiumExperimentMethods.R</code></a></small>
     <div class="hidden name"><code>isInTissue-VisiumExperiment-method.Rd</code></div>
     </div>
 
@@ -148,7 +153,9 @@ ones are in tissue and which ones are not.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>ve</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(file=<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"10x_visium"</span>,
                          <span class='st'>"ve.RDS"</span>), package=<span class='st'>"SpatialExperiment"</span>))
-<span class='fu'>isInTissue</span>(<span class='kw'>ve</span>)</div><div class='output co'>#&gt; logical(0)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>isInTissue</span>(<span class='kw'>ve</span>))</div><div class='output co'>#&gt; [1] 0</div></pre>
+<span class='fu'>isInTissue</span>(<span class='kw'>ve</span>)
+</div><div class='output co'>#&gt; logical(0)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>isInTissue</span>(<span class='kw'>ve</span>))
+</div><div class='output co'>#&gt; [1] 0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -164,7 +171,7 @@ ones are in tissue and which ones are not.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
 </div>
 
       </footer>

@@ -12,10 +12,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="S4 Class for Spatial Experiments handling ">
-<meta property="og:description" content="Defines a S4 classes for storing data for spatial experiments, such
-    as seqFISH and 10x-Visium Spatial Gene Expression. 
+<meta property="og:description" content="Defines S4 classes for storing data for spatial experiments.
+    Main examples are reported by using seqFISH and 10x-Visium Spatial Gene 
+    Expression data. 
     This includes specialized methods for storing, retrieving 
-    spatial coordinates, 10x dedicated parameters and their handling.  ">
+    spatial coordinates, 10x dedicated parameters and their handling.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -34,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
       </span>
     </div>
 
@@ -57,7 +58,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/MouseCoronalVisiumAnalysis.html">10x-Visum Spatial Data Analysis</a>
+      <a href="articles/MouseCoronalVisiumAnalysis.html">10x-Visium Spatial Data Analysis</a>
     </li>
     <li>
       <a href="articles/seqFISHAnalysis.html">seqFISH Spatial Data Workflow</a>
@@ -65,7 +66,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/drighelli/SpatialExperiment/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -77,14 +85,26 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-Defines a S4 classes for storing data for spatial experiments, such
-    as seqFISH and 10x-Visium Spatial Gene Expression. 
+Defines S4 classes for storing data for spatial experiments.
+    Main examples are reported by using seqFISH and 10x-Visium Spatial Gene 
+    Expression data. 
     This includes specialized methods for storing, retrieving 
-    spatial coordinates, 10x dedicated parameters and their handling.  
+    spatial coordinates, 10x dedicated parameters and their handling.
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Download from BIOC at <br><a href="https://www.bioconductor.org/packages/SpatialExperiment">https://​www.bioconductor.org/​packages/​SpatialExperiment</a>
+</li>
+<li>Browse source code at <br><a href="https://github.com/drighelli/SpatialExperiment/">https://​github.com/​drighelli/​SpatialExperiment/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/drighelli/SpatialExperiment/issues">https://​github.com/​drighelli/​SpatialExperiment/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
@@ -107,7 +127,7 @@ Defines a S4 classes for storing data for spatial experiments, such
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
 </div>
 
       </footer>

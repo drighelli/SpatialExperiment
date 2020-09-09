@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/MouseCoronalVisiumAnalysis.html">10x-Visum Spatial Data Analysis</a>
+      <a href="../articles/MouseCoronalVisiumAnalysis.html">10x-Visium Spatial Data Analysis</a>
     </li>
     <li>
       <a href="../articles/seqFISHAnalysis.html">seqFISH Spatial Data Workflow</a>
@@ -62,7 +62,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/drighelli/SpatialExperiment/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -78,85 +85,42 @@
       <h1 data-toc-skip>seqFISH Spatial Data Workflow</h1>
                         <h4 class="author">Dario Righelli</h4>
             
-            <h4 class="date">21 July, 2020</h4>
+            <h4 class="date">09 September, 2020</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/drighelli/SpatialExperiment/blob/master/vignettes/seqFISHAnalysis.Rmd"><code>vignettes/seqFISHAnalysis.Rmd</code></a></small>
       <div class="hidden name"><code>seqFISHAnalysis.Rmd</code></div>
 
     </div>
 
     
     
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
+<p>The SpatialExperiment package provides classes and methods for single cell spatial data handling.</p>
+<p>This vignettes shows how to create a SpatialExperiment class by loading a seqFISH spatial dataset.</p>
+<p>The seqFISH data are part of the <a href="https://github.com/BIRSBiointegration/Hackathon/tree/master/seqFISH">BIRS Biointegration Workshop Hackathon</a> previously published in <a href="https://www.nature.com/articles/nbt.4260">Zhu et al. 2018</a>.</p>
+</div>
+<div id="installation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h1>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, quietly = <span class="fl">TRUE</span>))
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
+<span class="kw">BiocManager</span>::<span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"SpatialExperiment"</span>)
+</pre></div>
+</div>
 <div id="loading-data-and-libraries" class="section level1">
 <h1 class="hasAnchor">
 <a href="#loading-data-and-libraries" class="anchor"></a>Loading data and libraries</h1>
 <p>We stored the provided seqFish and scRNA-seq data inside the SpatialExperiment external data seqFISH folder.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
+<div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">SpatialExperiment</span>)
 </pre></div>
-<pre><code>## Loading required package: SingleCellExperiment</code></pre>
-<pre><code>## Loading required package: SummarizedExperiment</code></pre>
-<pre><code>## Loading required package: GenomicRanges</code></pre>
-<pre><code>## Loading required package: stats4</code></pre>
-<pre><code>## Loading required package: BiocGenerics</code></pre>
-<pre><code>## Loading required package: parallel</code></pre>
-<pre><code>## 
-## Attaching package: 'BiocGenerics'</code></pre>
-<pre><code>## The following objects are masked from 'package:parallel':
-## 
-##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-##     parLapplyLB, parRapply, parSapply, parSapplyLB</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     IQR, mad, sd, var, xtabs</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
-##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
-##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which.max, which.min</code></pre>
-<pre><code>## Loading required package: S4Vectors</code></pre>
-<pre><code>## 
-## Attaching package: 'S4Vectors'</code></pre>
-<pre><code>## The following object is masked from 'package:base':
-## 
-##     expand.grid</code></pre>
-<pre><code>## Loading required package: IRanges</code></pre>
-<pre><code>## Loading required package: GenomeInfoDb</code></pre>
-<pre><code>## Loading required package: Biobase</code></pre>
-<pre><code>## Welcome to Bioconductor
-## 
-##     Vignettes contain introductory material; view with
-##     'browseVignettes()'. To cite Bioconductor, see
-##     'citation("Biobase")', and for packages 'citation("pkgname")'.</code></pre>
-<pre><code>## Loading required package: DelayedArray</code></pre>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## 
-## Attaching package: 'Matrix'</code></pre>
-<pre><code>## The following object is masked from 'package:S4Vectors':
-## 
-##     expand</code></pre>
-<pre><code>## Loading required package: matrixStats</code></pre>
-<pre><code>## 
-## Attaching package: 'matrixStats'</code></pre>
-<pre><code>## The following objects are masked from 'package:Biobase':
-## 
-##     anyMissing, rowMedians</code></pre>
-<pre><code>## 
-## Attaching package: 'DelayedArray'</code></pre>
-<pre><code>## The following objects are masked from 'package:matrixStats':
-## 
-##     colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     aperm, apply, rowsum</code></pre>
 <div id="seqfish-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#seqfish-data" class="anchor"></a>seqFISH data</h2>
-<div class="sourceCode" id="cb29"><pre class="downlit">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="kw">fishCoordFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>,
                             <span class="st">"fcortex.coordinates.txt"</span>), 
                             package=<span class="st">"SpatialExperiment"</span>)
@@ -176,43 +140,6 @@
                                 header=<span class="fl">FALSE</span>, sep=<span class="st">"\t"</span>, row.names=<span class="fl">1</span>)
 </pre></div>
 </div>
-<div id="single-cell-rna-seq-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#single-cell-rna-seq-data" class="anchor"></a>Single Cell RNA-seq data</h2>
-<div class="sourceCode" id="cb30"><pre class="downlit">
-<span class="kw">scRNACountsFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>, 
-                            <span class="st">"tasic_scRNAseq_training_b2.txt"</span>),
-                            package=<span class="st">"SpatialExperiment"</span>)
-<span class="kw">scRNASeqCounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(file=<span class="kw">scRNACountsFile</span>, header=<span class="fl">FALSE</span>, 
-                            sep=<span class="st">"\t"</span>, row.names=<span class="fl">1</span>)
-<span class="kw">scRNASeqCounts</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">scRNASeqCounts</span>)
-<span class="kw">scRNALabsFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>, 
-                            <span class="st">"tasic_scRNAseq_labels.tsv"</span>),
-                            package=<span class="st">"SpatialExperiment"</span>)
-<span class="kw">scRNASeqLabels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(file=<span class="kw">scRNALabsFile</span>, header=<span class="fl">FALSE</span>, sep=<span class="st">"\t"</span>)
-</pre></div>
-</div>
-</div>
-<div id="singlecellexperiment-package" class="section level1">
-<h1 class="hasAnchor">
-<a href="#singlecellexperiment-package" class="anchor"></a>SingleCellExperiment package</h1>
-<p>We load the scRNA-seq data into a SingleCellExperiment class, so we can use it for further joint analysis with the seqFISH data.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit">
-<span class="kw">sce</span> <span class="op">&lt;-</span> <span class="fu">SingleCellExperiment</span>(rowData=<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="kw">scRNASeqCounts</span>), 
-                    colData=<span class="kw">scRNASeqLabels</span>,
-                    assays=<span class="fu">SimpleList</span>(counts=<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">scRNASeqCounts</span>)))
-<span class="fu"><a href="../reference/show,SpatialExperiment-method.html">show</a></span>(<span class="kw">sce</span>)
-</pre></div>
-<pre><code>## class: SingleCellExperiment 
-## dim: 113 1723 
-## metadata(0):
-## assays(1): counts
-## rownames(113): abca15 abca9 ... zfp715 zfp90
-## rowData names(1): X
-## colnames(1723): V2 V3 ... V1723 V1724
-## colData names(3): V1 V2 V3
-## reducedDimNames(0):
-## altExpNames(0):</code></pre>
 </div>
 <div id="spatialexperiment-package" class="section level1">
 <h1 class="hasAnchor">
@@ -221,7 +148,7 @@
 <h2 class="hasAnchor">
 <a href="#class-handling" class="anchor"></a>Class handling</h2>
 <p>We can load the data inside the SpatialExperiment class. We then use the show method for looking at the class description.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit">
+<div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatialExperiment-class.html">SpatialExperiment</a></span>(rowData=<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="kw">fishFeaturesCounts</span>),
                         colData=<span class="kw">fishCellLabels</span>,
                         assays=<span class="fu">SimpleList</span>(counts=<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">fishFeaturesCounts</span>)),
@@ -238,7 +165,7 @@
 ## colData names(6): Cell_ID cluster ... Irrelevant Prob
 ## reducedDimNames(0):
 ## altExpNames(0):
-## spatialCoordinates(4): Cell_ID Irrelevant x y</code></pre>
+## spatialCoords(4): Cell_ID Irrelevant x y</code></pre>
 </div>
 <div id="spatial-coordinates" class="section level2">
 <h2 class="hasAnchor">
@@ -247,7 +174,7 @@
 <div id="getter" class="section level3">
 <h3 class="hasAnchor">
 <a href="#getter" class="anchor"></a>Getter</h3>
-<div class="sourceCode" id="cb35"><pre class="downlit">
+<div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span>(<span class="kw">se</span>)
 </pre></div>
 <pre><code>## DataFrame with 1597 rows and 4 columns
@@ -269,7 +196,7 @@
 <h3 class="hasAnchor">
 <a href="#setter" class="anchor"></a>Setter</h3>
 <p>We create a fake fish coordinates data frame and overwrite the old one, showing that the y coordinates are identical to the x ones.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit">
+<div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="kw">fakeFishCoords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="kw">fishCoordinates</span>[,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)], <span class="kw">fishCoordinates</span>[,<span class="fl">3</span>])
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">fakeFishCoords</span>) <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Cell_ID"</span>, <span class="st">"Irrelevant"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>)
 <span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span>(<span class="kw">se</span>) <span class="op">&lt;-</span> <span class="kw">fakeFishCoords</span>
@@ -289,12 +216,12 @@
 ## 1595      1595        100   1388.76   1388.76
 ## 1596      1596        100   5172.85   5172.85
 ## 1597      1597        100   5220.60   5220.60</code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit">
+<div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
 </pre></div>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Catalina 10.15.5
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
@@ -308,26 +235,27 @@
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] SpatialExperiment_0.99.2    SingleCellExperiment_1.11.6
-##  [3] SummarizedExperiment_1.19.5 DelayedArray_0.15.6        
+##  [1] SpatialExperiment_0.99.3    SingleCellExperiment_1.11.6
+##  [3] SummarizedExperiment_1.19.6 DelayedArray_0.15.7        
 ##  [5] matrixStats_0.56.0          Matrix_1.2-18              
-##  [7] Biobase_2.49.0              GenomicRanges_1.41.5       
-##  [9] GenomeInfoDb_1.25.8         IRanges_2.23.10            
+##  [7] Biobase_2.49.1              GenomicRanges_1.41.6       
+##  [9] GenomeInfoDb_1.25.11        IRanges_2.23.10            
 ## [11] S4Vectors_0.27.12           BiocGenerics_0.35.4        
 ## [13] BiocStyle_2.17.0           
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] compiler_4.0.2         BiocManager_1.30.10    XVector_0.29.3        
-##  [4] bitops_1.0-6           tools_4.0.2            zlibbioc_1.35.0       
-##  [7] digest_0.6.25          evaluate_0.14          memoise_1.1.0         
-## [10] lattice_0.20-41        rlang_0.4.7            yaml_2.2.1            
-## [13] pkgdown_1.5.1.9000     xfun_0.15              GenomeInfoDbData_1.2.3
-## [16] stringr_1.4.0          knitr_1.29             desc_1.2.0            
-## [19] fs_1.4.2               rprojroot_1.3-2        grid_4.0.2            
-## [22] R6_2.4.1               rmarkdown_2.3.2        bookdown_0.20         
-## [25] magrittr_1.5           backports_1.1.8        htmltools_0.5.0       
-## [28] assertthat_0.2.1       stringi_1.4.6          RCurl_1.98-1.2        
-## [31] crayon_1.3.4</code></pre>
+##  [1] cpp11_0.2.1            compiler_4.0.2         BiocManager_1.30.10   
+##  [4] XVector_0.29.3         bitops_1.0-6           tools_4.0.2           
+##  [7] zlibbioc_1.35.0        digest_0.6.25          evaluate_0.14         
+## [10] memoise_1.1.0          lattice_0.20-41        rlang_0.4.7           
+## [13] yaml_2.2.1             pkgdown_1.6.0.9000     xfun_0.17             
+## [16] GenomeInfoDbData_1.2.3 stringr_1.4.0          knitr_1.29            
+## [19] desc_1.2.0             fs_1.5.0               systemfonts_0.3.1     
+## [22] rprojroot_1.3-2        grid_4.0.2             R6_2.4.1              
+## [25] rmarkdown_2.3          bookdown_0.20          magrittr_1.5          
+## [28] backports_1.1.9        htmltools_0.5.0        assertthat_0.2.1      
+## [31] ragg_0.3.1             stringi_1.5.3          RCurl_1.98-1.2        
+## [34] crayon_1.3.4</code></pre>
 </div>
 </div>
 </div>
@@ -348,7 +276,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
 </div>
 
       </footer>

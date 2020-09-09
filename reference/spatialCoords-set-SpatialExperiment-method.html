@@ -73,7 +73,7 @@ SpatialExperiment class object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@ SpatialExperiment class object." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/MouseCoronalVisiumAnalysis.html">10x-Visum Spatial Data Analysis</a>
+      <a href="../articles/MouseCoronalVisiumAnalysis.html">10x-Visium Spatial Data Analysis</a>
     </li>
     <li>
       <a href="../articles/seqFISHAnalysis.html">seqFISH Spatial Data Workflow</a>
@@ -105,7 +105,12 @@ SpatialExperiment class object." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/drighelli/SpatialExperiment/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -120,7 +125,7 @@ SpatialExperiment class object." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>spatialCoords-setter</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/drighelli/SpatialExperiment/blob/master/R/SpatialExperimentMethods.R'><code>R/SpatialExperimentMethods.R</code></a></small>
     <div class="hidden name"><code>spatialCoords-set-SpatialExperiment-method.Rd</code></div>
     </div>
 
@@ -150,7 +155,8 @@ SpatialExperiment class object.</p>
     <p>none</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/example.html'>example</a></span>(<span class='kw'>SpatialExperiment</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/example.html'>example</a></span>(<span class='kw'>SpatialExperiment</span>)
+</div><div class='output co'>#&gt; 
 #&gt; SptlEx&gt; ## building random seqFISH data coordinates
 #&gt; SptlEx&gt; fishCoordinates &lt;- data.frame(Cell_ID=paste0("cell",c(1:30)),
 #&gt; SptlEx+                 Irrelevant=100,
@@ -175,7 +181,8 @@ SpatialExperiment class object.</p>
 #&gt; SptlEx+                         spatialCoords=fishCoordinates)</div><div class='input'><span class='kw'>fakeFishCoords</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='kw'>fishCoordinates</span>[,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>)], <span class='kw'>fishCoordinates</span>[,<span class='fl'>3</span>])
         <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>fakeFishCoords</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MyCell_ID"</span>, <span class='st'>"Irrelevant"</span>, <span class='st'>"x"</span>, <span class='st'>"y"</span>)
 <span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>) <span class='op'>&lt;-</span> <span class='kw'>fakeFishCoords</span>
-<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>)</div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>)
+</div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
 #&gt;       MyCell_ID Irrelevant         x         y
 #&gt;     &lt;character&gt;  &lt;numeric&gt; &lt;integer&gt; &lt;integer&gt;
 #&gt; 1         cell1        100      2901      2901
@@ -204,7 +211,7 @@ SpatialExperiment class object.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
 </div>
 
       </footer>
