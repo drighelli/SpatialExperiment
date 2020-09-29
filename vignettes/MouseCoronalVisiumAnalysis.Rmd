@@ -13,10 +13,6 @@ editor_options:
     chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Introduction
 The SpatialExperiment package provides classes and methods for single cell 
 spatial data handling.

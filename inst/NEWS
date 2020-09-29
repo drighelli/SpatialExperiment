@@ -1,3 +1,5 @@
+changes in versionn 0.99.4 (2020-24-07)
++ implementing bioconductor revisions first round
 changes in versionn 0.99.3 (2020-21-07)
 + implementing imagePaths in VisiumExperiment class
 + SpatialExperiment can now be created also without spatial coordinates
