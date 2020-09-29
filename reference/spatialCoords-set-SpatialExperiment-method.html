@@ -73,19 +73,13 @@ SpatialExperiment class object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -135,7 +129,7 @@ SpatialExperiment class object.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for SpatialExperiment</span>
-<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span></pre>
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,7 +149,7 @@ SpatialExperiment class object.</p>
     <p>none</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/example.html'>example</a></span>(<span class='kw'>SpatialExperiment</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/example.html'>example</a></span><span class='op'>(</span><span class='va'>SpatialExperiment</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; SptlEx&gt; ## building random seqFISH data coordinates
 #&gt; SptlEx&gt; fishCoordinates &lt;- data.frame(Cell_ID=paste0("cell",c(1:30)),
@@ -178,10 +172,10 @@ SpatialExperiment class object.</p>
 #&gt; SptlEx&gt; se &lt;- SpatialExperiment(rowData=rownames(fishCounts),
 #&gt; SptlEx+                         colData=fishCellLabels,
 #&gt; SptlEx+                         assays=SimpleList(counts=as.matrix(fishCounts)),
-#&gt; SptlEx+                         spatialCoords=fishCoordinates)</div><div class='input'><span class='kw'>fakeFishCoords</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='kw'>fishCoordinates</span>[,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>)], <span class='kw'>fishCoordinates</span>[,<span class='fl'>3</span>])
-        <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>fakeFishCoords</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MyCell_ID"</span>, <span class='st'>"Irrelevant"</span>, <span class='st'>"x"</span>, <span class='st'>"y"</span>)
-<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>) <span class='op'>&lt;-</span> <span class='kw'>fakeFishCoords</span>
-<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span>(<span class='kw'>se</span>)
+#&gt; SptlEx+                         spatialCoords=fishCoordinates)</div><div class='input'><span class='va'>fakeFishCoords</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>fishCoordinates</span><span class='op'>[</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span>, <span class='va'>fishCoordinates</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>
+        <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>fakeFishCoords</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MyCell_ID"</span>, <span class='st'>"Irrelevant"</span>, <span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span><span class='op'>(</span><span class='va'>se</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>fakeFishCoords</span>
+<span class='fu'><a href='spatialCoords,SpatialExperiment-method.html'>spatialCoords</a></span><span class='op'>(</span><span class='va'>se</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; DataFrame with 30 rows and 4 columns
 #&gt;       MyCell_ID Irrelevant         x         y
 #&gt;     &lt;character&gt;  &lt;numeric&gt; &lt;integer&gt; &lt;integer&gt;
@@ -211,7 +205,7 @@ SpatialExperiment class object.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

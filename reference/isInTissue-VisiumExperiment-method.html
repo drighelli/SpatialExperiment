@@ -73,19 +73,13 @@ ones are in tissue and which ones are not." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -135,7 +129,7 @@ ones are in tissue and which ones are not.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for VisiumExperiment</span>
-<span class='fu'>isInTissue</span>(<span class='kw'>x</span>)</pre>
+<span class='fu'>isInTissue</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,10 +145,10 @@ ones are in tissue and which ones are not.</p>
     <p>a TRUE/FALSE mask.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>ve</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(file=<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"10x_visium"</span>,
-                         <span class='st'>"ve.RDS"</span>), package=<span class='st'>"SpatialExperiment"</span>))
-<span class='fu'>isInTissue</span>(<span class='kw'>ve</span>)
-</div><div class='output co'>#&gt; logical(0)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>isInTissue</span>(<span class='kw'>ve</span>))
+    <pre class="examples"><div class='input'><span class='va'>ve</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span>file<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"10x_visium"</span>,
+                         <span class='st'>"ve.RDS"</span><span class='op'>)</span>, package<span class='op'>=</span><span class='st'>"SpatialExperiment"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>isInTissue</span><span class='op'>(</span><span class='va'>ve</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; logical(0)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'>isInTissue</span><span class='op'>(</span><span class='va'>ve</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -171,7 +165,7 @@ ones are in tissue and which ones are not.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

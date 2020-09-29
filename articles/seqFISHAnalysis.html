@@ -31,18 +31,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SpatialExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -85,7 +79,7 @@
       <h1 data-toc-skip>seqFISH Spatial Data Workflow</h1>
                         <h4 class="author">Dario Righelli</h4>
             
-            <h4 class="date">09 September, 2020</h4>
+            <h4 class="date">29 September, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/drighelli/SpatialExperiment/blob/master/vignettes/seqFISHAnalysis.Rmd"><code>vignettes/seqFISHAnalysis.Rmd</code></a></small>
       <div class="hidden name"><code>seqFISHAnalysis.Rmd</code></div>
@@ -105,40 +99,37 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, quietly = <span class="fl">TRUE</span>))
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-<span class="kw">BiocManager</span>::<span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"SpatialExperiment"</span>)
-</pre></div>
+<span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"SpatialExperiment"</span><span class="op">)</span></pre></div>
 </div>
 <div id="loading-data-and-libraries" class="section level1">
 <h1 class="hasAnchor">
 <a href="#loading-data-and-libraries" class="anchor"></a>Loading data and libraries</h1>
 <p>We stored the provided seqFish and scRNA-seq data inside the SpatialExperiment external data seqFISH folder.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">SpatialExperiment</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SpatialExperiment</span><span class="op">)</span></pre></div>
 <div id="seqfish-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#seqfish-data" class="anchor"></a>seqFISH data</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">fishCoordFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>,
-                            <span class="st">"fcortex.coordinates.txt"</span>), 
-                            package=<span class="st">"SpatialExperiment"</span>)
-<span class="kw">fishCoordinates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="kw">fishCoordFile</span>, header=<span class="fl">FALSE</span>, sep=<span class="st">" "</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">fishCoordinates</span>) <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Cell_ID"</span>, <span class="st">"Irrelevant"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>)
+<span class="va">fishCoordFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>,
+                            <span class="st">"fcortex.coordinates.txt"</span><span class="op">)</span>, 
+                            package<span class="op">=</span><span class="st">"SpatialExperiment"</span><span class="op">)</span>
+<span class="va">fishCoordinates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="va">fishCoordFile</span>, header<span class="op">=</span><span class="cn">FALSE</span>, sep<span class="op">=</span><span class="st">" "</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">fishCoordinates</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Cell_ID"</span>, <span class="st">"Irrelevant"</span>, <span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>
 
-<span class="kw">fishCellLabsFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>, 
-                            <span class="st">"seqfish_cell_labels.tsv"</span>),
-                            package=<span class="st">"SpatialExperiment"</span>)
-<span class="kw">fishCellLabels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(file=<span class="kw">fishCellLabsFile</span>, header=<span class="fl">FALSE</span>, sep=<span class="st">"\t"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">fishCellLabels</span>) <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Cell_ID"</span>, <span class="st">"cluster"</span>, <span class="st">"class"</span>, <span class="st">"classID"</span>, 
-                                <span class="st">"Irrelevant"</span>, <span class="st">"Prob"</span>)
-<span class="kw">fishFeatCountsFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>,
-                            <span class="st">"seqfish_normalized_cortex_b2_testing.txt"</span>), 
-                            package=<span class="st">"SpatialExperiment"</span>)
-<span class="kw">fishFeaturesCounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(file=<span class="kw">fishFeatCountsFile</span>, 
-                                header=<span class="fl">FALSE</span>, sep=<span class="st">"\t"</span>, row.names=<span class="fl">1</span>)
-</pre></div>
+<span class="va">fishCellLabsFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>, 
+                            <span class="st">"seqfish_cell_labels.tsv"</span><span class="op">)</span>,
+                            package<span class="op">=</span><span class="st">"SpatialExperiment"</span><span class="op">)</span>
+<span class="va">fishCellLabels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file<span class="op">=</span><span class="va">fishCellLabsFile</span>, header<span class="op">=</span><span class="cn">FALSE</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">fishCellLabels</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Cell_ID"</span>, <span class="st">"cluster"</span>, <span class="st">"class"</span>, <span class="st">"classID"</span>, 
+                                <span class="st">"Irrelevant"</span>, <span class="st">"Prob"</span><span class="op">)</span>
+<span class="va">fishFeatCountsFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"seqFISH"</span>,
+                            <span class="st">"seqfish_normalized_cortex_b2_testing.txt"</span><span class="op">)</span>, 
+                            package<span class="op">=</span><span class="st">"SpatialExperiment"</span><span class="op">)</span>
+<span class="va">fishFeaturesCounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>file<span class="op">=</span><span class="va">fishFeatCountsFile</span>, 
+                                header<span class="op">=</span><span class="cn">FALSE</span>, sep<span class="op">=</span><span class="st">"\t"</span>, row.names<span class="op">=</span><span class="fl">1</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="spatialexperiment-package" class="section level1">
@@ -149,12 +140,11 @@
 <a href="#class-handling" class="anchor"></a>Class handling</h2>
 <p>We can load the data inside the SpatialExperiment class. We then use the show method for looking at the class description.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatialExperiment-class.html">SpatialExperiment</a></span>(rowData=<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="kw">fishFeaturesCounts</span>),
-                        colData=<span class="kw">fishCellLabels</span>,
-                        assays=<span class="fu">SimpleList</span>(counts=<span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(<span class="kw">fishFeaturesCounts</span>)),
-                        spatialCoords=<span class="kw">fishCoordinates</span>)
-<span class="fu"><a href="../reference/show,SpatialExperiment-method.html">show</a></span>(<span class="kw">se</span>)
-</pre></div>
+<span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatialExperiment-class.html">SpatialExperiment</a></span><span class="op">(</span>rowData<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">fishFeaturesCounts</span><span class="op">)</span>,
+                        colData<span class="op">=</span><span class="va">fishCellLabels</span>,
+                        assays<span class="op">=</span><span class="fu">SimpleList</span><span class="op">(</span>counts<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">fishFeaturesCounts</span><span class="op">)</span><span class="op">)</span>,
+                        spatialCoords<span class="op">=</span><span class="va">fishCoordinates</span><span class="op">)</span>
+<span class="fu"><a href="../reference/show,SpatialExperiment-method.html">show</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></pre></div>
 <pre><code>## class: SpatialExperiment 
 ## dim: 113 1597 
 ## metadata(0):
@@ -175,8 +165,7 @@
 <h3 class="hasAnchor">
 <a href="#getter" class="anchor"></a>Getter</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span>(<span class="kw">se</span>)
-</pre></div>
+<span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></pre></div>
 <pre><code>## DataFrame with 1597 rows and 4 columns
 ##        Cell_ID Irrelevant         x         y
 ##      &lt;integer&gt;  &lt;integer&gt; &lt;numeric&gt; &lt;numeric&gt;
@@ -197,11 +186,10 @@
 <a href="#setter" class="anchor"></a>Setter</h3>
 <p>We create a fake fish coordinates data frame and overwrite the old one, showing that the y coordinates are identical to the x ones.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="kw">fakeFishCoords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="kw">fishCoordinates</span>[,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)], <span class="kw">fishCoordinates</span>[,<span class="fl">3</span>])
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">fakeFishCoords</span>) <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Cell_ID"</span>, <span class="st">"Irrelevant"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>)
-<span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span>(<span class="kw">se</span>) <span class="op">&lt;-</span> <span class="kw">fakeFishCoords</span>
-<span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span>(<span class="kw">se</span>)
-</pre></div>
+<span class="va">fakeFishCoords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">fishCoordinates</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span>, <span class="va">fishCoordinates</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">fakeFishCoords</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Cell_ID"</span>, <span class="st">"Irrelevant"</span>, <span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">fakeFishCoords</span>
+<span class="fu"><a href="../reference/spatialCoords,SpatialExperiment-method.html">spatialCoords</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></pre></div>
 <pre><code>## DataFrame with 1597 rows and 4 columns
 ##        Cell_ID Irrelevant         x         y
 ##      &lt;integer&gt;  &lt;integer&gt; &lt;numeric&gt; &lt;numeric&gt;
@@ -217,8 +205,7 @@
 ## 1596      1596        100   5172.85   5172.85
 ## 1597      1597        100   5220.60   5220.60</code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Catalina 10.15.6
@@ -235,25 +222,25 @@
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] SpatialExperiment_0.99.3    SingleCellExperiment_1.11.6
-##  [3] SummarizedExperiment_1.19.6 DelayedArray_0.15.7        
-##  [5] matrixStats_0.56.0          Matrix_1.2-18              
+##  [1] SpatialExperiment_0.99.4    SingleCellExperiment_1.11.7
+##  [3] SummarizedExperiment_1.19.7 DelayedArray_0.15.10       
+##  [5] matrixStats_0.57.0          Matrix_1.2-18              
 ##  [7] Biobase_2.49.1              GenomicRanges_1.41.6       
 ##  [9] GenomeInfoDb_1.25.11        IRanges_2.23.10            
-## [11] S4Vectors_0.27.12           BiocGenerics_0.35.4        
-## [13] BiocStyle_2.17.0           
+## [11] S4Vectors_0.27.13           BiocGenerics_0.35.4        
+## [13] BiocStyle_2.17.1           
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] cpp11_0.2.1            compiler_4.0.2         BiocManager_1.30.10   
 ##  [4] XVector_0.29.3         bitops_1.0-6           tools_4.0.2           
 ##  [7] zlibbioc_1.35.0        digest_0.6.25          evaluate_0.14         
 ## [10] memoise_1.1.0          lattice_0.20-41        rlang_0.4.7           
-## [13] yaml_2.2.1             pkgdown_1.6.0.9000     xfun_0.17             
-## [16] GenomeInfoDbData_1.2.3 stringr_1.4.0          knitr_1.29            
+## [13] yaml_2.2.1             pkgdown_1.6.1.9000     xfun_0.17             
+## [16] GenomeInfoDbData_1.2.3 stringr_1.4.0          knitr_1.30            
 ## [19] desc_1.2.0             fs_1.5.0               systemfonts_0.3.1     
 ## [22] rprojroot_1.3-2        grid_4.0.2             R6_2.4.1              
 ## [25] rmarkdown_2.3          bookdown_0.20          magrittr_1.5          
-## [28] backports_1.1.9        htmltools_0.5.0        assertthat_0.2.1      
+## [28] backports_1.1.10       htmltools_0.5.0        assertthat_0.2.1      
 ## [31] ragg_0.3.1             stringi_1.5.3          RCurl_1.98-1.2        
 ## [34] crayon_1.3.4</code></pre>
 </div>
@@ -276,7 +263,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
