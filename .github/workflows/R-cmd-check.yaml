@@ -20,11 +20,19 @@ jobs:
       matrix:
         config:
         - { os: windows-latest, r: 'devel', bioc: 'devel'}
+        - { os: windows-latest, r: 'devel', bioc: 'release'}
+        - { os: windows-latest, r: 'release', bioc: 'devel'}
+        - { os: windows-latest, r: 'release', bioc: 'release'}
+        #
         - { os: macOS-latest, r: 'devel', bioc: 'devel'}
-        - { os: macOS-latest, r: 'devel', bioc: 'devel'}
+        - { os: macOS-latest, r: 'devel', bioc: 'release'}
+        - { os: macOS-latest, r: 'release', bioc: 'devel'}
+        - { os: macOS-latest, r: 'release', bioc: 'release'}
+        #
         - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:devel'}
+        - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
+        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:devel'}
         - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
-#        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_10'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
