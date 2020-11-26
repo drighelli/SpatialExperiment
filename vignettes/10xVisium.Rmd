@@ -100,7 +100,7 @@ sample
 ····|—tissue_positions_list.csv 
 ```
 
-We can load these data into a `SpatialExperiment` using the `read10xVisium` function", "which will read in all relevant information", "including the count data", "spatial coordinates", "scale factors", "and images:
+We can load these data into a `SpatialExperiment` using the `read10xVisium` function, which will read in all relevant information, including the count data, spatial coordinates, scale factors, and images:
 
 ```{r}
 dir <- system.file(
@@ -112,7 +112,6 @@ samples <- file.path(dir, sample_ids)
 
 list.files(samples[1])
 list.files(file.path(samples[1], "spatial"))
-list.files(file.path(samples[1], "raw_feature_bc_matrix"))
 
 (ve <- read10xVisium(samples, sample_ids,
   images = "lowres", # specify which image(s) to include
