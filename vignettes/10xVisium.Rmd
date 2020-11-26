@@ -1,0 +1,464 @@
+---
+title: "Demo"
+author: "Helena L. Crowell"
+date: "`r format(Sys.Date(), '%b %m, %Y')`"
+output: BiocStyle::html_document
+---
+
+<style type="text/css"> .smaller { font-size: 10px } </style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
+```
+
+```{r message = FALSE, warning = FALSE}
+library(dplyr)
+library(ggplot2)
+library(scater)
+library(SpatialExperiment)
+library(tidyr)
+```
+
+# Summary
+
+A brief summary of the package's current structure is outlined below. To give some examples, we load an example `SpatialExperiment` containing 10X Visium spatial gene expression data of two serial mouse brain sections (Sagittal-Posterior) available [here](https://support.10xgenomics.com/spatial-gene-expression/datasets).
+
+```{r}
+data(ve)
+```
+
+## The `SpatialExperiment` class {- .tabset}
+
+### Spatial data {-}
+
+Spatial data are stored in the `colData` and must contain:
+
+* a character `sample_id` column giving unique sample identifiers
+* a logical `in_tissue` column indicating whether or not an observation was mapped to tissue
+* a two- or three-column numeric `xy_coords` matrix storing spatial coordinates
+  
+```{r}
+head(colData(ve))
+```
+  
+### Image data {-} 
+  
+Image-related data are stored in the `int_metadata()$imgData` field as a `DataFrame` with the following columns:
+
+* `sample_id` and `image_id` specifying the image's sample and image identifier
+* `data`: a list of `SpatialImage`s containing the image's `grob`, path and/or URL
+* `width` and `height` giving the image's dimension in pixel
+* `scaleFactor` used to re-scale spatial coordinates according to the image's resolution 
+
+```{r}
+(df <- imgData(ve))
+```
+
+### Getters, setters & methods {-}
+
+* `scaleFactors()` retrieves scale factors
+* `imgData(), imgData() <- value` to get/set the `imgData` `DataFrame`
+* `add/removeImg()` can be used to create/eliminate images in the `imgData` 
+* `load/unloadImg()` can be used to load/unload images, i.e. add/remove the `grob` 
+* the `read10xVisium()` constructor can be used to create a `SpatialExperiment` from 10x Visium spatial gene expression data in one line
+
+## The `SpatialImage` class
+
+Contains three slots that store any available information associated with an image: 
+
+* `@grob`: NULL or an object class `rastergrob` from the `grid` package 
+* `@path`: NULL or a character strings specifying an image file name (.png, .jpg or .tif)
+* `@url`: NULL or a character string specifying an URL from which to retrieve the image
+
+```{r}
+df$data[[1]]
+```
+
+* `imgGrob/path/Url(), ... <- value` access/set data in the respective slots
+* `load/unloadImg()` are used to add/drop the `grob` slot
+* `loadImg()` supports caching when loading from a URL; in general, paths are given precedence over URLs
+
+# The `SpatialExperiment` class
+
+The `SpatialExperiment` class extends the `SingleCellExperiment` class by requiring specific fields to be present in the object's `colData` and `int_metadata`. These aim to accommodate spatially and image related data", "respectively. 
+
+# Reading 10X Visium data
+
+The 10X Genomics' *CellRanger* pipeline will process the data using standard output file formats that are saved, for each sample, in a single directory `/<sample>/outs/` of the following structure: 
+
+```{bash eval = FALSE}
+sample 
+|—outs 
+··|—raw/filtered_feature_bc_matrix.h5 
+··|—raw/filtered_feature_bc_matrix 
+····|—barcodes.tsv 
+····|—features.tsv 
+····|—matrix.mtx 
+··|—spatial 
+····|—scalefactors_json.json 
+····|—tissue_lowres_image.png 
+····|—tissue_positions_list.csv 
+```
+
+We can load these data into a `SpatialExperiment` using the `read10xVisium` function", "which will read in all relevant information", "including the count data", "spatial coordinates", "scale factors", "and images:
+
+```{r}
+dir <- system.file(
+  file.path("extdata", "10xVisium"), 
+  package = "SpatialExperiment")
+
+sample_ids <- c("section1", "section2")
+samples <- file.path(dir, sample_ids)
+
+list.files(samples[1])
+list.files(file.path(samples[1], "spatial"))
+list.files(file.path(samples[1], "raw_feature_bc_matrix"))
+
+(ve <- read10xVisium(samples, sample_ids,
+  images = "lowres", # specify which image(s) to include
+  load = TRUE))      # specify whether or not to load image(s)
+```
+
+# Spatial data
+
+Sample identifiers, indication of whether or not an observation was mapped to the tissue, as well as spatial coordinates are stored inside the `colData`.
+
+```{r}
+# tabulate number of spots mapped to tissue
+table(
+  in_tissue = ve$in_tissue,
+  sample_id = ve$sample_id)
+```
+
+```{r}
+# view spatial coordinates
+head(ve$xy_coords)
+```
+
+# Image data
+
+All image related data are stored inside the `int_metadata`'s `imgData` field as `DataFrame` of the following structure: 
+
+* each row corresponds to one image for a given sample and with a given unique image identifier (e.g. its resolutions)
+* for each image, columns specify:
+  * which `sample_id` the image belongs to
+  * a unique `image_id` in order to accommodate multiple images for a given sample (e.g. of different resolutions)
+  * the image's `data` (a `SpatialImage` object)
+  * `width` and `height` of the image in pixel 
+  * the `scaleFactor` that adjusts pixel positions of the original, full-resolution image to pixel positions in the image
+
+The `imgData()` accessor can be used to retrieve the image data stored within the object:
+
+```{r}
+imgData(ve)
+```
+
+## The `SpatialImage` class
+
+Images are stored inside the `data` field of the `imgData` as a list of `SpatialImage`s, which enables storing three types of information that may be associated with an image:
+
+* `grob`: a `grob` object of the image 
+* `path`: a file path from which to load the image
+* `url`: a URL from which to retrieve the image
+
+Data available in an object of class `SpatialImage` may be accessed via the `imgGrob()`, `imgPath()` and `imgUrl()` accessors.
+
+```{r}
+imgData(ve)$data
+```
+
+While `grob`s can be used directly for plotting (e.g. using `grid.draw` or `ggplot2`), when multiple images are to be stored (say, for many samples and of different resolutions), or when a `SpatialExperiment` is to be exported, the `path` and `url` provide the option to store an image's source at minimal storage cost. 
+
+```{r fig.small = TRUE}
+# retrieve 'SpatialImage' for 1st image entry & visualize it
+si <- imgData(ve)$data[[1]]
+grid::grid.draw(imgGrob(si))
+```
+
+## Methods for image handling
+
+The `SpatialExperiment` package provides various functions to handle which and how image data is stored in the object. These include:
+
+* `loadImg` to actively load the image (from a path or URL) and store it as a `grob`
+* `unloadImg` to drop the `grob`, while retaining the source path and/or URL
+* `addImg` to add an image entry (as a path, URL, or `grob`)
+* `removeImg` to drop an image entry entirely
+
+Besides a path or URL to source the image from and a numeric scale factor, `addImg()` requires specification of the `sample_id` the new image belongs to, and an `image_id` that is not yet in use for that sample:
+
+```{r fig.small=TRUE}
+url <- "https://i.redd.it/3pw5uah7xo041.jpg"
+ve <- addImg(ve, 
+  sample_id = "section1", image_id = "pomeranian",
+  imageSource = url, scaleFactor = NA_real_, load = TRUE)
+
+grb <- imgGrob(ve, 
+  sample_id = "section1", 
+  image_id = "pomeranian")
+grid::grid.draw(grb)
+```
+
+`loadImg()` and `add/removeImg()` are more flexible in the specification of the `sample/image_id` arguments. Specifically, 
+
+- `TRUE` is equivalent to *all*, e.g. `sample_id = "<sample>", image_id = TRUE` will drop all images for a given sample.
+- `NULL` defaults to the first entry available, e.g., `sample_id = "<sample>", image_id = NULL` will drop the first image for a given sample.
+
+For example, `sample_id,image_id = TRUE,TRUE` will specify all images; `NULL,NULL` corresponds to the first image entry in the `imgData`; `TRUE,NULL` equals the first image for all samples; and `NULL,TRUE` matches all images for the first sample.
+
+**Example 1:** Unload all images, i.e., drop all `grob`s. As a result, `grob` slots will be set to `NULL`, and all `SpatialImage`s now say `> not loaded`.
+
+```{r}
+imgData(ve <- unloadImg(ve, sample_id = TRUE, image_id = TRUE))$data
+```
+
+**Example 2:** Reload the first image for sample `section2`; the corresponding image now says `grob: Av` (for available) and `> loaded`.
+
+```{r}
+imgData(ve <- loadImg(ve, "section2"))$data[[2]]
+```
+
+**Example 3:** Remove `lowres` image for `section1` sample; the image is now completely gone from the `imgData`.
+
+```{r}
+imgData(ve <- removeImg(ve, "section1", "pomeranian"))
+```
+
+## Image caching
+
+In general, paths take precedence over URLs, i.e. an image will only be loaded from the `imgUrl` if there is no `imgPath` available.
+
+Images loaded from URLs will be cached, i.e. they are downloaded once and the file path where they were stored in will be stored under the `SpatialImage`'s `imgPath`:
+
+```{r results="show"}
+imgData(loadImg(ve, TRUE, TRUE))$data[[2]]
+```
+
+For example, if we unload `section1`'s `fullres` image now and reload it, there won't be another progress bar (the chunk somehow above doesn't display one anyways... but it does in the console):
+
+```{r}
+ve <- unloadImg(ve, TRUE, TRUE)
+ve <- loadImg(ve, TRUE, TRUE)
+```
+
+# `colData` replacement
+
+While storing of `sample_id`s, the `in_tissue` indicator, and spatial `xy_coords` inside the `SpatialExperiment`'s `colData` enables directly accessibility via the `colData` and `$` accessors, these fields are protected against arbitrary modification. This affects replacement operations to the following effects:
+
+Renaming is generally not permitted:
+
+```{r error = TRUE}
+names(colData(ve))[1] <- "a"
+```
+
+Replacement of `sample_id`s is permitted provided that 
+
+i. the number of unique sample identifiers is retained
+ii. newly provided sample identifiers are a one-to-one mapping
+
+```{r error = TRUE}
+ve$sample_id <- sample(c("a", "b", "c"), ncol(ve), TRUE)
+ve$sample_id <- sample(c("a", "b"), ncol(ve), TRUE)
+```
+
+Valid replacement will be propagated to the `imgData`:
+  
+```{r}
+tmp <- ve
+i <- as.numeric(factor(ve$sample_id))
+tmp$sample_id <- c("sample1", "sample2")[i]
+imgData(tmp)
+```
+
+The `in_tissue` and `xy_coords` fields may be modified provided that the former is a logical vector, and the latter is a two- or three-column numeric matrix:
+
+```{r error = TRUE}
+ve$in_tissue <- "x"
+ve$xy_coords <- "x"
+```
+
+`colData(.) <- NULL` will retain only the `sample_id`, `in_tissue` and `xy_coords` fields:
+
+```{r}
+names(colData(ve))
+colData(ve) <- NULL
+names(colData(ve))
+```
+
+# Visualization
+
+The `DataFrame` format enforced by the `imgData` field works nicely with `ggplot2`. Here's a prototype of what a wrapper for plotting could look like that supports
+
+- coloring by observation metadata or features
+- highlighting according to a logical statement
+- faceting by multiple samples and/or features
+- controlling whether to show points and/or images
+- controlling which samples and images to use
+
+```{r}
+ggspatial <- function(x, 
+  fill=NULL, highlight=NULL, assay="logcounts", 
+  sample_id=NULL, image_id=NULL, points=TRUE, images=TRUE) 
+{
+  # check validity of input arguments
+  stopifnot(
+    is.logical(points), length(points) == 1,
+    is.logical(images), length(images) == 1)
+    
+  if (is.null(assay)) {
+    assay <- assayNames(x)[1]
+  } else {
+    stopifnot(
+      is.character(assay), 
+      length(assay) == 1, 
+      assay %in% assayNames(x))
+  }
+  
+  if (is.null(sample_id)) {
+    # default to using all samples
+    samples <- unique(x$sample_id)
+  } else {
+    stopifnot(sample_id %in% x$sample_id)
+    samples <- sample_id
+  }
+  # subset specified samples
+  x <- x[, x$sample_id %in% samples]
+  
+  if (is.null(image_id)) {
+    # default to first available image for each sample
+    idx <- SpatialExperiment:::.get_img_idx(x, TRUE, NULL)
+  } else {
+    if (length(image_id) == 1) {
+      idx <- SpatialExperiment:::.get_img_idx(x, TRUE, image_id)
+    } else {
+      stopifnot(length(image_id) == length(samples))
+      idx <- mapply(s=samples, i=image_id,
+        function(s, i) .get_img_idx(x, s, i))
+    }
+  }
+  # subset specified images
+  imgData(x) <- imgData(x)[idx, ]
+  
+  df <- as.data.frame(colData(x))
+  xy <- grep("xy", names(df))
+  xy <- names(df)[xy] <- c("x", "y")
+  
+  # scale spatial coordinates
+  sfs <- setNames(scaleFactors(x, TRUE, TRUE), samples)
+  df[, xy] <- df[, xy] * sfs[df$sample_id]
+  
+  facets <- "sample_id"
+  if (!is.null(fill)) {
+    stopifnot(
+      is.character(fill), 
+      all(fill %in% rownames(x)) 
+      || length(fill) == 1 & !is.null(x[[fill]]))
+    if (all(fill %in% rownames(x))) {
+      y <- assay(x, assay)
+      y <- as.matrix(y[fill, ])
+      df <- cbind(df, t(y))
+      df <- pivot_longer(df, all_of(fill))
+      fill <- "value"
+      facets <- c(facets, "name")
+    }
+  }
+  
+  # in principle, images can be plotted using 'annotation_custom()'
+  # however, this does not allow for faceting and we instead 
+  # construct a separate image layer for each sample
+  if (images) {
+    # split 'imgData' by sample
+    dfs <- split(imgData(x), imgData(x)$sample_id)
+    # construct separate image layer for each sample
+    images <- lapply(dfs, function(.) layer(
+      data=as_tibble(.),
+      inherit.aes=FALSE,
+      stat="identity",
+      position="identity",
+      geom=ggplot2::GeomCustomAnn,
+      params=list(
+        grob=imgGrob(.$data[[1]]),
+        xmin=0, xmax=.$width,
+        ymin=0, ymax=.$height)))
+  } else images <- NULL
+  
+  if (points) {
+    guide <- ifelse(is.numeric(df[[fill]]), guide_colorbar, guide_legend)
+    points <- list(
+      guides(fill=guide(
+        title=ifelse(fill == "value", assay, fill), 
+        order=1, override.aes=list(col=NA, size=3))),
+      geom_point(shape=21, size=1.25, stroke=0.25))
+    if (!is.null(highlight)) {
+      txt <- sprintf("with(df,%s)", highlight)
+      df$highlight <- eval(parse(text=txt))
+      highlights <- list(
+        scale_color_manual(highlight, values=c("transparent", "black")),
+        guides(col=guide_legend(override.aes=list(
+          size=2, stroke=1, col=c("grey", "black")))))
+    } else {
+      df$highlight <- "transparent"
+      highlights <- scale_color_identity()
+    }
+  } else {
+    # this is required, else the image layer doesn't show
+    points <- geom_point(col="transparent")
+    highlights <- NULL
+  }
+
+  if (!is.null(facets)) {
+    if (length(facets) == 1) {
+      facets <- facet_wrap(facets)
+    } else {
+      ns <- vapply(df[facets], function(.) length(unique(.)), numeric(1))
+      if (ns[2] > ns[1]) facets <- rev(facets)
+      facets <- reformulate(facets[1], facets[2])
+      facets <- list(
+        facet_grid(facets, switch="y"),
+        theme(strip.text.y.right = element_text(angle=90)))
+    }
+  } else facets <- NULL
+  
+  ggplot(df, 
+    aes_string("x", "y", fill=fill, col="highlight")) +
+    images + points + highlights + facets +
+    coord_equal(expand=FALSE) + theme_void() +
+    theme(legend.key.size=unit(0.5, "lines"))
+}
+```
+
+Here are some example visualizations with `ggspatial()`:
+
+```{r}
+# read10xCounts gives a 'DelayedMatrix'
+# which doesn't work with 'scater'
+assay(ve) <- as(assay(ve), "matrix")
+
+# normalization & quality control
+ve <- logNormCounts(ve)
+ve <- addPerFeatureQC(ve)
+ve <- addPerCellQC(ve)
+```
+
+```{r fig.width=6, fig.height=3}
+# plotting images only
+ggspatial(ve, points=FALSE)
+```
+
+```{r fig.width=7, fig.height=3}
+# both samples colored by total counts with 'in_tissue' spots highlighted
+ggspatial(ve, fill="total", highlight="in_tissue", images=FALSE) + 
+  scale_fill_viridis_c(trans="log10")
+```
+
+```{r fig.width=12, fig.height=5.5}
+# expression of some arbitrary highly expressed genes across samples
+gs <- rownames(ve)[rowData(ve)$mean > 250]
+ggspatial(ve[, ve$in_tissue], fill=gs) + scale_fill_viridis_c()
+```
+
+# Session information {- .smaller}
+
+```{r session-info}
+sessionInfo()
+```
+

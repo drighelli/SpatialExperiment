@@ -1,24 +1,59 @@
-#### Getters/Setters
+# imgData methods --------------------------------------------------------------
+
 #' @export
-setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
+setGeneric("imgData", function(x) standardGeneric("imgData"))
 #' @export
-setGeneric("scaleFactors<-", function(x, value)
-    standardGeneric("scaleFactors<-"))
+setGeneric("imgData<-", function(x, value) standardGeneric("imgData<-"))
+
 #' @export
-setGeneric(name="spatialCoords", def=function(x) 
-    standardGeneric("spatialCoords"))
+setGeneric("imgGrob", function(x, ...) standardGeneric("imgGrob"))
 #' @export
-setGeneric("spatialCoords<-", function(x, value)
-    standardGeneric("spatialCoords<-"))
+setGeneric("imgGrob<-", function(x, value) standardGeneric("imgGrob<-"))
+
 #' @export
-setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
+setGeneric("imgPath", function(x, ...) standardGeneric("imgPath"))
 #' @export
-setGeneric("spatialCoordsNames", function(x) 
-    standardGeneric("spatialCoordsNames"))
+setGeneric("imgPath<-", function(x, value) standardGeneric("imgPath<-"))
+
 #' @export
-setGeneric(name="imagePaths", def=function(x) standardGeneric("imagePaths"))
+setGeneric("imgUrl", function(x, ...) standardGeneric("imgUrl"))
 #' @export
-setGeneric("imagePaths", function(x, value) standardGeneric("imagePaths"))
+setGeneric("imgUrl<-", function(x, value) standardGeneric("imgUrl<-"))
+
 #' @export
-setGeneric("imagePaths<-", function(x, value)
-    standardGeneric("imagePaths<-"))
+setGeneric("loadImg", function(x, ...) standardGeneric("loadImg"))
+
+#' @export
+setGeneric("unloadImg", function(x, ...) standardGeneric("unloadImg"))
+
+#' @export
+setGeneric("addImg", function(x, ...) standardGeneric("addImg"))
+
+#' @export
+setGeneric("removeImg", function(x, ...) standardGeneric("removeImg"))
+
+#' @export
+setGeneric("scaleFactors", function(x, ...) standardGeneric("scaleFactors"))
+
+#' #### Getters/Setters
+#' #' @export
+#' setGeneric("scaleFactors<-", function(x, value)
+#'     standardGeneric("scaleFactors<-"))
+#' #' @export
+#' setGeneric(name="spatialCoords", def=function(x) 
+#'     standardGeneric("spatialCoords"))
+#' #' @export
+#' setGeneric("spatialCoords<-", function(x, value)
+#'     standardGeneric("spatialCoords<-"))
+#' #' @export
+#' setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
+#' #' @export
+#' setGeneric("spatialCoordsNames", function(x) 
+#'     standardGeneric("spatialCoordsNames"))
+#' #' @export
+#' setGeneric(name="imagePaths", def=function(x) standardGeneric("imagePaths"))
+#' #' @export
+#' setGeneric("imagePaths", function(x, value) standardGeneric("imagePaths"))
+#' #' @export
+#' setGeneric("imagePaths<-", function(x, value)
+#'     standardGeneric("imagePaths<-"))
