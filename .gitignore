@@ -14,3 +14,8 @@ Makevars
 ._*
 DEScan2.Rproj
 SpatialExperiment.Rproj
+
+vignettes/*.html
+vignettes/*_cache
+vignettes/*_files
+
