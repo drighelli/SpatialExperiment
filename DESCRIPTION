@@ -1,6 +1,6 @@
 Package: SpatialExperiment
 Type: Package
-Title: S4 Class for Spatial Experiments handling 
+Title: S4 Class for handling spatial transcriptomics data
 Version: 0.99.4
 Date: 2020-07-24
 Authors@R: c(
@@ -17,10 +17,13 @@ License: GPL-3
 BugReports: https://github.com/drighelli/SpatialExperiment/issues
 Encoding: UTF-8
 LazyData: true
-biocViews: DataRepresentation, DataImport, Infrastructure, SingleCell, 
-    ImmunoOncology
+biocViews: 
+    DataRepresentation, DataImport, ImmunoOncology, 
+    Infrastructure, SingleCell
 Depends: R (>= 4.0.0), methods, SingleCellExperiment
-Imports: S4Vectors
-Suggests: testthat, knitr, rjson, Matrix
+Imports: 
+    BiocFileCache, DropletUtils, grid, magick, rjson, 
+    S4Vectors, SummarizedExperiment, utils
+Suggests: knitr, Matrix, testthat 
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

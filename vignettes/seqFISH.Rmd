@@ -1,0 +1,96 @@
+---
+title: "seqFISH Spatial Data Workflow"
+author: "Dario Righelli"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    BiocStyle::html_document:
+        toc: true
+vignette: >
+    %\VignetteIndexEntry{seqFISH Spatial Data Workflow}
+    %\VignetteEncoding{UTF-8}
+    %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+    chunk_output_type: inline
+---
+
+<style type="text/css"> .smaller { font-size: 10px } </style>
+
+# Introduction
+
+The SpatialExperiment package provides classes and methods for single cell 
+spatial data handling.
+
+This vignettes shows how to create a SpatialExperiment class by loading a 
+seqFISH spatial dataset.
+
+The seqFISH data are part of the [BIRS Biointegration Workshop Hackathon](https://github.com/BIRSBiointegration/Hackathon/tree/master/seqFISH) 
+previously published in [Zhu et al. 2018](https://www.nature.com/articles/nbt.4260).
+
+
+# Installation 
+
+```{r, eval=FALSE}
+if(!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SpatialExperiment")
+```
+
+
+# Loading data and libraries
+
+We stored the provided seqFish and scRNA-seq data inside the SpatialExperiment
+external data seqFISH folder.
+
+```{r message = FALSE}
+library(ggplot2)
+library(SpatialExperiment)
+```
+
+# Reading seqFISH data
+
+```{r}
+dir <- system.file(
+    file.path("extdata", "seqFISH"), 
+    package = "SpatialExperiment")
+
+counts <- read.table(
+    file.path(dir, "seqfish_normalized_cortex_b2_testing.txt"),
+    header = FALSE, row.names = 1, sep = "\t")
+
+labels <- read.csv(
+    file.path(dir, "seqfish_cell_labels.tsv"),
+    header = FALSE, sep = "\t", col.names = c(
+        "cell_id", "cluster", "class", 
+        "class_id", "irrelevant", "prob")) 
+
+coords <- read.table(
+    file.path(dir, "fcortex.coordinates.txt"),
+    header = FALSE, sep = " ", col.names = c(
+        "cell_id", "irrelevant", "x", "y"))
+```
+
+```{r fig.width=6, fig.height=3}
+# construct 'SpatialExperiment'
+cd <-  DataFrame(
+    sample_id = "cortex",
+    in_tissue = TRUE,
+    xy_coords = I(as.matrix(coords[, c("x", "y")])),
+    labels[, c("cluster", "class", "class_id", "prob")])
+
+(fse <- SpatialExperiment(
+    assays = list(counts = counts), 
+    colData = cd))
+
+df <- as.data.frame(colData(fse))
+xy <- grep("xy", names(df))
+names(df)[xy] <- c("x", "y")
+ggplot(df, aes(x, y, col = class)) + 
+    geom_point() + coord_equal()
+```
+
+# Session information {- .smaller}
+
+```{r session-info}
+sessionInfo()
+```
+
