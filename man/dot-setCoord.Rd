@@ -2,21 +2,63 @@
 % Please edit documentation in R/SpatialExperiment-methods.R
 \name{.setCoord}
 \alias{.setCoord}
-\title{#' @rdname SpatialExperiment-methods
-#' @export
-setReplaceMethod("scaleFactors", 
-                 c("SpatialExperiment", "list"),
-                 function(x, sample_id=TRUE, image_id=TRUE, 
-                          scaleFactors=as.list(rep(1,1)))
-                 {
-                     idx <- .get_img_idx(x, sample_id, image_id)
-                     imgData(x)$scaleFactor[idx] <- scaleFactors
-                 }
-)}
+\alias{spatialCoords}
+\title{spatialCoords-getter}
 \usage{
 .setCoord(df, coordName, coordinates)
 }
+\arguments{
+\item{se}{A SpatialExperiment class object.}
+
+\item{sample_id}{}
+}
+\value{
+a DataFrame within the spatial coordinates.
+}
 \description{
+a getter method which returns the spatial coordinates previously
+stored in a SpatialExperiment class object.
+}
+\examples{
+example(SpatialExperiment)
+spatialCoords(se)
+setMethod(f="spatialCoords", signature="SpatialExperiment", 
+    function(se, sample_id=TRUE)
+{
+    samplesIdx <- 1:nrow(colData(se))
+    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id \%in\% sample_id)
+    
+    z_idx <- grep("z_coord", colnames(colData(se)))
+    
+    if(length(z_idx) != 0) 
+    {
+        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE], 
+                        colData(se)[samplesIdx,"y_coord", drop=FALSE],
+                        colData(se)[samplesIdx,"z_coord", drop=FALSE])
+    } else { 
+        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE], 
+                        colData(se)[samplesIdx,"y_coord", drop=FALSE])
+    }
+      
+    return(coords)
+})
+
+#' spatialCoordsMtx-getter
+#' @description a getter method which returns the spatial coordinates previously
+#' stored in a SpatialExperiment class object.
+#' @param se A SpatialExperiment class object.
+#' @param sample_id 
+#' @return a matrix object within the spatial coordinates.
+#'
+#' @export
+#' @examples
+#' example(SpatialExperiment)
+#' spatialCoordsMtx(se)
+setMethod(f="spatialCoordsMtx", signature="SpatialExperiment", 
+    function(se, sample_id=TRUE)
+{
+    return(as.matrix(spatialCoords(se, sample_id=sample_id)))
+})
 #' @rdname SpatialExperiment-methods
 #' @export
 setReplaceMethod("scaleFactors", 

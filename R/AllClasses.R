@@ -2,7 +2,10 @@
 #' 
 #' @importFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
-        contains = "SingleCellExperiment"
+        contains = "SingleCellExperiment",
+        slots=c(
+            spaCoordsNms="character"
+        )
 )
 
 #' @importFrom grid grob

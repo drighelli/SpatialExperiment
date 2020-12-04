@@ -72,19 +72,19 @@
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-                            sample_id=character(0),
-                            spatialCoords=matrix(NA_real_, nrow(sce), 2), ### to check sce definition
-                            imgData=NULL,
-                            inTissue=logical(0),
-                            scaleFactors=NULL)
+                              sample_id=character(0),
+                              spatialCoords=DataFrame(),
+                              imgData=NULL,
+                              inTissue=logical(0),
+                              scaleFactors=NULL)
 {
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
-                    sample_id=sample_id,
-                    spatialCoords=spatialCoords)#,
-                    # imgData=imgData, 
-                    # inTissue=inTissue,
-                    # scaleFactor=scaleFactor)
+                       sample_id=sample_id,
+                       spatialCoords=spatialCoords)#,
+    # imgData=imgData, 
+    # inTissue=inTissue,
+    # scaleFactor=scaleFactor)
     return(spe)
 }
 
@@ -94,9 +94,9 @@ SpatialExperiment <- function(...,
 .sce_to_spe <- function(sce,
                         sample_id=character(0), 
                         spatialCoords=matrix(NA_real_, nrow(sce), 2))#, 
-                        # imgData=NULL,
-                        # inTissue=logical(0),
-                        # scaleFactor=1)
+    # imgData=NULL,
+    # inTissue=logical(0),
+    # scaleFactor=1)
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -104,19 +104,21 @@ SpatialExperiment <- function(...,
         on.exit(S4Vectors:::disableValidity(old))
     }
     
-    if (is.null(sce$sample_id)) 
-        sce$sample_id <- sample_id
-    
-    if (is.null(sce$in_tissue))
-        sce$inTissue <- inTissue ## to modify with accessor
-    
-    if (is.null(spatialCoords(sce)))
-        spatialCoords(sce) <- coordinates ## to modify with accessor
+    if (is.null(sce$sample_id))
+    {
+        message("No sample_id provided in colData, assigning: ", sample_id)
+        sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+    }
     
     spe <- new("SpatialExperiment", sce)
     
-    if (is.null(imgData(spe)))
-        imgData(spe) <- imgData
+    spatialCoords(spe) <- spatialCoords
+    
+    # if (is.null(sce$in_tissue))
+    #     sce$inTissue <- inTissue ## to modify with accessor
+    
+    # if (is.null(imgData(spe)))
+    #     imgData(spe) <- imgData
     
     return(spe)
 }
@@ -126,3 +128,9 @@ setAs(
     to="SpatialExperiment", 
     function(from) .sce_to_spe(from))
 
+
+################ global definitions to move into another 
+EXPRSNAMES <- c("^([x|X]|pxl_col)", "^([y|Y]|pxl_row)", "^([z|Z])", 
+                "in_tissue", "array_row", "array_col")
+SPATDATANAMES <- c("x_coord", "y_coord", "z_coord", 
+                  "in_tissue", "array_row", "array_col")
