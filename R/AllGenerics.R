@@ -40,12 +40,12 @@ setGeneric("scaleFactors", function(x, ...) standardGeneric("scaleFactors"))
 #'     standardGeneric("scaleFactors<-"))
 #'
 #' @export
-setGeneric(name="spatialCoords", def=function(se,...)#, sample_id)
+setGeneric(name="spatialCoords", def=function(se,...)
     standardGeneric("spatialCoords"))
 #' 
 #' #' @export
-#' setGeneric(name="spatialCoordsMtx", def=function(se, ...)
-#'     standardGeneric("spatialCoordsMtx"))
+setGeneric(name="spatialCoordsMtx", def=function(se, ...)
+    standardGeneric("spatialCoordsMtx"))
 
 #' @export
 setGeneric("spatialCoords<-", function(x, value, ...)

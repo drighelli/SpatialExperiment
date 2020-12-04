@@ -140,7 +140,7 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
     function(se, sample_id=TRUE)
 {
     samplesIdx <- 1:nrow(colData(se))
-    #if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
     if( !isEmpty(samplesIdx) )
     {
         coords <- colData(se)[samplesIdx, se@spaCoordsNms]
@@ -161,23 +161,35 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
 
     return(coords)
 })
-#' 
-#' #' spatialCoordsMtx-getter
-#' #' @description a getter method which returns the spatial coordinates previously
-#' #' stored in a SpatialExperiment class object.
-#' #' @param se A SpatialExperiment class object.
-#' #' @param sample_id
-#' #' @return a matrix object within the spatial coordinates.
-#' #'
-#' #' @export
-#' #' @examples
-#' #' example(SpatialExperiment)
-#' #' spatialCoordsMtx(se)
-#' setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
-#'     function(se, sample_id=TRUE)
-#' {
-#'     return(as.matrix(spatialCoords(se, sample_id=sample_id)))
-#' })
+
+#' spatialCoordsMtx-getter
+#' @description a getter method which returns the spatial coordinates previously
+#' stored in a SpatialExperiment class object.
+#' @param se A SpatialExperiment class object.
+#' @param sample_id
+#' @return a matrix object within the spatial coordinates.
+#'
+#' @export
+#' @examples
+#' example(SpatialExperiment)
+#' spatialCoordsMtx(se)
+setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
+    function(se, sample_id=TRUE)
+{
+    samplesIdx <- 1:nrow(colData(se))
+    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+    z_idx <- grep("z_coord", colnames(colData(se)))
+    if(length(z_idx) != 0)
+    {
+        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
+                        colData(se)[samplesIdx,"y_coord", drop=FALSE],
+                        colData(se)[samplesIdx,"z_coord", drop=FALSE])
+    } else {
+        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
+                        colData(se)[samplesIdx,"y_coord", drop=FALSE])
+    }
+    return(as.matrix(coords))
+})
 
 
 
