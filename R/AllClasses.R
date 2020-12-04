@@ -28,15 +28,3 @@ setClass(
         grob="grobOrNULL",
         path="charOrNULL",
         url="charOrNULL"))
-
-#' #' @export
-#' #' @rdname VisiumExperiment
-#' #' @slot scaleFactors list
-#' #' @slot imagePaths list
-#' setClass("VisiumExperiment",
-#'     slots=c(
-#'         scaleFactors="list",
-#'         imagePaths="character"
-#'     ),
-#'     contains = "SpatialExperiment"
-#' )

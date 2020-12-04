@@ -6,7 +6,7 @@
 \usage{
 readImgData(
   path = ".",
-  sample_id = names(path),
+  sampleId = names(path),
   imageSources = file.path(path, "tissue_lowres_image.png"),
   scaleFactors = file.path(path, "scalefactors_json.json"),
   load = TRUE
@@ -15,7 +15,7 @@ readImgData(
 \arguments{
 \item{path}{...}
 
-\item{sample_id}{...}
+\item{sampleId}{...}
 
 \item{scaleFactors}{...}
 
@@ -42,7 +42,7 @@ list.files(dir)
 
 # read in images & scale factors
 # as valid 'imgData' 'DFrame'
-readImgData(dir, sample_id = "foo")
+readImgData(dir, sampleId = "foo")
 
 }
 \author{

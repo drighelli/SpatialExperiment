@@ -13,21 +13,22 @@
     }
 }
 
-.colData_in_tissue_validity <- function(x, msg=NULL) 
+.colData_inTissue_validity <- function(x, msg=NULL) 
 {
     is_valid <- is.logical(x)
     if (!is_valid) 
-        msg <- c(msg, "'in_tissue' field in 'colData' should be 'logical'")
+        msg <- c(msg, "'inTissue' field in 'colData' should be 'logical'")
     return(msg)
 }
 
-.colData_xy_coords_validity <- function(x, msg=NULL) 
-{
+.colData_xyzData_validity <- function(x, msg=NULL) 
+{ ##### to change
     # allow 2 or 3 columns to support z-coordinate
-    is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
+    #is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
+    is_valid <- all(c(ncol(x) %in% c(2, 3), is.numeric(x)))
     if (!is_valid)
         msg <- c(msg, paste(
-            "'xy_coords' field in 'colData'",
+            "'xyzData' field in 'colData'",
             "should be a two- or three-column numeric matrix"))
     return(msg)
 }
@@ -40,16 +41,16 @@
         # TODO: check validity of 'sample_id's wrt 'imgData'
     }
     
-    if (is.null(df$in_tissue)) {
-        msg <- c(msg, "no 'in_tissue' field in 'colData'")
-    } else if (!is.logical(df$in_tissue))
-        msg <- .colData_in_tissue_validity(df$in_tissue, msg)
-    
-    if (is.null(df$xy_coords)) {
-        msg <- c(msg, "no 'xy_coords' field in 'colData'")
-    } else {
-        msg <- .colData_xy_coords_validity(df$xy_coords, msg)
-    }
+    # if (is.null(df$inTissue)) {
+    #     msg <- c(msg, "no 'inTissue' field in 'colData'")
+    # } else if (!is.logical(df$inTissue))
+    #     msg <- .colData_inTissue_validity(df$inTissue, msg)
+    # 
+    # if (is.null(df$xyzData)) {
+    #     msg <- c(msg, "no 'xyzData' field in 'colData'")
+    # } else {
+    #     msg <- .colData_xyzData_validity(df$xyzData, msg)
+    # }
     return(msg)
 }
 
@@ -107,7 +108,7 @@ setValidity2("SpatialExperiment", .spe_validity)
         length(x) == 1,
         is.character(x),
         file.exists(x),
-        # TODO: any other possible image formats?
+        # TODO: any other possible image formats? 
         grepl("(\\.png|\\.jpg|\\.tif)$", x)))
     
     if (!is_valid)
@@ -138,12 +139,12 @@ setValidity2("SpatialExperiment", .spe_validity)
 #' .ve_validity <- function(object)
 #' {
 #'     msg <- NULL
-#'     if( sum(c("in_tissue", "array_row", "array_col",
+#'     if( sum(c("inTissue", "array_row", "array_col",
 #'         "pxl_col_in_fullres", "pxl_row_in_fullres")
 #'         %in% colnames(spatialCoords(object))) != 5 ) 
 #'     {
 #'         msg <- c(msg, paste0("Please use the 10x Visium colnames for the",
-#'             " spatial coordinates. (Defaults are 'in_tissue, 'array_row'", 
+#'             " spatial coordinates. (Defaults are 'inTissue, 'array_row'", 
 #'             " 'array_col', 'pxl_col_in_fullres', 'pxl_row_in_fullres')"))
 #'     }
 #'     

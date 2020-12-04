@@ -11,20 +11,21 @@
 #' @param ... 
 #'   arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #'   constructor to fill the slots of the base class.
+#' @param xyzData 
+#'   a two/(three)-column numeric matrix containing 
+#'   spatial xy(z)-coordinates for each observation
 #' @param imgData 
 #'   a \code{DataFrame} storing the image data (see details)
 #' @param sample_id 
 #'   a character vector of unique sample identifiers in
 #'   conformity with the \code{sample_id}s in \code{imgData}
-#' @param in_tissue 
+#' @param inTissue 
 #'   a logical vector indicating whether or not
 #'   an observation could be mapped onto the tissue
-#' @param xy_coords 
-#'   a two/(three)-column numeric matrix containing 
-#'   spatial xy(z)-coordinates for each observation
+
 #' 
 #' @details 
-#' If any of arguments \code{sample_id}, \code{in_tissue} and \code{xy_coords}
+#' If any of arguments \code{sample_id}, \code{inTissue} and \code{xyzData}
 #' are missing, the \code{SpatialExperiment} constructor will assume 
 #' these are supplied via the input \code{colData}. 
 #' 
@@ -50,7 +51,7 @@
 #' fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 #' xyz <- read.csv(fnm, header = FALSE, row.names = 1, 
 #'   col.names = c(
-#'     "barcode", "in_tissue", "array_row", "array_col", 
+#'     "barcode", "inTissue", "array_row", "array_col", 
 #'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
 #'    
 #' # construct observation & feature metadata 
@@ -59,8 +60,8 @@
 #'   
 #' cd <- S4Vectors::DataFrame(
 #'   sample_id = "foo",
-#'   in_tissue = as.logical(xyz$in_tissue),
-#'   xy_coords = I(as.matrix(xyz[, grep("pxl", names(xyz))])))
+#'   inTissue = as.logical(xyz$inTissue),
+#'   xyzData = I(as.matrix(xyz[, grep("pxl", names(xyz))])))
 #'   
 #' # construct 'SpatialExperiment'
 #' SpatialExperiment(
@@ -70,21 +71,32 @@
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
-SpatialExperiment <- function(..., imgData=NULL,
-    sample_id=character(0), in_tissue=logical(0), 
-    xy_coords=matrix(NA_real_, nrow(sce), 2))
+SpatialExperiment <- function(..., 
+                            sample_id=character(0),
+                            spatialCoords=matrix(NA_real_, nrow(sce), 2), ### to check sce definition
+                            imgData=NULL,
+                            inTissue=logical(0),
+                            scaleFactors=NULL)
 {
     sce <- SingleCellExperiment(...)
-    spe <- .sce_to_spe(sce, imgData, sample_id, in_tissue, xy_coords)
+    spe <- .sce_to_spe(sce=sce,
+                    sample_id=sample_id,
+                    spatialCoords=spatialCoords)#,
+                    # imgData=imgData, 
+                    # inTissue=inTissue,
+                    # scaleFactor=scaleFactor)
     return(spe)
 }
 
 #' @importFrom methods new
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
-.sce_to_spe <- function(sce, imgData=NULL, 
-    sample_id=character(0), in_tissue=logical(0), 
-    xy_coords=matrix(NA_real_, nrow(sce), 2)) 
+.sce_to_spe <- function(sce,
+                        sample_id=character(0), 
+                        spatialCoords=matrix(NA_real_, nrow(sce), 2))#, 
+                        # imgData=NULL,
+                        # inTissue=logical(0),
+                        # scaleFactor=1)
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -96,10 +108,10 @@ SpatialExperiment <- function(..., imgData=NULL,
         sce$sample_id <- sample_id
     
     if (is.null(sce$in_tissue))
-        sce$in_tissue <- in_tissue
+        sce$inTissue <- inTissue ## to modify with accessor
     
-    if (is.null(sce$xy_coords))
-        sce$xy_coords <- xy_coords
+    if (is.null(spatialCoords(sce)))
+        spatialCoords(sce) <- coordinates ## to modify with accessor
     
     spe <- new("SpatialExperiment", sce)
     
@@ -114,32 +126,3 @@ setAs(
     to="SpatialExperiment", 
     function(from) .sce_to_spe(from))
 
-#' SpatialExperiment <- function(..., spatialCoords=data.frame())
-#' {
-#'     sce <- SingleCellExperiment::SingleCellExperiment(...)
-#'     return(.sce_to_se(sce, spatialCoords=spatialCoords))
-#' }
-#' 
-#' #' @importClassesFrom S4Vectors DataFrame
-#' #' @importFrom S4Vectors DataFrame isEmpty
-#' #' @importFrom methods new
-#' .sce_to_se <- function(sce, spatialCoords=DataFrame())
-#' {
-#'     old <- S4Vectors:::disableValidity()
-#'     if (!isTRUE(old)) {
-#'         S4Vectors:::disableValidity(TRUE)
-#'         on.exit(S4Vectors:::disableValidity(old))
-#'     }
-#'     se <- new("SpatialExperiment", sce) ## here it calls the validity
-#'     spatialCoords(se) <- spatialCoords
-#' 
-#'     return(se)
-#' }
-#' 
-#' #' @exportMethod coerce
-#' #' @importClassesFrom SingleCellExperiment SingleCellExperiment
-#' #' @import SingleCellExperiment
-#' setAs(from="SingleCellExperiment", to="SpatialExperiment", function(from)
-#' {
-#'     .sce_to_se(from)
-#' })
