@@ -146,7 +146,7 @@ read10xVisium <- function(samples="",
     {
         df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep = "_")
-        cbind(sample_id=names(x)[i], df)
+        if(!is.null(names(x))) cbind(sample_id=names(x)[i], df)
     })
     df <- do.call(rbind, df)
     df$in_tissue <- as.logical(df$in_tissue)

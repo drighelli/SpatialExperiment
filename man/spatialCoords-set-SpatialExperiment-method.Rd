@@ -5,14 +5,14 @@
 \alias{spatialCoords<-}
 \title{spatialCoords-setter}
 \usage{
-\S4method{spatialCoords}{SpatialExperiment}(se, coords = DataFrame(), sample_id = TRUE) <- value
+\S4method{spatialCoords}{SpatialExperiment}(x, sample_id = TRUE) <- value
 }
 \arguments{
+\item{sample_id}{}
+
 \item{se}{a SpatialExperiment class object}
 
 \item{coords}{a DataFrame with the new spatial coordinates to set.}
-
-\item{sample_id}{}
 }
 \value{
 none

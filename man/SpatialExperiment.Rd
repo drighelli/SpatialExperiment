@@ -8,20 +8,21 @@
 \usage{
 SpatialExperiment(
   ...,
-  coordinates = matrix(NA_real_, nrow(sce), 2),
-  imgData = NULL,
   sample_id = character(0),
-  inTissue = logical(0)
+  spatialCoords = DataFrame(),
+  imgData = NULL,
+  inTissue = logical(0),
+  scaleFactors = NULL
 )
 }
 \arguments{
 \item{...}{arguments to be passed to the \code{\link{SingleCellExperiment}} 
 constructor to fill the slots of the base class.}
 
-\item{imgData}{a \code{DataFrame} storing the image data (see details)}
-
 \item{sample_id}{a character vector of unique sample identifiers in
 conformity with the \code{sample_id}s in \code{imgData}}
+
+\item{imgData}{a \code{DataFrame} storing the image data (see details)}
 
 \item{inTissue}{a logical vector indicating whether or not
 an observation could be mapped onto the tissue}

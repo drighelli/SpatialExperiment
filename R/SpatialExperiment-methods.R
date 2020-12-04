@@ -136,43 +136,48 @@ setMethod("scaleFactors", "SpatialExperiment",
 #' @examples
 #' example(SpatialExperiment)
 #' spatialCoords(se)
-setMethod(f="spatialCoords", signature="SpatialExperiment", 
+setMethod(f="spatialCoords", signature="SpatialExperiment",
     function(se, sample_id=TRUE)
 {
     samplesIdx <- 1:nrow(colData(se))
-    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-    
-    z_idx <- grep("z_coord", colnames(colData(se)))
-    
-    if(length(z_idx) != 0) 
+    #if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+    if( !isEmpty(samplesIdx) )
     {
-        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE], 
-                        colData(se)[samplesIdx,"y_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"z_coord", drop=FALSE])
-    } else { 
-        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE], 
-                        colData(se)[samplesIdx,"y_coord", drop=FALSE])
+        coords <- colData(se)[samplesIdx, se@spaCoordsNms]
+    } else {
+        stop("Provided sample_id is not valid.")
     }
-      
+        # z_idx <- grep("z_coord", colnames(colData(se)))
+        #
+        # if(length(z_idx) != 0)
+        # {
+        #     coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
+        #                     colData(se)[samplesIdx,"y_coord", drop=FALSE],
+        #                     colData(se)[samplesIdx,"z_coord", drop=FALSE])
+        # } else {
+        #     coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
+        #                     colData(se)[samplesIdx,"y_coord", drop=FALSE])
+        # }
+
     return(coords)
 })
-
-#' spatialCoordsMtx-getter
-#' @description a getter method which returns the spatial coordinates previously
-#' stored in a SpatialExperiment class object.
-#' @param se A SpatialExperiment class object.
-#' @param sample_id 
-#' @return a matrix object within the spatial coordinates.
-#'
-#' @export
-#' @examples
-#' example(SpatialExperiment)
-#' spatialCoordsMtx(se)
-setMethod(f="spatialCoordsMtx", signature="SpatialExperiment", 
-    function(se, sample_id=TRUE)
-{
-    return(as.matrix(spatialCoords(se, sample_id=sample_id)))
-})
+#' 
+#' #' spatialCoordsMtx-getter
+#' #' @description a getter method which returns the spatial coordinates previously
+#' #' stored in a SpatialExperiment class object.
+#' #' @param se A SpatialExperiment class object.
+#' #' @param sample_id
+#' #' @return a matrix object within the spatial coordinates.
+#' #'
+#' #' @export
+#' #' @examples
+#' #' example(SpatialExperiment)
+#' #' spatialCoordsMtx(se)
+#' setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
+#'     function(se, sample_id=TRUE)
+#' {
+#'     return(as.matrix(spatialCoords(se, sample_id=sample_id)))
+#' })
 
 
 
@@ -192,6 +197,8 @@ setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
 #' )
 
 
+
+
 .setCoord <- function(df, coordName, coordinates)
 {
     stopifnot(dim(df)[1] == length(coordinates))
@@ -207,7 +214,7 @@ setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
 #' @param sample_id 
 #' @return none
 #' @importFrom SingleCellExperiment int_colData int_colData<-
-#' @importFrom S4Vectors nrow SimpleList
+#' @importFrom S4Vectors nrow SimpleList isEmpty
 #' @importFrom methods is
 #' @aliases spatialCoords<-
 #' @export
@@ -218,23 +225,29 @@ setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
 #' spatialCoords(se) <- fakeFishCoords
 #' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
-    function(se, coords=DataFrame(), sample_id=TRUE)
+    function(x, value=DataFrame())#, sample_id=TRUE)
 {
-    # stopifnot(length(grep("^([xyz|XYZ])", colnames(coords))) > 0)
-    if(!is(coords, "DataFrame")){ coords <- DataFrame(coords) }
-    samplesIdx <- 1:nrow(colData(se))
-    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-    
-    x_idx <- grep("^([x|X])", colnames(coords))
-    y_idx <- grep("^([y|Y])", colnames(coords))
-    z_idx <- grep("^([z|Z])", colnames(coords))
-    
-    if(length(x_idx) != 0) colData(se) <- .setCoord(colData(se)[samplesIdx,], "x_coord", coords[[x_idx]])
-    if(length(y_idx) != 0) colData(se) <- .setCoord(colData(se)[samplesIdx,], "y_coord", coords[[y_idx]])
-    if(length(z_idx) != 0) colData(se) <- .setCoord(colData(se)[samplesIdx,], "z_coord", coords[[z_idx]])
-    
+    stopifnot(dim(value)[1]==dim(colData(x))[1])
+    if(!is(value, "DataFrame")){ value <- DataFrame(value) }
+    samplesIdx <- 1:nrow(colData(x))
+    # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+    i=1
+    dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
+    spaCoords <- character()
+    for(i in 1:dim(dfexprs)[2]) 
+    {
+        idx <- grep(dfexprs[1,i], colnames(value))
+        if( !isEmpty(idx) )
+        {
+            colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
+            if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
+        }
+    }
+    if(isEmpty(x@spaCoordsNms)) x@spaCoordsNms <- spaCoords
+    names(x@spaCoordsNms) <- NULL
+    ## write new validity xyz
     # if (length(msg)) { warning(msg); return(spe) }
-    return(se) ## write new validity xyzlibra
+    return(x) 
 })
 
 #' 

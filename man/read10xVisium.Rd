@@ -8,7 +8,7 @@ read10xVisium(
   samples = "",
   sample_id = paste0("sample", seq_along(samples)),
   type = c("HDF5", "sparse"),
-  images = c("lowres", "hires", "detected", "aligned"),
+  images = c("fullres", "lowres", "hires", "detected", "aligned"),
   load = TRUE
 )
 }
