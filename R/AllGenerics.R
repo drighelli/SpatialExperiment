@@ -35,16 +35,21 @@ setGeneric("removeImg", function(x, ...) standardGeneric("removeImg"))
 #' @export
 setGeneric("scaleFactors", function(x, ...) standardGeneric("scaleFactors"))
 
-#' #### Getters/Setters
 #' #' @export
 #' setGeneric("scaleFactors<-", function(x, value)
 #'     standardGeneric("scaleFactors<-"))
-#' #' @export
-#' setGeneric(name="spatialCoords", def=function(x) 
-#'     standardGeneric("spatialCoords"))
-#' #' @export
-#' setGeneric("spatialCoords<-", function(x, value)
-#'     standardGeneric("spatialCoords<-"))
+
+#' @export
+setGeneric(name="spatialCoords", def=function(se, ...)
+    standardGeneric("spatialCoords"))
+
+#' @export
+setGeneric(name="spatialCoordsMtx", def=function(se, ...)
+    standardGeneric("spatialCoordsMtx"))
+
+#' @export
+setGeneric("spatialCoords<-", function(se, coords, ...)
+    standardGeneric("spatialCoords<-"))
 #' #' @export
 #' setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
 #' #' @export

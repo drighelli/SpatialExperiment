@@ -6,7 +6,6 @@
 \alias{imgData<-}
 \alias{colData<-}
 \alias{scaleFactors}
-\alias{colData<-,SpatialExperiment,NULL-method}
 \alias{[,SpatialExperiment,ANY,ANY,ANY-method}
 \alias{scaleFactors,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
@@ -14,8 +13,6 @@
 \alias{imgData<-,SpatialExperiment,NULL-method}
 \title{SpatialExperiment methods}
 \usage{
-\S4method{colData}{SpatialExperiment,DataFrame}(x) <- value
-
 \S4method{colData}{SpatialExperiment,`NULL`}(x) <- value
 
 \S4method{[}{SpatialExperiment,ANY,ANY,ANY}(x, i, j)
@@ -35,7 +32,8 @@
 
 \item{i, j}{indices specifying elements to extract or replace}
 
-\item{sample_id, image_id}{character string, \code{TRUE} or \code{NULL} specifying sample/image 
+\item{sample_id, }{image_id 
+character string, \code{TRUE} or \code{NULL} specifying sample/image 
 identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 and \code{NULL} specifies the first available entry (see details)}
 }

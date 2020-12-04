@@ -2,7 +2,7 @@
 #' @title Read images & scale factors 
 #' 
 #' @param path ...
-#' @param sample_id ...
+#' @param sampleId ...
 #' @param images ...
 #' @param scaleFactors ...
 #' @param load logical; should the image(s) be loaded into memory
@@ -24,7 +24,7 @@
 #' 
 #' # read in images & scale factors
 #' # as valid 'imgData' 'DFrame'
-#' readImgData(dir, sample_id = "foo")
+#' readImgData(dir, sampleId = "foo")
 #' 
 #' @importFrom rjson fromJSON
 #' @importFrom grid rasterGrob unit
@@ -34,23 +34,23 @@
 # TODO: change 'as' to 'load = TRUE/FALSE' &
 # support images to be supplied as path or URL
 
-readImgData <- function(path=".", sample_id=names(path), 
+readImgData <- function(path=".", sampleId=names(path), 
     imageSources=file.path(path, "tissue_lowres_image.png"), 
     scaleFactors=file.path(path, "scalefactors_json.json"),
     load=TRUE)
 {
     # get sample identifiers
-    if (is.null(sample_id))
-        stop("'sample_id' mustn't be NULL")
+    if (is.null(sampleId))
+        stop("'sampleId' mustn't be NULL")
     stopifnot(
-        is.character(sample_id),
-        length(unique(sample_id)) == length(path))
-    names(path) <- names(scaleFactors) <- sample_id
+        is.character(sampleId),
+        length(unique(sampleId)) == length(path))
+    names(path) <- names(scaleFactors) <- sampleId
     
     # put images into list with one element per sample
     images <- lapply(path, function(.) grep(., imageSources, value=TRUE))
     
-    dfs <- lapply(sample_id, function(sid) 
+    dfs <- lapply(sampleId, function(sid) 
     {
         sfs <- fromJSON(file=scaleFactors[sid])
         dfs <- lapply(images[[sid]], function(img) 

@@ -8,10 +8,10 @@
 \usage{
 SpatialExperiment(
   ...,
+  coordinates = matrix(NA_real_, nrow(sce), 2),
   imgData = NULL,
   sample_id = character(0),
-  in_tissue = logical(0),
-  xy_coords = matrix(NA_real_, nrow(sce), 2)
+  inTissue = logical(0)
 )
 }
 \arguments{
@@ -23,10 +23,10 @@ constructor to fill the slots of the base class.}
 \item{sample_id}{a character vector of unique sample identifiers in
 conformity with the \code{sample_id}s in \code{imgData}}
 
-\item{in_tissue}{a logical vector indicating whether or not
+\item{inTissue}{a logical vector indicating whether or not
 an observation could be mapped onto the tissue}
 
-\item{xy_coords}{a two/(three)-column numeric matrix containing 
+\item{xyzData}{a two/(three)-column numeric matrix containing 
 spatial xy(z)-coordinates for each observation}
 }
 \value{
@@ -40,7 +40,7 @@ for multiple samples and of different resolutions via \code{\link{imgData}},
 and requires certain observation metadata specific to ST data to be present.
 }
 \details{
-If any of arguments \code{sample_id}, \code{in_tissue} and \code{xy_coords}
+If any of arguments \code{sample_id}, \code{inTissue} and \code{xyzData}
 are missing, the \code{SpatialExperiment} constructor will assume 
 these are supplied via the input \code{colData}.
 }
@@ -62,7 +62,7 @@ img <- readImgData(
 fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 xyz <- read.csv(fnm, header = FALSE, row.names = 1, 
   col.names = c(
-    "barcode", "in_tissue", "array_row", "array_col", 
+    "barcode", "inTissue", "array_row", "array_col", 
     "pxl_row_in_fullres", "pxl_col_in_fullres"))
    
 # construct observation & feature metadata 
@@ -71,8 +71,8 @@ rd <- S4Vectors::DataFrame(
   
 cd <- S4Vectors::DataFrame(
   sample_id = "foo",
-  in_tissue = as.logical(xyz$in_tissue),
-  xy_coords = I(as.matrix(xyz[, grep("pxl", names(xyz))])))
+  inTissue = as.logical(xyz$inTissue),
+  xyzData = I(as.matrix(xyz[, grep("pxl", names(xyz))])))
   
 # construct 'SpatialExperiment'
 SpatialExperiment(
