@@ -262,20 +262,41 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
     return(x) 
 })
 
-#' 
-#' 
-#' #' spatialCoordsNames-getter
-#' #' @description getter method for the spatial coordinates names in a
-#' #' SpatialExperiment class object.
-#' #' @param x a SpatialExperiment class object.
-#' #'
-#' #' @return a vector with the colnames of the spatial coordinates.
-#' #' @export
-#' #' @aliases spatialCoordsNames
-#' #' @examples
-#' #' example(SpatialExperiment)
-#' #' spatialCoordsNames(se)
-#' setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
-#' {
-#'     return(colnames(int_colData(x)$spatial))
-#' })
+
+
+#' spatialCoordsNames-getter
+#' @description getter method for the spatial coordinates names in a
+#' SpatialExperiment class object.
+#' @param x a SpatialExperiment class object.
+#'
+#' @return a vector with the colnames of the spatial coordinates.
+#' @export
+#' @aliases spatialCoordsNames
+#' @examples
+#' example(SpatialExperiment)
+#' spatialCoordsNames(se)
+setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
+{
+    return(x@spaCoordsNms)
+})
+
+
+#' isInTissue
+#' @description returns a mask of TRUE/FALSE Barcodes spots, indicating which
+#' ones are in tissue and which ones are not.
+#' @param x  a VisiumExperiment class object.
+#'
+#' @return a TRUE/FALSE mask.
+#' @export
+#' @aliases isInTissue
+#' @examples
+#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
+#'                          "ve.RDS"), package="SpatialExperiment"))
+#' isInTissue(ve)
+#' sum(isInTissue(ve))
+setMethod(f="isInTissue", signature="SpatialExperiment", function(x, sample_id=TRUE)
+{
+    samplesIdx <- 1:nrow(colData(x))
+    if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id)
+    return( x$in_tissue[samplesIdx] == 1 ) 
+})
