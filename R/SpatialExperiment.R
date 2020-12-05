@@ -72,19 +72,22 @@
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-                              sample_id=character(0),
+                              sample_id="Sample01",
                               spatialCoords=DataFrame(),
-                              imgData=NULL,
-                              inTissue=logical(0),
-                              scaleFactors=NULL)
-{
+                              scaleFactors=1,
+                              imageSources=NULL,
+                              image_id=NULL,
+                              loadImage=TRUE,
+                              imgData=NULL)
+{   
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
                        sample_id=sample_id,
-                       spatialCoords=spatialCoords)#,
-    # imgData=imgData, 
-    # inTissue=inTissue,
-    # scaleFactor=scaleFactor)
+                       spatialCoords=spatialCoords,
+                       scaleFactors=scaleFactors,
+                       imageSources=imageSources,
+                       loadImage=loadImage,
+                       imgData=imgData)
     return(spe)
 }
 
@@ -92,11 +95,14 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
-                        sample_id=character(0), 
-                        spatialCoords=matrix(NA_real_, nrow(sce), 2))#, 
-    # imgData=NULL,
-    # inTissue=logical(0),
-    # scaleFactor=1)
+                        sample_id="Sample01",
+                        spatialCoords=DataFrame(),
+                        scaleFactors=1,
+                        imageSources=NULL,
+                        image_id=NULL,
+                        loadImage=TRUE,
+                        imgData=NULL)
+    ## provide path to load 10x data with read10x function
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -114,12 +120,34 @@ SpatialExperiment <- function(...,
     
     spatialCoords(spe) <- spatialCoords
     
-    # if (is.null(sce$in_tissue))
-    #     sce$inTissue <- inTissue ## to modify with accessor
+    if(is.null(imgData))
+    {
+        imgData(spe) <- imgData
+    }
     
-    # if (is.null(imgData(spe)))
-    #     imgData(spe) <- imgData
-    
+    if(!is.null(imageSources))
+    {
+        if(is.null(image_id))
+        {
+            image_id=paste0(sample_id, "_",
+                            sub(pattern="(.*)\\..*$", 
+                                replacement="\\1", 
+                                basename(imageSources)), 
+                            1:length(imageSources))
+        } else {
+            stopifnot(length(image_id) != length(imageSources))
+        }
+        
+        for(i in 1:length(imageSources))
+        {
+            spe <- addImg(spe, imageSource=imageSources[i], 
+                        scaleFactor=.loadScaleFacts(scaleFactors, 
+                                            basename(imageSources[i])), 
+                        sample_id=sample_id[i], image_id=image_id[[i]], 
+                        load=loadImage)
+        }
+    }
+
     return(spe)
 }
 
@@ -129,7 +157,7 @@ setAs(
     function(from) .sce_to_spe(from))
 
 
-################ global definitions to move into another 
+################ global definitions to move into another file
 EXPRSNAMES <- c("^([x|X]|pxl_col)", "^([y|Y]|pxl_row)", "^([z|Z])", 
                 "in_tissue", "array_row", "array_col")
 SPATDATANAMES <- c("x_coord", "y_coord", "z_coord", 
