@@ -1,4 +1,5 @@
-#' @name SpatialExperiment-methods
+# setters ----------------------------------------------------------------------
+# #' @name SpatialExperiment-methods
 #' @title SpatialExperiment methods
 #' @aliases imgData imgData<- colData<- scaleFactors
 #' 
@@ -34,7 +35,7 @@
 #         new <- colData(se)
 #         
 #         # these 'colData' columns should remain existent & valid
-#         nms <- c("sample_id", "inTissue", "x_coord", "y_coord")#, "z_coord")
+#         nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
 #         
 #         # check if any of 'nms' are being renamed
 #         if (ncol(new) == ncol(old) 
@@ -82,7 +83,7 @@
 #         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
 #     })
 
-#' @rdname SpatialExperiment-methods
+#' @rdname SpatialExperiment-methods ###### is it really useful?
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SummarizedExperiment colData colData<-
 #' @export
@@ -90,7 +91,7 @@ setReplaceMethod("colData",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
         # keep required fields only
-        cd <- colData(x)[, c("sample_id", "inTissue", "xyzData")] ####################
+        cd <- colData(x)[, c("sample_id", x@spaCoordsNms)] 
         BiocGenerics:::replaceSlots(x, colData=cd, check=FALSE)
     })
 
@@ -111,6 +112,63 @@ setMethod("[",
     return(x)
 })
 
+#' #' @rdname SpatialExperiment-methods
+#' #' @export
+#' setReplaceMethod("scaleFactors", 
+#'                  c("SpatialExperiment", "list"),
+#'                  function(x, sample_id=TRUE, image_id=TRUE, 
+#'                           scaleFactors=as.list(rep(1,1)))
+#'                  {
+#'                      idx <- .get_img_idx(x, sample_id, image_id)
+#'                      imgData(x)$scaleFactor[idx] <- scaleFactors
+#'                  }
+#' )
+
+#' spatialCoords-setter
+#' @description a setter method which sets/replaces the spatial coordinate in a
+#' SpatialExperiment class object.
+#' @param se a SpatialExperiment class object
+#' @param coords a DataFrame with the new spatial coordinates to set.
+#' @param sample_id 
+#' @return none
+#' @importFrom SingleCellExperiment int_colData int_colData<-
+#' @importFrom S4Vectors nrow SimpleList isEmpty
+#' @importFrom methods is
+#' @aliases spatialCoords<-
+#' @export
+#' @examples
+#' example(SpatialExperiment)
+#' fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
+#'         colnames(fakeFishCoords) <- c("MyCell_ID", "Irrelevant", "x", "y")
+#' spatialCoords(se) <- fakeFishCoords
+#' spatialCoords(se)
+setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
+    function(x, value=DataFrame())#, sample_id=TRUE)
+ {
+    stopifnot(dim(value)[1]==dim(colData(x))[1])
+    if(!is(value, "DataFrame")){ value <- DataFrame(value) }
+    samplesIdx <- 1:nrow(colData(x))
+    # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+    i=1
+    dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
+    spaCoords <- character()
+    for(i in 1:dim(dfexprs)[2]) 
+    {
+        idx <- grep(dfexprs[1,i], colnames(value))
+        if( !isEmpty(idx) )
+        {
+            colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
+            if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
+        }
+    }
+    if(isEmpty(x@spaCoordsNms)) x@spaCoordsNms <- spaCoords
+    names(x@spaCoordsNms) <- NULL
+    ## write new validity xyz
+    # if (length(msg)) { warning(msg); return(spe) }
+ return(x) 
+ })
+
+
 # getters ----------------------------------------------------------------------
 
 #' @rdname SpatialExperiment-methods
@@ -118,11 +176,11 @@ setMethod("[",
 setMethod("scaleFactors", "SpatialExperiment",
     function(x, sample_id=TRUE, image_id=TRUE)
     {
+        stopifnot(exists("int_metadata(se)$imgData"))
         idx <- .get_img_idx(x, sample_id, image_id)
         imgData(x)$scaleFactor[idx]
     }
 )
-
 
 #' spatialCoords-getter
 #' @description a getter method which returns the spatial coordinates previously
@@ -147,18 +205,6 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
     } else {
         stop("Provided sample_id is not valid.")
     }
-        # z_idx <- grep("z_coord", colnames(colData(se)))
-        #
-        # if(length(z_idx) != 0)
-        # {
-        #     coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
-        #                     colData(se)[samplesIdx,"y_coord", drop=FALSE],
-        #                     colData(se)[samplesIdx,"z_coord", drop=FALSE])
-        # } else {
-        #     coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
-        #                     colData(se)[samplesIdx,"y_coord", drop=FALSE])
-        # }
-
     return(coords)
 })
 
@@ -190,79 +236,6 @@ setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
     }
     return(as.matrix(coords))
 })
-
-
-
-
-# setters ----------------------------------------------------------------------
-# 
-#' #' @rdname SpatialExperiment-methods
-#' #' @export
-#' setReplaceMethod("scaleFactors", 
-#'                  c("SpatialExperiment", "list"),
-#'                  function(x, sample_id=TRUE, image_id=TRUE, 
-#'                           scaleFactors=as.list(rep(1,1)))
-#'                  {
-#'                      idx <- .get_img_idx(x, sample_id, image_id)
-#'                      imgData(x)$scaleFactor[idx] <- scaleFactors
-#'                  }
-#' )
-
-
-
-
-.setCoord <- function(df, coordName, coordinates)
-{
-    stopifnot(dim(df)[1] == length(coordinates))
-    df[[coordName]] <- coordinates
-    return(df)
-}
-
-#' spatialCoords-setter
-#' @description a setter method which sets/replaces the spatial coordinate in a
-#' SpatialExperiment class object.
-#' @param se a SpatialExperiment class object
-#' @param coords a DataFrame with the new spatial coordinates to set.
-#' @param sample_id 
-#' @return none
-#' @importFrom SingleCellExperiment int_colData int_colData<-
-#' @importFrom S4Vectors nrow SimpleList isEmpty
-#' @importFrom methods is
-#' @aliases spatialCoords<-
-#' @export
-#' @examples
-#' example(SpatialExperiment)
-#' fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
-#'         colnames(fakeFishCoords) <- c("MyCell_ID", "Irrelevant", "x", "y")
-#' spatialCoords(se) <- fakeFishCoords
-#' spatialCoords(se)
-setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
-    function(x, value=DataFrame())#, sample_id=TRUE)
-{
-    stopifnot(dim(value)[1]==dim(colData(x))[1])
-    if(!is(value, "DataFrame")){ value <- DataFrame(value) }
-    samplesIdx <- 1:nrow(colData(x))
-    # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-    i=1
-    dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
-    spaCoords <- character()
-    for(i in 1:dim(dfexprs)[2]) 
-    {
-        idx <- grep(dfexprs[1,i], colnames(value))
-        if( !isEmpty(idx) )
-        {
-            colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
-            if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
-        }
-    }
-    if(isEmpty(x@spaCoordsNms)) x@spaCoordsNms <- spaCoords
-    names(x@spaCoordsNms) <- NULL
-    ## write new validity xyz
-    # if (length(msg)) { warning(msg); return(spe) }
-    return(x) 
-})
-
-
 
 #' spatialCoordsNames-getter
 #' @description getter method for the spatial coordinates names in a
@@ -296,6 +269,7 @@ setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 #' sum(isInTissue(ve))
 setMethod(f="isInTissue", signature="SpatialExperiment", function(x, sample_id=TRUE)
 {
+    if(!("in_tissue" %in% x@spaCoordsNms)) stop("No tissue mask loaded!")
     samplesIdx <- 1:nrow(colData(x))
     if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id)
     return( x$in_tissue[samplesIdx] == 1 ) 
