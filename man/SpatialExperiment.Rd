@@ -8,11 +8,13 @@
 \usage{
 SpatialExperiment(
   ...,
-  sample_id = character(0),
+  sample_id = "Sample01",
   spatialCoords = DataFrame(),
-  imgData = NULL,
-  inTissue = logical(0),
-  scaleFactors = NULL
+  scaleFactors = 1,
+  imageSources = NULL,
+  image_id = NULL,
+  loadImage = TRUE,
+  imgData = NULL
 )
 }
 \arguments{
@@ -24,11 +26,11 @@ conformity with the \code{sample_id}s in \code{imgData}}
 
 \item{imgData}{a \code{DataFrame} storing the image data (see details)}
 
-\item{inTissue}{a logical vector indicating whether or not
-an observation could be mapped onto the tissue}
-
 \item{xyzData}{a two/(three)-column numeric matrix containing 
 spatial xy(z)-coordinates for each observation}
+
+\item{inTissue}{a logical vector indicating whether or not
+an observation could be mapped onto the tissue}
 }
 \value{
 a \code{SpatialExperiment}
