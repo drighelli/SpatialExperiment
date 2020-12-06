@@ -3,7 +3,18 @@
 \name{spatialCoords<-,SpatialExperiment-method}
 \alias{spatialCoords<-,SpatialExperiment-method}
 \alias{spatialCoords<-}
-\title{spatialCoords-setter}
+\title{#' @rdname SpatialExperiment-methods
+#' @export
+setReplaceMethod("scaleFactors", 
+                 c("SpatialExperiment", "list"),
+                 function(x, sample_id=TRUE, image_id=TRUE, 
+                          scaleFactors=as.list(rep(1,1)))
+                 {
+                     idx <- .get_img_idx(x, sample_id, image_id)
+                     imgData(x)$scaleFactor[idx] <- scaleFactors
+                 }
+)
+spatialCoords-setter}
 \usage{
 \S4method{spatialCoords}{SpatialExperiment}(x) <- value
 }
