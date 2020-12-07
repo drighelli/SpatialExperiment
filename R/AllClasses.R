@@ -4,6 +4,7 @@
 setClass("SpatialExperiment",
         contains = "SingleCellExperiment",
         slots=c(
+            # imgData="DataFrame",
             spaCoordsNms="character"
         )
 )

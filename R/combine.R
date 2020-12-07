@@ -7,22 +7,35 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
         on.exit(S4Vectors:::disableValidity(old))
     }
     out <- callNextMethod()
-    
     args <- list(...)
     # stopifnot(any(isClass("SpatialExperiment", args)))
-    samplesids <- unlist(lapply(args, function(spE) return(unique(colData(spE)$sample_id))))
-    dsid <- duplicated(samplesids)
-    samplesids <- paste0(samplesids, c(1:length(dsid)))
+
+    ################################# keeping sample_id unique
+    ## to change with something:
+    ## faster 
+    ## avoid ids like 12,123,1234
+    samplesids <- unlist(lapply(args, function(spE)
+    {
+        return(table(colData(spE)$sample_id))
+    }))
+    dups <- duplicated(names(samplesids))
+    names(samplesids)[!dups] <- lapply(names(samplesids)[!dups], function(x) paste0(x, 0))
+    i <- 1
+    while( sum(dups) != 0 )
+    {
+        names(samplesids)[dups] <- lapply(names(samplesids)[dups], function(x) paste0(x, i)) 
+        dups <- duplicated(names(samplesids))
+        i <- i+1 
+        
+    }
+    colData(out)$sample_id <- rep(names(samplesids), samplesids)
+    
+    ############################## creating new imgData
+    newimgdata <- do.call(rbind, lapply(args, imgData))
+    int_metadata(out)[names(int_metadata(out)) %in% "imgData"] <- NULL
+    int_metadata(out)$imgData <- newimgdata
     
     
-    
-    # stopifnot(any())
-    # 
-    # 
-    # 
-    # 
-    # 
-    # BiocGenerics:::replaceSlots(out)#, int_metadata=int_m, check=FALSE)
-    out
+    return(out)
 })
 
