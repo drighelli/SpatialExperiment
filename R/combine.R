@@ -8,34 +8,43 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
     }
     out <- callNextMethod()
     args <- list(...)
-    # stopifnot(any(isClass("SpatialExperiment", args)))
 
     ################################# keeping sample_id unique
-    ## to change with something:
-    ## faster 
-    ## avoid ids like 12,123,1234
-    samplesids <- unlist(lapply(args, function(spE)
-    {
-        return(table(colData(spE)$sample_id))
-    }))
-    dups <- duplicated(names(samplesids))
-    names(samplesids)[!dups] <- lapply(names(samplesids)[!dups], function(x) paste0(x, 0))
-    i <- 1
-    while( sum(dups) != 0 )
-    {
-        names(samplesids)[dups] <- lapply(names(samplesids)[dups], function(x) paste0(x, i)) 
-        dups <- duplicated(names(samplesids))
-        i <- i+1 
-        
-    }
-    colData(out)$sample_id <- rep(names(samplesids), samplesids)
+    sampleids <- .createSampleIds(args)
+    colData(out)$sample_id <- rep(names(sampleids), sampleids)
     
     ############################## creating new imgData
     newimgdata <- do.call(rbind, lapply(args, imgData))
     int_metadata(out)[names(int_metadata(out)) %in% "imgData"] <- NULL
     int_metadata(out)$imgData <- newimgdata
-    
+    imgids <- .getIdsTable(args, imgData)
+    imgData(out)$sample_id <- rep(names(sampleids), imgids) 
     
     return(out)
 })
 
+.getIdsTable <- function(args, speFUN)
+{
+    idsTab <- unlist(lapply(args, function(spE)
+    {
+        sids <- table(speFUN(spE)$sample_id)
+        sids <- sids[order(unique(speFUN(spE)$sample_id))]
+        return(sids)
+    }))
+    return(idsTab)
+}
+
+.createSampleIds <- function(args)
+{
+    sampleids <- .getIdsTable(args, colData)
+    dups <- duplicated(names(sampleids))
+    names(sampleids)[!dups] <- lapply(names(sampleids)[!dups], function(x) paste0(x, 0))
+    i <- 1
+    while( sum(dups) != 0 )
+    {
+        names(sampleids)[dups] <- lapply(names(sampleids)[dups], function(x) paste0(x, i)) 
+        dups <- duplicated(names(sampleids))
+        i <- i+1 
+    }
+    return(sampleids)
+}
