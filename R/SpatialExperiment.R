@@ -79,7 +79,7 @@ SpatialExperiment <- function(...,
                               image_id=NULL,
                               loadImage=TRUE,
                               imgData=NULL)
-{   
+{
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
                        sample_id=sample_id,
@@ -109,7 +109,7 @@ SpatialExperiment <- function(...,
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
-    
+    stopifnot( length(sample_id)==1 )
     if (is.null(sce$sample_id))
     {
         message("No sample_id provided in colData, assigning: ", sample_id)
@@ -143,7 +143,7 @@ SpatialExperiment <- function(...,
             spe <- addImg(spe, imageSource=imageSources[i], 
                         scaleFactor=.loadScaleFacts(scaleFactors, 
                                             basename(imageSources[i])), 
-                        sample_id=sample_id[i], image_id=image_id[[i]], 
+                        sample_id=sample_id, image_id=image_id[i], 
                         load=loadImage)
         }
     }

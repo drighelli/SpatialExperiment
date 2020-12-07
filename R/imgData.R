@@ -15,7 +15,7 @@ setReplaceMethod("imgData",
         if (!is.null(msg))
             stop(msg)
         int_metadata(x)$imgData <- value
-        return(x) 
+        return(x)
     })
 
 #' @rdname SpatialExperiment-methods
@@ -23,7 +23,7 @@ setReplaceMethod("imgData",
 #' @export
 setReplaceMethod("imgData",
     c("SpatialExperiment", "NULL"),
-    function(x, value) { 
+    function(x, value) {
         int_metadata(x)$imgData <- value
-        return(x) 
+        return(x)
     })
