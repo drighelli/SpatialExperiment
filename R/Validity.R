@@ -40,7 +40,8 @@
 .colData_validity <- function(obj, msg=NULL)
 {
     df <- colData(obj)
-    if (is.null(df$sample_id)) {
+    if (is.null(df$sample_id)) 
+    {
         msg <- c(msg, "no 'sample_id' field in 'colData'")
     } else {
         if(!is.null(imgData(obj)))
