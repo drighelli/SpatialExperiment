@@ -21,19 +21,39 @@ SpatialExperiment(
 \item{...}{arguments to be passed to the \code{\link{SingleCellExperiment}} 
 constructor to fill the slots of the base class.}
 
-\item{sample_id}{a character vector of unique sample identifiers in
-conformity with the \code{sample_id}s in \code{imgData}}
+\item{sample_id}{a character of a sample identifier in
+conformity with the \code{sample_id} in \code{imgData}
+It is automatically detected from the colData, if not present 
+it assigns the value present into this paramenter (default is "Sample01").}
 
-\item{imgData}{a \code{DataFrame} storing the image data (see details)}
+\item{spatialCoords}{the spatial coordinates DataFrame can have multiple 
+columns. \code{x_coord} and \code{y_coord} are mandatory, 
+while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
+\code{array_row}, \code{array_col}.}
 
-\item{xyzData}{a two/(three)-column numeric matrix containing 
-spatial xy(z)-coordinates for each observation}
+\item{scaleFactors}{the scale factors to be associated with the image(s) (optional, default 1).
+It can be a number, a file path linking to a JSON file or the values read 
+from a 10x Visium scaleFactors JSON file.
+In these last two cases (10x Visium scale factors), 
+it automatically detects which factor 
+has to be loaded, depending on the resolution of the loaded image 
+(see \code{imageSources}).}
 
-\item{inTissue}{a logical vector indicating whether or not
-an observation could be mapped onto the tissue}
+\item{imageSources}{(optional)
+one or more image sources, they can be local paths or URLs.}
+
+\item{image_id}{(optional)
+a character vector of the same length of \code{imageSources} within unique 
+image_ids.}
+
+\item{loadImage}{a logical indicating if the image has to be loaded in memory 
+(default is TRUE).}
+
+\item{imgData}{(optional)
+a \code{DataFrame} storing the image data (see details)}
 }
 \value{
-a \code{SpatialExperiment}
+a \code{SpatialExperiment} object
 }
 \description{
 The SpatialExperiment class is designed to represent spatial transcriptomics 
@@ -43,9 +63,15 @@ for multiple samples and of different resolutions via \code{\link{imgData}},
 and requires certain observation metadata specific to ST data to be present.
 }
 \details{
-If any of arguments \code{sample_id}, \code{inTissue} and \code{xyzData}
-are missing, the \code{SpatialExperiment} constructor will assume 
-these are supplied via the input \code{colData}.
+The contructor expects the user to provide a \code{sample_id} column into the
+\code{colData}, otherwise it assigns the \code{sample_id} parameter value.
+If the \code{imgData} argument is not \code{NULL}, it considers it 
+already built, otherwise it builds it from the \code{imgSources}, 
+combining the \code{image_id} if provided. 
+Otherwise it builds the \code{image_id} from the \code{ample_id} and 
+the \code{imageSources}.
+If multiple samples have to be combined, please refer to 
+\link[SpatialExperiment]{cbind}.
 }
 \examples{
 dir <- system.file(

@@ -6,10 +6,11 @@ Date: 2020-07-24
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
-        person("Davide", "Risso", role=c("aut"), 
-        email="risso.davide@gmail.com"),
         person("Helena L.", "Crowell", role=c("ctb"), 
-        email="helena.crowell@uzh.ch"))
+        email="helena.crowell@uzh.ch"),
+        person("Davide", "Risso", role=c("aut"), 
+        email="risso.davide@gmail.com")
+        )
 Description: Defines S4 classes for storing data for spatial experiments.
     Main examples are reported by using seqFISH and 10x-Visium Spatial Gene 
     Expression data. 
@@ -22,9 +23,9 @@ LazyData: true
 biocViews: 
     DataRepresentation, DataImport, ImmunoOncology, 
     Infrastructure, SingleCell
-Depends: R (>= 4.0.0), methods, SingleCellExperiment
+Depends: R (>= 4.0.0), methods, SingleCellExperiment, magick, grid
 Imports: 
-    BiocFileCache, DropletUtils, grid, magick, rjson, 
+    BiocFileCache, DropletUtils, rjson, 
     S4Vectors, SummarizedExperiment, utils
 Suggests: knitr, Matrix, testthat 
 VignetteBuilder: knitr

@@ -5,7 +5,7 @@ setClass("SpatialExperiment",
         contains = "SingleCellExperiment",
         slots=c(
             # imgData="DataFrame",
-            spaCoordsNms="character"
+            spaCoordsNms="character" # changes accordingly to the spatialCoords loaded by the constructor
         )
 )
 

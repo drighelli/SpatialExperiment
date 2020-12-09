@@ -11,27 +11,50 @@
 #' @param ... 
 #'   arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #'   constructor to fill the slots of the base class.
-#' @param xyzData 
-#'   a two/(three)-column numeric matrix containing 
-#'   spatial xy(z)-coordinates for each observation
-#' @param imgData 
-#'   a \code{DataFrame} storing the image data (see details)
 #' @param sample_id 
-#'   a character vector of unique sample identifiers in
-#'   conformity with the \code{sample_id}s in \code{imgData}
-#' @param inTissue 
-#'   a logical vector indicating whether or not
-#'   an observation could be mapped onto the tissue
-
+#' a character of a sample identifier in
+#' conformity with the \code{sample_id} in \code{imgData}
+#' It is automatically detected from the colData, if not present 
+#' it assigns the value present into this paramenter (default is "Sample01").
+#' @param spatialCoords 
+#' the spatial coordinates DataFrame can have multiple 
+#' columns. \code{x_coord} and \code{y_coord} are mandatory, 
+#' while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
+#' \code{array_row}, \code{array_col}.
+#' @param scaleFactors 
+#' the scale factors to be associated with the image(s) (optional, default 1).
+#' It can be a number, a file path linking to a JSON file or the values read 
+#' from a 10x Visium scaleFactors JSON file.
+#' In these last two cases (10x Visium scale factors), 
+#' it automatically detects which factor 
+#' has to be loaded, depending on the resolution of the loaded image 
+#' (see \code{imageSources}).
+#' @param imgData (optional)
+#'   a \code{DataFrame} storing the image data (see details)
+#' @param imageSources (optional)
+#' one or more image sources, they can be local paths or URLs.
+#' @param image_id (optional)
+#' a character vector of the same length of \code{imageSources} within unique 
+#' image_ids.
+#' @param loadImage 
+#' a logical indicating if the image has to be loaded in memory 
+#' (default is TRUE).
 #' 
 #' @details 
-#' If any of arguments \code{sample_id}, \code{inTissue} and \code{xyzData}
-#' are missing, the \code{SpatialExperiment} constructor will assume 
-#' these are supplied via the input \code{colData}. 
+#' The contructor expects the user to provide a \code{sample_id} column into the
+#' \code{colData}, otherwise it assigns the \code{sample_id} parameter value.
+#' If the \code{imgData} argument is not \code{NULL}, it considers it 
+#' already built, otherwise it builds it from the \code{imgSources}, 
+#' combining the \code{image_id} if provided. 
+#' Otherwise it builds the \code{image_id} from the \code{ample_id} and 
+#' the \code{imageSources}.
+#' If multiple samples have to be combined, please refer to 
+#' \link[SpatialExperiment]{cbind}.
+#' 
 #' 
 #' @author Dario Righelli & Helena L. Crowell
 #' 
-#' @return a \code{SpatialExperiment}
+#' @return a \code{SpatialExperiment} object
 #' 
 #' @examples
 #' dir <- system.file(
@@ -109,6 +132,7 @@ SpatialExperiment <- function(...,
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
+    stopifnot(!is.null(spatialCoords))
     stopifnot( length(sample_id)==1 )
     if (is.null(sce$sample_id))
     {
@@ -120,13 +144,10 @@ SpatialExperiment <- function(...,
     
     spatialCoords(spe) <- spatialCoords
     
-    if(is.null(imgData))
+    if(!is.null(imgData))
     {
         imgData(spe) <- imgData
-    }
-    
-    if(!is.null(imageSources))
-    {
+    } else if(!is.null(imageSources)) {
         if(is.null(image_id))
         {
             image_id=paste0(sample_id, "_",
