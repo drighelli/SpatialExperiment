@@ -68,10 +68,13 @@ The contructor expects the user to provide a \code{sample_id} column into the
 If the \code{imgData} argument is not \code{NULL}, it considers it 
 already built, otherwise it builds it from the \code{imgSources}, 
 combining the \code{image_id} if provided. 
-Otherwise it builds the \code{image_id} from the \code{ample_id} and 
+Otherwise it builds the \code{image_id} from the \code{sample_id} and 
 the \code{imageSources}.
 If multiple samples have to be combined, please refer to 
 \link[SpatialExperiment]{cbind}.
+
+For additional information on the the spatialCoords please refer to 
+\link[SpatialExperiment]{spatialCoords},
 }
 \examples{
 dir <- system.file(
@@ -84,29 +87,25 @@ sce <- DropletUtils::read10xCounts(fnm)
 
 # read in image data
 img <- readImgData(
-  path = file.path(dir, "spatial"), 
+  path = file.path(dir, "spatial"),
   sample_id="foo")
 
 # read in spatial coordinates
 fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
-xyz <- read.csv(fnm, header = FALSE, row.names = 1, 
+xyz <- read.csv(fnm, header = FALSE, row.names = 1,
   col.names = c(
-    "barcode", "inTissue", "array_row", "array_col", 
+    "barcode", "in_tissue", "array_row", "array_col",
     "pxl_row_in_fullres", "pxl_col_in_fullres"))
-   
-# construct observation & feature metadata 
+xyz$in_tissue <- as.logical(xyz$in_tissue)
+# construct observation & feature metadata
 rd <- S4Vectors::DataFrame(
-  symbol = rowData(sce)$Symbol) 
-  
-cd <- S4Vectors::DataFrame(
-  sample_id = "foo",
-  inTissue = as.logical(xyz$inTissue),
-  xyzData = I(as.matrix(xyz[, grep("pxl", names(xyz))])))
+  symbol = rowData(sce)$Symbol)
   
 # construct 'SpatialExperiment'
-SpatialExperiment(
-  assays = list(counts = assay(sce)),
-  colData = cd, rowData = rd, imgData = img)
+(SpatialExperiment(
+    assays = list(counts = assay(sce)),
+    colData = colData(sce), rowData = rd, imgData = img,
+    spatialCoords=xyz, sample_id="foo"))
 }
 \author{
 Dario Righelli & Helena L. Crowell

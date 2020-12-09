@@ -62,7 +62,7 @@ and \code{NULL} specifies the first available entry (see details)}
 
 \item{se}{A SpatialExperiment class object.}
 
-\item{coords}{a DataFrame with the new spatial coordinates to set.}
+\item{coords}{a DataFrame with the new spatial coordinates to set (see details).}
 
 \item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying sample 
 identifier(s); here, \code{TRUE} is equivalent to all samples 
@@ -80,8 +80,10 @@ a vector with the colnames of the spatial coordinates.
 a TRUE/FALSE mask.
 }
 \description{
-a setter method which sets/replaces the spatial coordinate in a
+a setter method which sets/replaces the spatial coordinates in a
 SpatialExperiment class object.
+They are always stored as \code{x_coord}, \code{y_coord} and when found 
+\code{in_tissue}, \code{array_row} and \code{array_col} (see details).
 
 a getter method which returns the spatial coordinates previously
 stored in a SpatialExperiment class object.
@@ -95,11 +97,24 @@ SpatialExperiment class object.
 returns a mask of TRUE/FALSE Barcodes spots, indicating which
 ones are in tissue and which ones are not.
 }
+\details{
+The method automatically recognizes any kind of colnames with
+\code{x}, \code{y}, \code{z}, \code{x_coord}, \code{y_coord}, \code{z_coord} and, 
+additionally, for the 10x Visium, it recognizes the 
+\code{pxl_row_in_fullres} and \code{pxl_col_in_fullres} storing them respectively as 
+\code{y_coord} and \code{x_coord}.
+While \code{in_tissue} \code{array_row} \code{array_col} are stored as they are.
+NB \code{in_tissue} have to be in logical form.
+}
 \examples{
 example(SpatialExperiment)
-fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
-        colnames(fakeFishCoords) <- c("MyCell_ID", "Irrelevant", "x", "y")
-spatialCoords(se) <- fakeFishCoords
+fakeCoords <- cbind(spatialCoords(se)$x_coord, spatialCoords(se)$x_coord)
+colnames(fakeCoords) <- c("x", "y")
+spatialCoords(se) <- fakeCoords
+spatialCoords(se)
+oneCoord <- cbind(spatialCoords(se)$y_coord)
+colnames(oneCoord) <- c("pxl_row_in_fullres") # it assigns it to the y_coord
+spatialCoords(se) <- oneCoord
 spatialCoords(se)
 example(SpatialExperiment)
 spatialCoords(se)

@@ -6,7 +6,7 @@
 \usage{
 readImgData(
   path = ".",
-  sampleId = names(path),
+  sample_id = names(path),
   imageSources = file.path(path, "tissue_lowres_image.png"),
   scaleFactors = file.path(path, "scalefactors_json.json"),
   load = TRUE
@@ -15,12 +15,12 @@ readImgData(
 \arguments{
 \item{path}{...}
 
-\item{sampleId}{...}
-
 \item{scaleFactors}{...}
 
 \item{load}{logical; should the image(s) be loaded into memory
 as a \code{grob}? If FALSE, will store the path/URL instead.}
+
+\item{sampleId}{...}
 
 \item{images}{...}
 }

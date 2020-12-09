@@ -34,23 +34,23 @@
 # TODO: change 'as' to 'load = TRUE/FALSE' &
 # support images to be supplied as path or URL
 
-readImgData <- function(path=".", sampleId=names(path), 
+readImgData <- function(path=".", sample_id=names(path), 
     imageSources=file.path(path, "tissue_lowres_image.png"), 
     scaleFactors=file.path(path, "scalefactors_json.json"),
     load=TRUE)
 {
     # get sample identifiers
-    if (is.null(sampleId))
-        stop("'sampleId' mustn't be NULL")
+    if (is.null(sample_id))
+        stop("'sample_id' mustn't be NULL")
     stopifnot(
-        is.character(sampleId),
-        length(unique(sampleId)) == length(path))
-    names(path) <- names(scaleFactors) <- sampleId
+        is.character(sample_id),
+        length(unique(sample_id)) == length(path))
+    names(path) <- names(scaleFactors) <- sample_id
     
     # put images into list with one element per sample
     images <- lapply(path, function(.) grep(., imageSources, value=TRUE))
     
-    dfs <- lapply(sampleId, function(sid) 
+    dfs <- lapply(sample_id, function(sid) 
     {
         sfs <- fromJSON(file=scaleFactors[sid])
         dfs <- lapply(images[[sid]], function(img) 
