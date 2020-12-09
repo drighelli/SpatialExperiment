@@ -37,49 +37,52 @@ setReplaceMethod("colData",
 
         # these 'colData' columns should remain existent & valid
         # nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
-        nms <- x@spaCoordsNms
-        
-        # check if any of 'nms' are being renamed
-        if (ncol(new) == ncol(old)
-            && !setequal(names(old), names(new))
-            && any(nms %in% setdiff(names(old), names(new)))) {
+        if(!isEmpty(x@spaCoordsNms))
+        {
+            nms <- x@spaCoordsNms
+            
+            # check if any of 'nms' are being renamed
+            if (ncol(new) == ncol(old)
+                && !setequal(names(old), names(new))
+                && any(nms %in% setdiff(names(old), names(new)))) {
+                    warning(
+                        "cannot rename 'colData' fields ",
+                        paste(sQuote(nms), collapse = ", "))
+                    return(x)
+            }
+    
+            # check that 'nms' still exist
+            # (this is not handled by the check above)
+            if (!all(nms %in% names(new))) {
                 warning(
-                    "cannot rename 'colData' fields ",
+                    "cannot drop 'colData' fields",
                     paste(sQuote(nms), collapse = ", "))
                 return(x)
+            }
+    
+            # check that 'sample_id's remain valid & update 'imgData' accordingly
+            ns_old <- length(sids_old <- unique(old$sample_id))
+            ns_new <- length(sids_new <- unique(new$sample_id))
+            if (ns_old != ns_new) {
+                warning(sprintf(
+                    "Number of unique 'sample_id's is %s, but %s %s provided",
+                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
+                return(x)
+            } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
+                warning("New 'sample_id's must map uniquely")
+                return(x)
+            } else if (!is.null(imgData(x))) {
+                m <- match(imgData(x)$sample_id, sids_old)
+                imgData(x)$sample_id <- sids_new[m]
+            }
+    
+            # check that 'inTissue' & 'xyzData' remain valid
+            msg <- .colData_inTissue_validity(new$in_tissue)
+            if (length(msg)) { warning(msg); return(x) }
+    
+            msg <- .colData_spatialCoords_validity(new$xyzData)
+            if (length(msg)) { warning(msg); return(x) }
         }
-
-        # check that 'nms' still exist
-        # (this is not handled by the check above)
-        if (!all(nms %in% names(new))) {
-            warning(
-                "cannot drop 'colData' fields",
-                paste(sQuote(nms), collapse = ", "))
-            return(x)
-        }
-
-        # check that 'sample_id's remain valid & update 'imgData' accordingly
-        ns_old <- length(sids_old <- unique(old$sample_id))
-        ns_new <- length(sids_new <- unique(new$sample_id))
-        if (ns_old != ns_new) {
-            warning(sprintf(
-                "Number of unique 'sample_id's is %s, but %s %s provided",
-                ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
-            return(x)
-        } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
-            warning("New 'sample_id's must map uniquely")
-            return(x)
-        } else if (!is.null(imgData(x))) {
-            m <- match(imgData(x)$sample_id, sids_old)
-            imgData(x)$sample_id <- sids_new[m]
-        }
-
-        # check that 'inTissue' & 'xyzData' remain valid
-        msg <- .colData_inTissue_validity(new$in_tissue)
-        if (length(msg)) { warning(msg); return(x) }
-
-        msg <- .colData_spatialCoords_validity(new$xyzData)
-        if (length(msg)) { warning(msg); return(x) }
 
         # overwrite 'colData' if all checks pasted
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
