@@ -61,7 +61,7 @@ labels <- read.csv(
     file.path(dir, "seqfish_cell_labels.tsv"),
     header = FALSE, sep = "\t", col.names = c(
         "cell_id", "cluster", "class", 
-        "class_id", "irrelevant", "prob")) 
+        "class_id", "irrelevant", "prob"))
 
 coords <- read.table(
     file.path(dir, "fcortex.coordinates.txt"),
@@ -71,20 +71,13 @@ coords <- read.table(
 
 ```{r fig.width=6, fig.height=3}
 # construct 'SpatialExperiment'
-cd <-  DataFrame(
-    sample_id = "cortex",
-    in_tissue = TRUE,
-    xy_coords = I(as.matrix(coords[, c("x", "y")])),
-    labels[, c("cluster", "class", "class_id", "prob")])
+fse <- SpatialExperiment(rowData=rownames(counts),
+                        colData=labels,
+                        assays=SimpleList(counts=as.matrix(counts)),
+                        spatialCoords=coords)
 
-(fse <- SpatialExperiment(
-    assays = list(counts = counts), 
-    colData = cd))
-
-df <- as.data.frame(colData(fse))
-xy <- grep("xy", names(df))
-names(df)[xy] <- c("x", "y")
-ggplot(df, aes(x, y, col = class)) + 
+spatialCoordsNames(fse)
+ggplot(as.data.frame(colData(fse)), aes(x_coord, y_coord, col = class)) + 
     geom_point() + coord_equal()
 ```
 
