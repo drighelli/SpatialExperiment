@@ -18,7 +18,11 @@
 #' @importFrom methods callNextMethod
 .spe_show <- function(object) {
     callNextMethod()
+    coolcat("spatialCoordsNames(%d) : %s\n", spatialCoordsNames(object))
+    if(any(spatialCoordsNames(object) %in% "in_tissue"))
+        coolcat("inTissue(%d): %s\n", sum(isInTissue(object)))
     coolcat("imgData(%d): %s\n", names(imgData(object)))
+    
 }
 
 #' @rdname SpatialExperiment-misc

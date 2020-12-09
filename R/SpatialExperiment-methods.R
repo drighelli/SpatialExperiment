@@ -1,7 +1,8 @@
 # setters ----------------------------------------------------------------------
 # #' @name SpatialExperiment-methods
 #' @title SpatialExperiment methods
-#' @aliases imgData imgData<- colData<- scaleFactors
+#' @aliases imgData imgData<- colData<- scaleFactors spatialCoordsMtx 
+#' spatialCoords spatialCoords<- spatialCoordsNames isInTissue
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
 #' @param i,j indices specifying elements to extract or replace
@@ -23,67 +24,68 @@
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SummarizedExperiment colData colData<-
 #' @export
-# setReplaceMethod("colData",
-#     c("SpatialExperiment", "DataFrame"),
-#     function(x, value) {
-#         # store original 'colData'
-#         old <- colData(x)
-#         
-#         # do the replacement
-#         se <- as(x, "SummarizedExperiment")
-#         colData(se) <- value
-#         new <- colData(se)
-#         
-#         # these 'colData' columns should remain existent & valid
-#         nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
-#         
-#         # check if any of 'nms' are being renamed
-#         if (ncol(new) == ncol(old) 
-#             && !setequal(names(old), names(new))
-#             && any(nms %in% setdiff(names(old), names(new)))) {
-#                 warning(
-#                     "cannot rename 'colData' fields ",
-#                     paste(sQuote(nms), collapse = ", "))
-#                 return(x)
-#         }
-#         
-#         # check that 'nms' still exist
-#         # (this is not handled by the check above)
-#         if (!all(nms %in% names(new))) {
-#             warning(
-#                 "cannot drop 'colData' fields", 
-#                 paste(sQuote(nms), collapse = ", "))
-#             return(x)
-#         }
-#         
-#         # check that 'sample_id's remain valid & update 'imgData' accordingly
-#         ns_old <- length(sids_old <- unique(old$sample_id))
-#         ns_new <- length(sids_new <- unique(new$sample_id))
-#         if (ns_old != ns_new) {
-#             warning(sprintf(
-#                 "Number of unique 'sample_id's is %s, but %s %s provided", 
-#                 ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
-#             return(x)
-#         } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
-#             warning("New 'sample_id's must map uniquely")
-#             return(x)
-#         } else if (!is.null(imgData(x))) {
-#             m <- match(imgData(x)$sample_id, sids_old)
-#             imgData(x)$sample_id <- sids_new[m]
-#         }
-# 
-#         # check that 'inTissue' & 'xyzData' remain valid
-#         msg <- .colData_inTissue_validity(new$in_tissue)
-#         if (length(msg)) { warning(msg); return(x) }
-# 
-#         # msg <- .colData_xyzData_validity(new$xyzData)
-#         # if (length(msg)) { warning(msg); return(x) }
-# 
-#         # overwrite 'colData' if all checks pasted
-#         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
-#     })
+setReplaceMethod("colData",
+    c("SpatialExperiment", "DataFrame"),
+    function(x, value) {
+        # store original 'colData'
+        old <- colData(x)
 
-#' @rdname SpatialExperiment-methods ###### is it really useful?
+        # do the replacement
+        se <- as(x, "SummarizedExperiment")
+        colData(se) <- value
+        new <- colData(se)
+
+        # these 'colData' columns should remain existent & valid
+        # nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
+        nms <- x@spaCoordsNms
+        
+        # check if any of 'nms' are being renamed
+        if (ncol(new) == ncol(old)
+            && !setequal(names(old), names(new))
+            && any(nms %in% setdiff(names(old), names(new)))) {
+                warning(
+                    "cannot rename 'colData' fields ",
+                    paste(sQuote(nms), collapse = ", "))
+                return(x)
+        }
+
+        # check that 'nms' still exist
+        # (this is not handled by the check above)
+        if (!all(nms %in% names(new))) {
+            warning(
+                "cannot drop 'colData' fields",
+                paste(sQuote(nms), collapse = ", "))
+            return(x)
+        }
+
+        # check that 'sample_id's remain valid & update 'imgData' accordingly
+        ns_old <- length(sids_old <- unique(old$sample_id))
+        ns_new <- length(sids_new <- unique(new$sample_id))
+        if (ns_old != ns_new) {
+            warning(sprintf(
+                "Number of unique 'sample_id's is %s, but %s %s provided",
+                ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
+            return(x)
+        } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
+            warning("New 'sample_id's must map uniquely")
+            return(x)
+        } else if (!is.null(imgData(x))) {
+            m <- match(imgData(x)$sample_id, sids_old)
+            imgData(x)$sample_id <- sids_new[m]
+        }
+
+        # check that 'inTissue' & 'xyzData' remain valid
+        msg <- .colData_inTissue_validity(new$in_tissue)
+        if (length(msg)) { warning(msg); return(x) }
+
+        msg <- .colData_spatialCoords_validity(new$xyzData)
+        if (length(msg)) { warning(msg); return(x) }
+
+        # overwrite 'colData' if all checks pasted
+        BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
+    })
+
+#' @rdname SpatialExperiment-methods
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SummarizedExperiment colData colData<-
 #' @export
@@ -112,24 +114,17 @@ setMethod("[",
     return(x)
 })
 
-#' #' @rdname SpatialExperiment-methods
-#' #' @export
-#' setReplaceMethod("scaleFactors", 
-#'                  c("SpatialExperiment", "list"),
-#'                  function(x, sample_id=TRUE, image_id=TRUE, 
-#'                           scaleFactors=as.list(rep(1,1)))
-#'                  {
-#'                      idx <- .get_img_idx(x, sample_id, image_id)
-#'                      imgData(x)$scaleFactor[idx] <- scaleFactors
-#'                  }
-#' )
 
 #' spatialCoords-setter
+#' @rdname SpatialExperiment-methods
 #' @description a setter method which sets/replaces the spatial coordinate in a
 #' SpatialExperiment class object.
 #' @param se a SpatialExperiment class object
 #' @param coords a DataFrame with the new spatial coordinates to set.
 #' @param sample_id 
+#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' identifier(s); here, \code{TRUE} is equivalent to all samples 
+#' and \code{NULL} specifies the first available entry (see details)
 #' @return none
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty
@@ -183,10 +178,14 @@ setMethod("scaleFactors", "SpatialExperiment",
 )
 
 #' spatialCoords-getter
+#' @rdname SpatialExperiment-methods
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
 #' @param sample_id 
+#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' identifier(s); here, \code{TRUE} is equivalent to all samples 
+#' and \code{NULL} specifies the first available entry (see details)
 #' @return a DataFrame within the spatial coordinates.
 #'
 #' @export
@@ -209,10 +208,14 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
 })
 
 #' spatialCoordsMtx-getter
+#' @rdname SpatialExperiment-methods
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
-#' @param sample_id
+#' @param sample_id 
+#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' identifier(s); here, \code{TRUE} is equivalent to all samples 
+#' and \code{NULL} specifies the first available entry (see details)
 #' @return a matrix object within the spatial coordinates.
 #'
 #' @export
@@ -238,6 +241,7 @@ setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
 })
 
 #' spatialCoordsNames-getter
+#' @rdname SpatialExperiment-methods
 #' @description getter method for the spatial coordinates names in a
 #' SpatialExperiment class object.
 #' @param x a SpatialExperiment class object.
@@ -255,10 +259,14 @@ setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 
 
 #' isInTissue
+#' @rdname SpatialExperiment-methods
 #' @description returns a mask of TRUE/FALSE Barcodes spots, indicating which
 #' ones are in tissue and which ones are not.
 #' @param x  a VisiumExperiment class object.
-#'
+#' @param sample_id
+#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' identifier(s); here, \code{TRUE} is equivalent to all samples 
+#' and \code{NULL} specifies the first available entry (see details)
 #' @return a TRUE/FALSE mask.
 #' @export
 #' @aliases isInTissue
@@ -274,3 +282,16 @@ setMethod(f="isInTissue", signature="SpatialExperiment", function(x, sample_id=T
     if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id)
     return( x$in_tissue[samplesIdx] == 1 ) 
 })
+
+
+#' #' @rdname SpatialExperiment-methods
+#' #' @export
+#' setReplaceMethod("scaleFactors", 
+#'                  c("SpatialExperiment", "list"),
+#'                  function(x, sample_id=TRUE, image_id=TRUE, 
+#'                           scaleFactors=as.list(rep(1,1)))
+#'                  {
+#'                      idx <- .get_img_idx(x, sample_id, image_id)
+#'                      imgData(x)$scaleFactor[idx] <- scaleFactors
+#'                  }
+#' )

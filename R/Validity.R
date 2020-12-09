@@ -17,40 +17,56 @@
 {
     is_valid <- is.logical(x)
     if (!is_valid) 
-        msg <- c(msg, "'inTissue' field in 'colData' should be 'logical'")
+        msg <- c(msg, "'in_tissue' field in 'colData' should be 'logical'")
     return(msg)
 }
 
-.colData_xyzData_validity <- function(x, msg=NULL) 
-{ ##### to change
+.colData_spatialCoords_validity <- function(x, msg=NULL) 
+{ 
     # allow 2 or 3 columns to support z-coordinate
     #is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
-    is_valid <- all(c(ncol(x) %in% c(2, 3), is.numeric(x)))
+    is_valid <- all(spatialCoordsNames(x) %in% SPATDATANAMES,
+                    is.numeric(x$x_coord), 
+                    is.numeric(x$y_coord), 
+                    ifelse("z_coord" %in% spatialCoordsNames(x), 
+                            is.numeric(x$z_coord), 
+                            TRUE))
     if (!is_valid)
         msg <- c(msg, paste(
-            "'xyzData' field in 'colData'",
-            "should be a two- or three-column numeric matrix"))
+            "'spatialCoords' fields in 'colData' aren't correct"))
     return(msg)
 }
 
-.colData_validity <- function(df, msg=NULL)
+.colData_validity <- function(obj, msg=NULL)
 {
+    df <- colData(obj)
     if (is.null(df$sample_id)) {
         msg <- c(msg, "no 'sample_id' field in 'colData'")
     } else {
-        # TODO: check validity of 'sample_id's wrt 'imgData'
+        if(!is.null(imgData(obj)))
+        {
+            sids <- unique(df$sample_id)
+            isids <- unique(imgData(obj)$sample_id)
+            if( any( !(sids %in% isids), !(isids %in% sids) ) )
+            {
+                msg <- c(msg, "sample_id(s) don't match between ",
+                        "imgData and colData")
+            }
+        }
     }
     
-    # if (is.null(df$inTissue)) {
-    #     msg <- c(msg, "no 'inTissue' field in 'colData'")
-    # } else if (!is.logical(df$inTissue))
-    #     msg <- .colData_inTissue_validity(df$inTissue, msg)
-    # 
-    # if (is.null(df$xyzData)) {
-    #     msg <- c(msg, "no 'xyzData' field in 'colData'")
-    # } else {
-    #     msg <- .colData_xyzData_validity(df$xyzData, msg)
-    # }
+    # if (is.null(df$in_tissue)) { ## it can also be not stored
+    #     msg <- c(msg, "no 'in_tissue' field in 'colData'")
+    # } else 
+    if (!is.null(df$in_tissue) && is.logical(df$in_tissue))
+        msg <- .colData_inTissue_validity(df$inTissue, msg)
+
+    if ( any(is.null(df$x_coord), is.null(df$y_coord)) )
+    {
+        msg <- c(msg, "no 'x_coord' or 'y_coord' field in 'colData'")
+    } else {
+        msg <- .colData_spatialCoords_validity(obj, msg)
+    }
     return(msg)
 }
 
@@ -91,7 +107,7 @@
 .spe_validity <- function(object)
 {
     msg <- NULL
-    msg <- .colData_validity(colData(object), msg)
+    msg <- .colData_validity(object, msg)
     msg <- .imgData_validity(imgData(object), msg)
     if (length(msg)) 
         return(msg)
@@ -133,35 +149,3 @@ setValidity2("SpatialExperiment", .spe_validity)
         stop("cannot connect to specified 'url'")
     })
 }
-
-# VisiumExperiment validity ----------------------------------------------------
-
-#' .ve_validity <- function(object)
-#' {
-#'     msg <- NULL
-#'     if( sum(c("inTissue", "array_row", "array_col",
-#'         "pxl_col_in_fullres", "pxl_row_in_fullres")
-#'         %in% colnames(spatialCoords(object))) != 5 ) 
-#'     {
-#'         msg <- c(msg, paste0("Please use the 10x Visium colnames for the",
-#'             " spatial coordinates. (Defaults are 'inTissue, 'array_row'", 
-#'             " 'array_col', 'pxl_col_in_fullres', 'pxl_row_in_fullres')"))
-#'     }
-#'     
-#'     if( sum(c("spot_diameter_fullres", "tissue_hires_scalef",
-#'         "fiducial_diameter_fullres", "tissue_lowres_scalef")
-#'         %in% names(scaleFactors(object))) != 4 )
-#'     {
-#'         msg <- c(msg, paste0("Please use the 10x Visium names for the",
-#'             " scale factors. (Required are 'spot_diameter_fullres', 
-#'             ' tissue_hires_scalef', 'fiducial_diameter_fullres', 
-#'             ' tissue_lowres_scalef')"))
-#'     }
-#'     
-#'     if(length(msg)) { return(msg) }
-#'     
-#'     return(TRUE)
-#' }
-#' 
-#' #' @importFrom S4Vectors setValidity2
-#' setValidity2("VisiumExperiment", .ve_validity)
