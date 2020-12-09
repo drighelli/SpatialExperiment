@@ -37,7 +37,7 @@ setReplaceMethod("colData",
 
         # these 'colData' columns should remain existent & valid
         # nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
-        if(!isEmpty(x@spaCoordsNms))
+        if(!isEmpty(x@spaCoordsNms)) ## during initialization of the object the validity not works
         {
             nms <- x@spaCoordsNms
             
@@ -80,7 +80,7 @@ setReplaceMethod("colData",
             msg <- .colData_inTissue_validity(new$in_tissue)
             if (length(msg)) { warning(msg); return(x) }
     
-            msg <- .colData_spatialCoords_validity(new$xyzData)
+            msg <- .colData_spatialCoords_validity(x)
             if (length(msg)) { warning(msg); return(x) }
         }
 
@@ -120,15 +120,27 @@ setMethod("[",
 
 #' spatialCoords-setter
 #' @rdname SpatialExperiment-methods
-#' @description a setter method which sets/replaces the spatial coordinate in a
+#' @description 
+#' a setter method which sets/replaces the spatial coordinates in a
 #' SpatialExperiment class object.
-#' @param se a SpatialExperiment class object
-#' @param coords a DataFrame with the new spatial coordinates to set.
+#' They are always stored as \code{x_coord}, \code{y_coord} and when found 
+#' \code{in_tissue}, \code{array_row} and \code{array_col} (see details).
+#' @param se 
+#' a SpatialExperiment class object
+#' @param coords 
+#' a DataFrame with the new spatial coordinates to set (see details).
 #' @param sample_id 
 #' character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples 
 #' and \code{NULL} specifies the first available entry (see details)
 #' @return none
+#' @details The method automatically recognizes any kind of colnames with
+#' \code{x}, \code{y}, \code{z}, \code{x_coord}, \code{y_coord}, \code{z_coord} and, 
+#' additionally, for the 10x Visium, it recognizes the 
+#' \code{pxl_row_in_fullres} and \code{pxl_col_in_fullres} storing them respectively as 
+#' \code{y_coord} and \code{x_coord}.
+#' While \code{in_tissue} \code{array_row} \code{array_col} are stored as they are.
+#' NB \code{in_tissue} have to be in logical form.
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty
 #' @importFrom methods is
@@ -136,9 +148,13 @@ setMethod("[",
 #' @export
 #' @examples
 #' example(SpatialExperiment)
-#' fakeFishCoords <- cbind(fishCoordinates[,c(1:3)], fishCoordinates[,3])
-#'         colnames(fakeFishCoords) <- c("MyCell_ID", "Irrelevant", "x", "y")
-#' spatialCoords(se) <- fakeFishCoords
+#' fakeCoords <- cbind(spatialCoords(se)$x_coord, spatialCoords(se)$x_coord)
+#' colnames(fakeCoords) <- c("x", "y")
+#' spatialCoords(se) <- fakeCoords
+#' spatialCoords(se)
+#' oneCoord <- cbind(spatialCoords(se)$y_coord)
+#' colnames(oneCoord) <- c("pxl_row_in_fullres") # it assigns it to the y_coord
+#' spatialCoords(se) <- oneCoord
 #' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
     function(x, value=DataFrame())#, sample_id=TRUE)
@@ -159,12 +175,15 @@ setReplaceMethod(f="spatialCoords", signature="SpatialExperiment",
             if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
         }
     }
-    if(isEmpty(x@spaCoordsNms)) x@spaCoordsNms <- spaCoords
-    names(x@spaCoordsNms) <- NULL
-    ## write new validity xyz
-    # if (length(msg)) { warning(msg); return(spe) }
- return(x) 
- })
+    if(isEmpty(x@spaCoordsNms)) 
+    {
+        x@spaCoordsNms <- spaCoords
+        names(x@spaCoordsNms) <- NULL
+    }
+    msg <- .colData_spatialCoords_validity(x)
+    if (length(msg)) { warning(msg); return(x) }
+    # return(x) 
+})
 
 
 # getters ----------------------------------------------------------------------
