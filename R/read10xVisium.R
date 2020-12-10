@@ -51,8 +51,8 @@
 #' list.files(file.path(samples[1], "spatial"))
 #' list.files(file.path(samples[1], "raw_feature_bc_matrix"))
 #' 
-#' (ve <- read10xVisium(samples, sample_ids, 
-#'   images = c("lowres", "detected"), load = FALSE))
+#' (ve <- read10xVisium(samples, sample_ids, type="HDF5",
+#'   images = c("lowres"), load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
 #' table(
@@ -67,8 +67,8 @@
 #' @importFrom methods as
 #' @importFrom S4Vectors DataFrame metadata 
 #' @importFrom SummarizedExperiment assay assay<- rowData rowData<- metadata<-
+#' @importFrom SpatialExperiment spatialCoords
 #' @export
-
 read10xVisium <- function(samples="",
     sample_id=paste0("sample", seq_along(samples)),
     type=c("HDF5", "sparse"),
@@ -112,10 +112,17 @@ read10xVisium <- function(samples="",
         file.path(., img_fns[imgs])))
     
     # read count data
-    sce <- read10xCounts(
-        samples=counts, 
-        sample.names=sids,
-        col.names=TRUE)
+    scelist <- lapply(seq_along(counts), function(i) 
+    {
+        read10xCounts(
+            samples=counts[i], 
+            sample.names=sids[i],
+            col.names=TRUE)
+    }) 
+    # sce <- read10xCounts(
+    #     samples=counts, 
+    #     sample.names=sids,
+    #     col.names=TRUE)
     # TODO: 
     # read10xCounts() gives a 'DelayedMatrix',
     # which doesn't work with 'scater'...
@@ -123,13 +130,33 @@ read10xVisium <- function(samples="",
     #assay(sce) <- as(as.matrix(assay(sce)), "dgCMatrix")
     
     # read spatial data
-    colData(sce) <- .read_xyz(xyz)[colnames(sce), ]
+    # colData(sce) <- .read_xyz(xyz)[colnames(sce), ] see below
     
     # construct 'SpatialExperiment'
-    rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
-    metadata(sce)$Sample <- NULL
-    spe <- as(sce, "SpatialExperiment")
+    spelist <- lapply(scelist, function(sce)
+    {
+        rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
+        metadata(sce)$Sample <- NULL
+        return(as(sce, "SpatialExperiment"))
+    })
     
+    coords <- lapply(xyz, function(xxx) 
+    {
+        .read_xyz(xxx)
+    })
+    spelist <- lapply(spelist, function(spe) {
+        spatialCoords(spe) <- coords[[1]][colnames(spe),]
+        return(spe)
+    })
+    
+    spe <- do.call(cbind, spelist)
+    # sce$sample_id <- sce$Sample
+    # rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
+    # metadata(sce)$Sample <- NULL
+    # spe <- as(sce, "SpatialExperiment")
+    # SpatialExperiment(sce, spatialCoords=.read_xyz(xyz)[colnames(sce), ])
+    ##### using the setter
+    # spatialCoords(spe) <- .read_xyz(xyz)[colnames(sce), ] 
     # read image data
     id <- readImgData(samples, sids, img, sfs, load)
     imgData(spe) <- id
@@ -148,10 +175,13 @@ read10xVisium <- function(samples="",
         df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep = "_")
         if(!is.null(names(x))) cbind(sample_id=names(x)[i], df)
+        df
     })
     df <- do.call(rbind, df)
     df$in_tissue <- as.logical(df$in_tissue)
-    xy <- grep("pxl", names(df))
-    mat <- as.matrix(df[, xy])
-    DataFrame(df[, -xy], xy_coords=I(mat))
+    return(df)
+    ###### they are not stored as matrix anymore
+    # xy <- grep("pxl", names(df))
+    # mat <- as.matrix(df[, xy])
+    # DataFrame(df[, -xy], xy_coords=I(mat))
 }
