@@ -67,7 +67,6 @@
 #' @importFrom methods as
 #' @importFrom S4Vectors DataFrame metadata 
 #' @importFrom SummarizedExperiment assay assay<- rowData rowData<- metadata<-
-#' @importFrom SpatialExperiment spatialCoords
 #' @export
 read10xVisium <- function(samples="",
     sample_id=paste0("sample", seq_along(samples)),
