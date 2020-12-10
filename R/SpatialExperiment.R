@@ -132,14 +132,18 @@ SpatialExperiment <- function(...,
     }
     stopifnot(!is.null(spatialCoords))
     stopifnot( length(sample_id)==1 )
-    if (is.null(sce$sample_id))
+    if (! ("Sample" %in% colnames(colData(sce))))
     {
         message("No sample_id provided in colData, assigning: ", sample_id)
         sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+    } else {
+        sce$sample_id <- sce$Sample
+        ## colData(sce)["Sample"] remove this column
     }
     
     spe <- new("SpatialExperiment", sce)
-    spatialCoords(spe) <- spatialCoords
+    
+    if(!isEmpty(spatialCoords)) spatialCoords(spe) <- spatialCoords
     
     if(!is.null(imgData))
     {
@@ -167,6 +171,7 @@ SpatialExperiment <- function(...,
     }
 
     return(spe)
+        
 }
 
 setAs(

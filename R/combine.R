@@ -62,12 +62,13 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
     colData(out)$sample_id <- rep(names(sampleids), sampleids)
     
     ############################## creating new imgData
-    newimgdata <- do.call(rbind, lapply(args, imgData))
-    int_metadata(out)[names(int_metadata(out)) %in% "imgData"] <- NULL
-    int_metadata(out)$imgData <- newimgdata
-    imgids <- .getIdsTable(args, imgData)
-    imgData(out)$sample_id <- rep(names(sampleids), imgids) 
-    
+    if(!is.null(imgData(args[[1]]))){ ## handle imgData across multiple samples
+        newimgdata <- do.call(rbind, lapply(args, imgData))
+        int_metadata(out)[names(int_metadata(out)) %in% "imgData"] <- NULL
+        int_metadata(out)$imgData <- newimgdata
+        imgids <- .getIdsTable(args, imgData)
+        imgData(out)$sample_id <- rep(names(sampleids), imgids) 
+    } 
     return(out)
 })
 
@@ -86,7 +87,7 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
 {
     sampleids <- .getIdsTable(args, colData)
     dups <- duplicated(names(sampleids))
-    names(sampleids)[!dups] <- lapply(names(sampleids)[!dups], function(x) paste0(x, 0))
+    # names(sampleids)[!dups] <- lapply(names(sampleids)[!dups], function(x) paste0(x, 0))
     i <- 1
     while( sum(dups) != 0 )
     {

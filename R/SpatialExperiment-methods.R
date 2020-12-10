@@ -82,10 +82,12 @@ setReplaceMethod("colData",
     
             msg <- .colData_spatialCoords_validity(x)
             if (length(msg)) { warning(msg); return(x) }
+            # overwrite 'colData' if all checks pasted
+           
         }
-
-        # overwrite 'colData' if all checks pasted
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
+        
+        
     })
 
 #' @rdname SpatialExperiment-methods
@@ -159,30 +161,36 @@ setMethod("[",
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
     function(x, value=DataFrame())#, sample_id=TRUE)
  {
+
     stopifnot(dim(value)[1]==dim(colData(x))[1])
     if(!is(value, "DataFrame")){ value <- DataFrame(value) }
-    samplesIdx <- 1:nrow(colData(x))
-    # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-    i=1
-    dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
-    spaCoords <- character()
-    for(i in 1:dim(dfexprs)[2]) 
+    if(!isEmpty(value))
     {
-        idx <- grep(dfexprs[1,i], colnames(value))
-        if( !isEmpty(idx) )
+        samplesIdx <- 1:nrow(colData(x))
+        # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+        i=1
+        dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
+        spaCoords <- character()
+        for(i in 1:dim(dfexprs)[2]) 
         {
-            colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
-            if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
+            idx <- grep(dfexprs[1,i], colnames(value))
+            if( !isEmpty(idx) )
+            {
+                colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
+                if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
+            }
+        }
+        
+        if(isEmpty(x@spaCoordsNms)) 
+        {
+            names(spaCoords) <- NULL
+            x@spaCoordsNms <- spaCoords
+            # names(x@spaCoordsNms) <- NULL
         }
     }
-    if(isEmpty(x@spaCoordsNms)) 
-    {
-        x@spaCoordsNms <- spaCoords
-        names(x@spaCoordsNms) <- NULL
-    }
-    msg <- .colData_spatialCoords_validity(x)
-    if (length(msg)) { warning(msg); return(x) }
-    # return(x) 
+    # msg <- .colData_spatialCoords_validity(x)
+    # if (length(msg)) { warning(msg); return(x) }
+    return(x) 
 })
 
 

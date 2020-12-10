@@ -25,7 +25,6 @@
 { 
     # allow 2 or 3 columns to support z-coordinate
     #is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
-    print("spatcorvalidity")
     is_valid <- all(spatialCoordsNames(x) %in% SPATDATANAMES,
                     is.numeric(x$x_coord), 
                     is.numeric(x$y_coord), 
@@ -41,37 +40,41 @@
 
 .colData_validity <- function(obj, msg=NULL)
 {
-    df <- colData(obj)
-    if (is.null(df$sample_id)) 
+    if(!isEmpty(obj@spaCoordsNms))
     {
-        msg <- c(msg, "no 'sample_id' field in 'colData'")
-    } else {
-        if(!is.null(imgData(obj)))
+        df <- colData(obj)
+        if (is.null(df$sample_id)) 
         {
-            sids <- unique(df$sample_id)
-            isids <- unique(imgData(obj)$sample_id)
-            if( any( !(sids %in% isids), !(isids %in% sids) ) )
+            msg <- c(msg, "no 'sample_id' field in 'colData'")
+        } else {
+            if(!is.null(imgData(obj)))
             {
-                msg <- c(msg, "sample_id(s) don't match between ",
-                        "imgData and colData")
+                sids <- unique(df$sample_id)
+                isids <- unique(imgData(obj)$sample_id)
+                if( any( !(sids %in% isids), !(isids %in% sids) ) )
+                {
+                    msg <- c(msg, "sample_id(s) don't match between ",
+                             "imgData and colData")
+                }
             }
         }
+        
+        # if (is.null(df$in_tissue)) { ## it can also be not stored
+        #     msg <- c(msg, "no 'in_tissue' field in 'colData'")
+        # } else 
+        if ((!is.null(df$in_tissue)) && (!is.logical(df$in_tissue)))
+            msg <- .colData_inTissue_validity(df$inTissue, msg)
+        
+        if ( any(is.null(df$x_coord), is.null(df$y_coord)) )
+        {
+            msg <- c(msg, "no 'x_coord' or 'y_coord' field in 'colData'")
+        } else {
+            if(is.null(obj)) print("nullllllll")
+            msg <- .colData_spatialCoords_validity(obj, msg)
+        }
+        return(msg)
     }
     
-    # if (is.null(df$in_tissue)) { ## it can also be not stored
-    #     msg <- c(msg, "no 'in_tissue' field in 'colData'")
-    # } else 
-    if (!is.null(df$in_tissue) && is.logical(df$in_tissue))
-        msg <- .colData_inTissue_validity(df$inTissue, msg)
-
-    if ( any(is.null(df$x_coord), is.null(df$y_coord)) )
-    {
-        msg <- c(msg, "no 'x_coord' or 'y_coord' field in 'colData'")
-    } else {
-        if(is.null(obj)) print("nullllllll")
-        msg <- .colData_spatialCoords_validity(obj, msg)
-    }
-    return(msg)
 }
 
 #' @importFrom methods is
