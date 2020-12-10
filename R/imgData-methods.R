@@ -21,7 +21,7 @@
 #' } 
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
-#' @param sample_id,image_id 
+#' @param sample_id, image_id 
 #'   character string, \code{TRUE} or \code{NULL} specifying sample/image 
 #'   identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 #'   and \code{NULL} specifies the first available entry (see details)
@@ -45,7 +45,7 @@
 #' a character string or vector is returned by \code{imgPath/Url()},
 #' and a single or list of \code{grob}(s) is returned by \code{imgGrob()}.
 #'   
-#' @examples
+#' #' @examples
 #' data(ve)
 #' (df <- imgData(ve))
 #' 
@@ -56,37 +56,37 @@
 #' imgUrl(si)
 #' 
 #' # unload all images
-#' ve <- unloadImg(ve, 
-#'   sample_id = TRUE, 
+#' ve <- unloadImg(ve,
+#'   sample_id = TRUE,
 #'   image_id = TRUE)
 #' imgData(ve)$data
 #' 
 #' # reload all images
-#' ve <- loadImg(ve, 
-#'   sample_id = TRUE, 
+#' ve <- loadImg(ve,
+#'   sample_id = TRUE,
 #'   image_id = TRUE)
 #' imgData(ve)$data
 #' 
 #' # remove an image
-#' ve <- removeImg(ve, 
-#'   sample_id = "section1", 
-#'   image_id = "detected")
+#' ve <- removeImg(ve,
+#'   sample_id = "section1",
+#'   image_id = "lowres")
 #' imgData(ve)
 #' 
 #' # add an image
 #' url <- "https://i.redd.it/3pw5uah7xo041.jpg"
-#' ve <- addImg(ve, 
+#' ve <- addImg(ve,
 #'   sample_id = "section1",
 #'   image_id = "pomeranian",
-#'   imageSource = url, 
+#'   imageSource = url,
 #'   scaleFactor = NA_real_,
 #'   load = TRUE)
-#'   
-#' grb <- imgGrob(ve, 
-#'   sample_id = "section1", 
+#' 
+#' grb <- imgGrob(ve,
+#'   sample_id = "section1",
 #'   image_id = "pomeranian")
 #' grid::grid.draw(grb)
-#'   
+
 #' @author Helena L. Crowell
 
 # getters ----------------------------------------------------------------------

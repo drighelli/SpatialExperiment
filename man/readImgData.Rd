@@ -32,7 +32,7 @@ Read images & scale factors
 }
 \examples{
 dir <- system.file(
-  file.path("extdata", "10xVisium", "spatial"),
+  file.path("extdata", "10xVisium", "section1", "spatial"),
   package = "SpatialExperiment")
   
 # base directory contains 
@@ -42,7 +42,7 @@ list.files(dir)
 
 # read in images & scale factors
 # as valid 'imgData' 'DFrame'
-readImgData(dir, sampleId = "foo")
+readImgData(dir, sample_id = "foo")
 
 }
 \author{

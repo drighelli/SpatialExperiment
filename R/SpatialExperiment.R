@@ -84,7 +84,7 @@
 #'   symbol = rowData(sce)$Symbol)
 #'   
 #' # construct 'SpatialExperiment'
-#' (SpatialExperiment(
+#' (se <- SpatialExperiment(
 #'     assays = list(counts = assay(sce)),
 #'     colData = colData(sce), rowData = rd, imgData = img,
 #'     spatialCoords=xyz, sample_id="foo"))
