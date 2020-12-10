@@ -14,7 +14,7 @@
 #' 
 #' @examples 
 #' dir <- system.file(
-#'   file.path("extdata", "10xVisium", "spatial"),
+#'   file.path("extdata", "10xVisium", "section1", "spatial"),
 #'   package = "SpatialExperiment")
 #'   
 #' # base directory contains 
@@ -24,7 +24,7 @@
 #' 
 #' # read in images & scale factors
 #' # as valid 'imgData' 'DFrame'
-#' readImgData(dir, sampleId = "foo")
+#' readImgData(dir, sample_id = "foo")
 #' 
 #' @importFrom rjson fromJSON
 #' @importFrom grid rasterGrob unit

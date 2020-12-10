@@ -6,41 +6,21 @@
 \alias{imgData<-}
 \alias{colData<-}
 \alias{scaleFactors}
-\alias{spatialCoordsMtx}
-\alias{spatialCoords}
-\alias{spatialCoords<-}
-\alias{spatialCoordsNames}
-\alias{isInTissue}
 \alias{colData<-,SpatialExperiment,NULL-method}
 \alias{[,SpatialExperiment,ANY,ANY,ANY-method}
-\alias{spatialCoords<-,SpatialExperiment-method}
 \alias{scaleFactors,SpatialExperiment-method}
-\alias{spatialCoords,SpatialExperiment-method}
-\alias{spatialCoordsMtx,SpatialExperiment-method}
-\alias{spatialCoordsNames,SpatialExperiment-method}
-\alias{isInTissue,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
 \alias{imgData<-,SpatialExperiment,DataFrame-method}
 \alias{imgData<-,SpatialExperiment,NULL-method}
 \title{SpatialExperiment methods}
 \usage{
-\S4method{colData}{SpatialExperiment,DataFrame}(x) <- value
+\S4method{colData}{SpatialExperiment,DataFrame}(x, sample_id, image_id) <- value
 
 \S4method{colData}{SpatialExperiment,`NULL`}(x) <- value
 
 \S4method{[}{SpatialExperiment,ANY,ANY,ANY}(x, i, j)
 
-\S4method{spatialCoords}{SpatialExperiment}(x) <- value
-
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
-
-\S4method{spatialCoords}{SpatialExperiment}(se, sample_id = TRUE)
-
-\S4method{spatialCoordsMtx}{SpatialExperiment}(se, sample_id = TRUE)
-
-\S4method{spatialCoordsNames}{SpatialExperiment}(x)
-
-\S4method{isInTissue}{SpatialExperiment}(x, sample_id = TRUE)
 
 \S4method{imgData}{SpatialExperiment}(x)
 
@@ -49,81 +29,18 @@
 \S4method{imgData}{SpatialExperiment,`NULL`}(x) <- value
 }
 \arguments{
-\item{x}{a VisiumExperiment class object.}
+\item{x}{a \code{\link{SpatialExperiment}}}
 
 \item{value}{a \code{\link[S4Vectors]{DataFrame}}}
 
-\item{i, j}{indices specifying elements to extract or replace}
-
-\item{sample_id, }{image_id 
-character string, \code{TRUE} or \code{NULL} specifying sample/image 
+\item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying sample/image 
 identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 and \code{NULL} specifies the first available entry (see details)}
 
-\item{se}{A SpatialExperiment class object.}
-
-\item{coords}{a DataFrame with the new spatial coordinates to set (see details).}
-
-\item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying sample 
-identifier(s); here, \code{TRUE} is equivalent to all samples 
+\item{image_id}{character string, \code{TRUE} or \code{NULL} specifying sample/image 
+identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 and \code{NULL} specifies the first available entry (see details)}
 }
-\value{
-none
-
-a DataFrame within the spatial coordinates.
-
-a matrix object within the spatial coordinates.
-
-a vector with the colnames of the spatial coordinates.
-
-a TRUE/FALSE mask.
-}
 \description{
-a setter method which sets/replaces the spatial coordinates in a
-SpatialExperiment class object.
-They are always stored as \code{x_coord}, \code{y_coord} and when found 
-\code{in_tissue}, \code{array_row} and \code{array_col} (see details).
-
-a getter method which returns the spatial coordinates previously
-stored in a SpatialExperiment class object.
-
-a getter method which returns the spatial coordinates previously
-stored in a SpatialExperiment class object.
-
-getter method for the spatial coordinates names in a
-SpatialExperiment class object.
-
-returns a mask of TRUE/FALSE Barcodes spots, indicating which
-ones are in tissue and which ones are not.
-}
-\details{
-The method automatically recognizes any kind of colnames with
-\code{x}, \code{y}, \code{z}, \code{x_coord}, \code{y_coord}, \code{z_coord} and, 
-additionally, for the 10x Visium, it recognizes the 
-\code{pxl_row_in_fullres} and \code{pxl_col_in_fullres} storing them respectively as 
-\code{y_coord} and \code{x_coord}.
-While \code{in_tissue} \code{array_row} \code{array_col} are stored as they are.
-NB \code{in_tissue} have to be in logical form.
-}
-\examples{
-example(SpatialExperiment)
-fakeCoords <- cbind(spatialCoords(se)$x_coord, spatialCoords(se)$x_coord)
-colnames(fakeCoords) <- c("x", "y")
-spatialCoords(se) <- fakeCoords
-spatialCoords(se)
-oneCoord <- cbind(spatialCoords(se)$y_coord)
-colnames(oneCoord) <- c("pxl_row_in_fullres") # it assigns it to the y_coord
-spatialCoords(se) <- oneCoord
-spatialCoords(se)
-example(SpatialExperiment)
-spatialCoords(se)
-example(SpatialExperiment)
-spatialCoordsMtx(se)
-example(SpatialExperiment)
-spatialCoordsNames(se)
-ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
-                         "ve.RDS"), package="SpatialExperiment"))
-isInTissue(ve)
-sum(isInTissue(ve))
+SpatialExperiment methods
 }

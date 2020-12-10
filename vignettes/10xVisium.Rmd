@@ -2,7 +2,15 @@
 title: "Demo"
 author: "Helena L. Crowell"
 date: "`r format(Sys.Date(), '%b %m, %Y')`"
-output: BiocStyle::html_document
+output: 
+    BiocStyle::html_document:
+        toc: true
+vignette: >
+    %\VignetteIndexEntry{Visium Spatial Data Workflow}
+    %\VignetteEncoding{UTF-8}
+    %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+    chunk_output_type: console
 ---
 
 <style type="text/css"> .smaller { font-size: 10px } </style>
@@ -131,7 +139,7 @@ table(
 
 ```{r}
 # view spatial coordinates
-head(ve$xy_coords)
+head(spatialCoords(ve))
 ```
 
 # Image data
@@ -268,11 +276,10 @@ tmp$sample_id <- c("sample1", "sample2")[i]
 imgData(tmp)
 ```
 
-The `in_tissue` and `xy_coords` fields may be modified provided that the former is a logical vector, and the latter is a two- or three-column numeric matrix:
+The `in_tissue` field may be modified provided that the former is a logical vector
 
 ```{r error = TRUE}
 ve$in_tissue <- "x"
-ve$xy_coords <- "x"
 ```
 
 `colData(.) <- NULL` will retain only the `sample_id`, `in_tissue` and `xy_coords` fields:
@@ -337,7 +344,7 @@ ggspatial <- function(x,
   # subset specified images
   imgData(x) <- imgData(x)[idx, ]
   
-  df <- as.data.frame(colData(x))
+  df <- as.data.frame(colData(x)) ## this must be changed with spatialCoordsMtx(x)
   xy <- grep("xy", names(df))
   xy <- names(df)[xy] <- c("x", "y")
   

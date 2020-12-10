@@ -31,7 +31,8 @@
 \arguments{
 \item{x}{a \code{\link{SpatialExperiment}}}
 
-\item{sample_id, image_id}{character string, \code{TRUE} or \code{NULL} specifying sample/image 
+\item{sample_id, }{image_id 
+character string, \code{TRUE} or \code{NULL} specifying sample/image 
 identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 and \code{NULL} specifies the first available entry (see details)}
 
@@ -54,6 +55,48 @@ stored inside the \code{imgData}'s \code{data} field.
 Depending on whether or not multiple entries are excesses,
 a character string or vector is returned by \code{imgPath/Url()},
 and a single or list of \code{grob}(s) is returned by \code{imgGrob()}.
+  
+#' @examples
+data(ve)
+(df <- imgData(ve))
+
+# 'SpatialImage' accessors
+(si <- df$data[[1]])
+imgGrob(si)
+imgPath(si)
+imgUrl(si)
+
+# unload all images
+ve <- unloadImg(ve,
+  sample_id = TRUE,
+  image_id = TRUE)
+imgData(ve)$data
+
+# reload all images
+ve <- loadImg(ve,
+  sample_id = TRUE,
+  image_id = TRUE)
+imgData(ve)$data
+
+# remove an image
+ve <- removeImg(ve,
+  sample_id = "section1",
+  image_id = "lowres")
+imgData(ve)
+
+# add an image
+url <- "https://i.redd.it/3pw5uah7xo041.jpg"
+ve <- addImg(ve,
+  sample_id = "section1",
+  image_id = "pomeranian",
+  imageSource = url,
+  scaleFactor = NA_real_,
+  load = TRUE)
+
+grb <- imgGrob(ve,
+  sample_id = "section1",
+  image_id = "pomeranian")
+grid::grid.draw(grb)
 }
 \description{
 The set of functions described below is designed to handle 
@@ -72,49 +115,6 @@ the image-related data stored inside a \code{SpatialExperiment}'s
   to add/remove an image entry to/from 
   the \code{imgData} \code{DataFrame}}
 }
-}
-\examples{
-data(ve)
-(df <- imgData(ve))
-
-# 'SpatialImage' accessors
-(si <- df$data[[1]])
-imgGrob(si)
-imgPath(si)
-imgUrl(si)
-
-# unload all images
-ve <- unloadImg(ve, 
-  sample_id = TRUE, 
-  image_id = TRUE)
-imgData(ve)$data
-
-# reload all images
-ve <- loadImg(ve, 
-  sample_id = TRUE, 
-  image_id = TRUE)
-imgData(ve)$data
-
-# remove an image
-ve <- removeImg(ve, 
-  sample_id = "section1", 
-  image_id = "detected")
-imgData(ve)
-
-# add an image
-url <- "https://i.redd.it/3pw5uah7xo041.jpg"
-ve <- addImg(ve, 
-  sample_id = "section1",
-  image_id = "pomeranian",
-  imageSource = url, 
-  scaleFactor = NA_real_,
-  load = TRUE)
-  
-grb <- imgGrob(ve, 
-  sample_id = "section1", 
-  image_id = "pomeranian")
-grid::grid.draw(grb)
-  
 }
 \author{
 Helena L. Crowell

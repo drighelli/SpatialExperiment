@@ -1,14 +1,14 @@
 # setters ----------------------------------------------------------------------
 # #' @name SpatialExperiment-methods
 #' @title SpatialExperiment methods
-#' @aliases imgData imgData<- colData<- scaleFactors spatialCoordsMtx 
-#' spatialCoords spatialCoords<- spatialCoordsNames isInTissue
+#' @aliases imgData imgData<- colData<- scaleFactors  
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
-#' @param i,j indices specifying elements to extract or replace
 #' @param value a \code{\link[S4Vectors]{DataFrame}}
-#' @param sample_id, image_id 
-#'   character string, \code{TRUE} or \code{NULL} specifying sample/image 
+#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample/image 
+#'   identifier(s); here, \code{TRUE} is equivalent to all samples/images 
+#'   and \code{NULL} specifies the first available entry (see details)
+#' @param image_id character string, \code{TRUE} or \code{NULL} specifying sample/image 
 #'   identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 #'   and \code{NULL} specifies the first available entry (see details)
 
@@ -26,7 +26,7 @@
 #' @export
 setReplaceMethod("colData",
     c("SpatialExperiment", "DataFrame"),
-    function(x, value) {
+    function(x, value, sample_id, image_id) {
         # store original 'colData'
         old <- colData(x)
 
@@ -65,9 +65,9 @@ setReplaceMethod("colData",
             ns_new <- length(sids_new <- unique(new$sample_id))
             if (ns_old != ns_new) {
                 warning(sprintf(
-                    "Number of unique 'sample_id's is %s, but %s %s provided",
-                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
-                return(x)
+                    "Number of unique 'sample_id's is %s, but %s %s provided.\nOverwriting",
+                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was"))) 
+                return(x) 
             } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
                 warning("New 'sample_id's must map uniquely")
                 return(x)
@@ -120,17 +120,15 @@ setMethod("[",
 })
 
 
-#' spatialCoords-setter
-#' @rdname SpatialExperiment-methods
+
+#' spatialCoords<-
 #' @description 
 #' a setter method which sets/replaces the spatial coordinates in a
 #' SpatialExperiment class object.
 #' They are always stored as \code{x_coord}, \code{y_coord} and when found 
 #' \code{in_tissue}, \code{array_row} and \code{array_col} (see details).
-#' @param se 
-#' a SpatialExperiment class object
-#' @param coords 
-#' a DataFrame with the new spatial coordinates to set (see details).
+#' @param x a SpatialExperiment class object
+#' @param value a DataFrame with the new spatial coordinates to set (see details).
 #' @param sample_id 
 #' character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples 
@@ -146,7 +144,6 @@ setMethod("[",
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty
 #' @importFrom methods is
-#' @aliases spatialCoords<-
 #' @export
 #' @examples
 #' example(SpatialExperiment)
@@ -155,11 +152,11 @@ setMethod("[",
 #' spatialCoords(se) <- fakeCoords
 #' spatialCoords(se)
 #' oneCoord <- cbind(spatialCoords(se)$y_coord)
-#' colnames(oneCoord) <- c("pxl_row_in_fullres") # it assigns it to the y_coord
+#' colnames(oneCoord) <- c("pxl_row_in_fullres") # assigns it to the y_coord
 #' spatialCoords(se) <- oneCoord
 #' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
-    function(x, value=NULL)#, sample_id=TRUE)
+    function(x, value=NULL, sample_id=TRUE)
  {
 
     stopifnot(dim(value)[1]==dim(colData(x))[1])
@@ -207,19 +204,17 @@ setMethod("scaleFactors", "SpatialExperiment",
     }
 )
 
-#' spatialCoords-getter
-#' @rdname SpatialExperiment-methods
+
+#' spatialCoords
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
-#' @param sample_id 
-#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples 
 #' and \code{NULL} specifies the first available entry (see details)
 #' @return a DataFrame within the spatial coordinates.
 #'
 #' @export
-#' @aliases spatialCoords
 #' @examples
 #' example(SpatialExperiment)
 #' spatialCoords(se)
@@ -237,13 +232,12 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
     return(coords)
 })
 
-#' spatialCoordsMtx-getter
-#' @rdname SpatialExperiment-methods
+
+#' spatialCoordsMtx
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
-#' @param sample_id 
-#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples 
 #' and \code{NULL} specifies the first available entry (see details)
 #' @return a matrix object within the spatial coordinates.
@@ -270,15 +264,14 @@ setMethod(f="spatialCoordsMtx", signature="SpatialExperiment",
     return(as.matrix(coords))
 })
 
-#' spatialCoordsNames-getter
-#' @rdname SpatialExperiment-methods
+
+#' spatialCoordsNames
 #' @description getter method for the spatial coordinates names in a
 #' SpatialExperiment class object.
 #' @param x a SpatialExperiment class object.
 #'
 #' @return a vector with the colnames of the spatial coordinates.
 #' @export
-#' @aliases spatialCoordsNames
 #' @examples
 #' example(SpatialExperiment)
 #' spatialCoordsNames(se)
@@ -289,22 +282,19 @@ setMethod(f="spatialCoordsNames", signature="SpatialExperiment", function(x)
 
 
 #' isInTissue
-#' @rdname SpatialExperiment-methods
 #' @description returns a mask of TRUE/FALSE Barcodes spots, indicating which
 #' ones are in tissue and which ones are not.
 #' @param x  a VisiumExperiment class object.
-#' @param sample_id
-#' character string, \code{TRUE} or \code{NULL} specifying sample 
+#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples 
 #' and \code{NULL} specifies the first available entry (see details)
 #' @return a TRUE/FALSE mask.
 #' @export
-#' @aliases isInTissue
 #' @examples
-#' ve <- readRDS(file=system.file(file.path("extdata", "10x_visium",
-#'                          "ve.RDS"), package="SpatialExperiment"))
+#' data(ve)
 #' isInTissue(ve)
 #' sum(isInTissue(ve))
+#' ve[isInTissue(ve),]
 setMethod(f="isInTissue", signature="SpatialExperiment", function(x, sample_id=TRUE)
 {
     if(!("in_tissue" %in% x@spaCoordsNms)) stop("No tissue mask loaded!")

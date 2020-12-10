@@ -9,7 +9,7 @@
 SpatialExperiment(
   ...,
   sample_id = "Sample01",
-  spatialCoords = DataFrame(),
+  spatialCoords = NULL,
   scaleFactors = 1,
   imageSources = NULL,
   image_id = NULL,
@@ -102,7 +102,7 @@ rd <- S4Vectors::DataFrame(
   symbol = rowData(sce)$Symbol)
   
 # construct 'SpatialExperiment'
-(SpatialExperiment(
+(se <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     colData = colData(sce), rowData = rd, imgData = img,
     spatialCoords=xyz, sample_id="foo"))

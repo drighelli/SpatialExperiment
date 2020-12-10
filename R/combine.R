@@ -36,7 +36,9 @@
 #' example(SpatialExperiment, echo=FALSE) # using the class example
 #'
 #' # Combining:
-#' cbind(spe, spe)
+#' se1 <- se
+#' se1$sample_id <- "foo1"
+#' cbind(se, se1)
 #'
 #' @docType methods
 #' @aliases
@@ -56,10 +58,10 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
     }
     out <- callNextMethod()
     args <- list(...)
-    
+    save(out, file="out.rda")
     ################################# keeping sample_id unique
     sampleids <- .createSampleIds(args)
-    colData(out)$sample_id <- rep(names(sampleids), sampleids)
+    colData(out)$sample_id <- rep(names(sampleids), times=sampleids)
     
     ############################## creating new imgData
     if(!is.null(imgData(args[[1]]))){ ## handle imgData across multiple samples

@@ -40,7 +40,9 @@ Refer to \code{?\link[base]{cbind}} for the interpretation of \code{deparse.leve
 example(SpatialExperiment, echo=FALSE) # using the class example
 
 # Combining:
-cbind(spe, spe)
+se1 <- se
+se1$sample_id <- "foo1"
+cbind(se, se1)
 
 }
 \author{
