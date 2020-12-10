@@ -58,7 +58,6 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
     }
     out <- callNextMethod()
     args <- list(...)
-    save(out, file="out.rda")
     ################################# keeping sample_id unique
     sampleids <- .createSampleIds(args)
     colData(out)$sample_id <- rep(names(sampleids), times=sampleids)
