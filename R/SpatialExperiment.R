@@ -94,7 +94,7 @@
 #' @export
 SpatialExperiment <- function(..., 
                               sample_id="Sample01",
-                              spatialCoords=DataFrame(),
+                              spatialCoords=NULL,
                               scaleFactors=1,
                               imageSources=NULL,
                               image_id=NULL,
@@ -117,7 +117,7 @@ SpatialExperiment <- function(...,
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
                         sample_id="Sample01",
-                        spatialCoords=DataFrame(),
+                        spatialCoords=NULL,
                         scaleFactors=1,
                         imageSources=NULL,
                         image_id=NULL,
@@ -130,20 +130,24 @@ SpatialExperiment <- function(...,
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
-    stopifnot(!is.null(spatialCoords))
     stopifnot( length(sample_id)==1 )
-    if (! ("Sample" %in% colnames(colData(sce))))
+        
+    if ( "Sample" %in% colnames(colData(sce)) ) 
     {
-        message("No sample_id provided in colData, assigning: ", sample_id)
-        sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+        if(sample_id == "Sample01")
+        {
+            sce$sample_id <- sce$Sample
+        } else {
+            sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+        }
+        colData(sce) <- colData(sce)[,-which(colnames(colData(sce)) == "Sample")]
     } else {
-        sce$sample_id <- sce$Sample
-        ## colData(sce)["Sample"] remove this column
+        sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
     }
     
     spe <- new("SpatialExperiment", sce)
     
-    if(!isEmpty(spatialCoords)) spatialCoords(spe) <- spatialCoords
+    if(!is.null(spatialCoords)) spatialCoords(spe) <- spatialCoords
     
     if(!is.null(imgData))
     {

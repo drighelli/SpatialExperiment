@@ -159,12 +159,12 @@ setMethod("[",
 #' spatialCoords(se) <- oneCoord
 #' spatialCoords(se)
 setReplaceMethod(f="spatialCoords", signature="SpatialExperiment", 
-    function(x, value=DataFrame())#, sample_id=TRUE)
+    function(x, value=NULL)#, sample_id=TRUE)
  {
 
     stopifnot(dim(value)[1]==dim(colData(x))[1])
     if(!is(value, "DataFrame")){ value <- DataFrame(value) }
-    if(!isEmpty(value))
+    if(!is.null(value))
     {
         samplesIdx <- 1:nrow(colData(x))
         # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
