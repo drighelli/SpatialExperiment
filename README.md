@@ -7,8 +7,21 @@ SpatialExperiment is now available on the [Bioductor official repository](https:
 To install it simply run 
 
 ````
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
 BiocManager::install("SpatialExperiment")
 ````
+
+# Installing devel version of the package
+
+To install the latest devel version please run
+
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("devtools")
+devtools::install_github("drighelli/SpatialExperiment", ref="devel")
+```
 
 # Spatial Analysis
 
