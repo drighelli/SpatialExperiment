@@ -4,11 +4,17 @@ SpatialExperiment package provides S4 classes for Spatial Transcriptomics data h
 At the moment it provides SpatialExperiment and VisiumExperiment classes, providing basical setters/getters for spatial sequencing experiments.
 
 SpatialExperiment is now available on the [Bioductor official repository](https://bioconductor.org/packages/SpatialExperiment/).
-To install it simply run 
 
-````
-BiocManager::install("SpatialExperiment")
-````
+# Installing devel version of the package
+
+To install the latest devel version please run
+
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("devtools")
+devtools::install_github("drighelli/SpatialExperiment", ref="devel_spot_based")
+```
 
 # Spatial Analysis
 

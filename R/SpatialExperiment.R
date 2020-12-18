@@ -147,7 +147,7 @@ SpatialExperiment <- function(...,
     
     spe <- new("SpatialExperiment", sce)
     
-    if(!is.null(spatialCoords)) spatialCoords(spe) <- spatialCoords
+    if(!is.null(spatialCoords)) spatialData(spe) <- spatialCoords
     
     if(!is.null(imgData))
     {

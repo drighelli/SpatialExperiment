@@ -4,17 +4,20 @@
 \alias{spatialCoords,SpatialExperiment-method}
 \title{spatialCoords}
 \usage{
-\S4method{spatialCoords}{SpatialExperiment}(se, sample_id = TRUE)
+\S4method{spatialCoords}{SpatialExperiment}(se, as.df = FALSE, sample_id = TRUE)
 }
 \arguments{
 \item{se}{A SpatialExperiment class object.}
+
+\item{as.df}{logical indicating if the returned structure has to be a 
+DataFrame (default is FALSE)}
 
 \item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying sample 
 identifier(s); here, \code{TRUE} is equivalent to all samples 
 and \code{NULL} specifies the first available entry (see details)}
 }
 \value{
-a DataFrame within the spatial coordinates.
+by default returns a matrix object within the spatial coordinates.
 }
 \description{
 a getter method which returns the spatial coordinates previously

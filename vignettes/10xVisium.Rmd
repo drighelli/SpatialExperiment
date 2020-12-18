@@ -39,14 +39,17 @@ data(ve)
 
 ### Spatial data {-}
 
-Spatial data are stored in the `colData` and must contain:
+<!-- Spatial data are stored in the `colData` and must contain: -->
 
-* a character `sample_id` column giving unique sample identifiers
-* a logical `in_tissue` column indicating whether or not an observation was mapped to tissue
-* a two- or three-column numeric `xy_coords` matrix storing spatial coordinates
-  
+<!-- * a character `sample_id` column giving unique sample identifiers -->
+<!-- * a logical `in_tissue` column indicating whether or not an observation was mapped to tissue -->
+<!-- * a two- or three-column numeric `xy_coords` matrix storing spatial coordinates -->
+
+TBW 
+
+
 ```{r}
-head(colData(ve))
+head(spatialData(ve))
 ```
   
 ### Image data {-} 
@@ -133,12 +136,17 @@ Sample identifiers, indication of whether or not an observation was mapped to th
 ```{r}
 # tabulate number of spots mapped to tissue
 table(
-  in_tissue = ve$in_tissue,
+  in_tissue = isInTissue(ve),
   sample_id = ve$sample_id)
 ```
 
 ```{r}
 # view spatial coordinates
+head(spatialData(ve))
+```
+
+
+```{r}
 head(spatialCoords(ve))
 ```
 
@@ -344,11 +352,13 @@ ggspatial <- function(x,
   # subset specified images
   imgData(x) <- imgData(x)[idx, ]
   
-  df <- as.data.frame(colData(x)) ## this must be changed with spatialCoordsMtx(x)
-  xy <- grep("xy", names(df))
+  df <- colData(x, as.df=TRUE)
+  
+  # df <- as.data.frame(colData(x)) ## this must be changed with spatialCoords(x)
+  xy <- grep("x_coord|y_coord", names(df))
   xy <- names(df)[xy] <- c("x", "y")
   
-  # scale spatial coordinates
+# scale spatial coordinates
   sfs <- setNames(scaleFactors(x, TRUE, TRUE), samples)
   df[, xy] <- df[, xy] * sfs[df$sample_id]
   
@@ -459,7 +469,7 @@ ggspatial(ve, fill="total", highlight="in_tissue", images=FALSE) +
 ```{r fig.width=12, fig.height=5.5}
 # expression of some arbitrary highly expressed genes across samples
 gs <- rownames(ve)[rowData(ve)$mean > 250]
-ggspatial(ve[, ve$in_tissue], fill=gs) + scale_fill_viridis_c()
+ggspatial(ve[, isInTissue(ve)], fill=gs) + scale_fill_viridis_c()
 ```
 
 # Session information {- .smaller}

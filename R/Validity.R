@@ -25,10 +25,10 @@
 { 
     # allow 2 or 3 columns to support z-coordinate
     #is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
-    is_valid <- all(spatialCoordsNames(x) %in% SPATDATANAMES,
+    is_valid <- all(spatialDataNames(x) %in% SPATDATANAMES,
                     is.numeric(x$x_coord), 
                     is.numeric(x$y_coord), 
-                    ifelse("z_coord" %in% spatialCoordsNames(x), 
+                    ifelse("z_coord" %in% spatialDataNames(x), 
                             is.numeric(x$z_coord), 
                             TRUE)
                 )

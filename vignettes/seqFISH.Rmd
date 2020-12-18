@@ -76,7 +76,7 @@ fse <- SpatialExperiment(rowData=rownames(counts),
                         assays=SimpleList(counts=as.matrix(counts)),
                         spatialCoords=coords)
 
-spatialCoordsNames(fse)
+spatialDataNames(fse)
 ggplot(as.data.frame(colData(fse)), aes(x_coord, y_coord, col = class)) + 
     geom_point() + coord_equal()
 ```
