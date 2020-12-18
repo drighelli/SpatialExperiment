@@ -43,4 +43,15 @@ and \code{NULL} specifies the first available entry (see details)}
 }
 \description{
 SpatialExperiment methods
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setReplaceMethod("scaleFactors", "SpatialExperiment",
+          function(x, value, sample_id=TRUE, image_id=TRUE)
+          {
+              stopifnot(exists("int_metadata(se)$imgData"))
+              idx <- .get_img_idx(x, sample_id, image_id)
+              imgData(x)$scaleFactor[idx] <- value
+          }
+)
 }

@@ -180,7 +180,7 @@ imgData(ve)$data
 
 While `grob`s can be used directly for plotting (e.g. using `grid.draw` or `ggplot2`), when multiple images are to be stored (say, for many samples and of different resolutions), or when a `SpatialExperiment` is to be exported, the `path` and `url` provide the option to store an image's source at minimal storage cost. 
 
-```{r fig.small = TRUE, eval=FALSE}
+```{r fig.small = TRUE, eval=TRUE}
 # retrieve 'SpatialImage' for 1st image entry & visualize it
 si <- imgData(ve)$data[[1]]
 # grid::grid.draw(imgGrob(si))
@@ -197,7 +197,7 @@ The `SpatialExperiment` package provides various functions to handle which and h
 
 Besides a path or URL to source the image from and a numeric scale factor, `addImg()` requires specification of the `sample_id` the new image belongs to, and an `image_id` that is not yet in use for that sample:
 
-```{r fig.small=TRUE, eval=FALSE}
+```{r fig.small=TRUE, eval=TRUE}
 url <- "https://i.redd.it/3pw5uah7xo041.jpg"
 ve <- addImg(ve, 
   sample_id = "section1", image_id = "pomeranian",
@@ -253,13 +253,13 @@ ve <- loadImg(ve, TRUE, TRUE)
 
 # `colData` replacement
 
-While storing of `sample_id`s, the `in_tissue` indicator, and spatial `xy_coords` inside the `SpatialExperiment`'s `colData` enables directly accessibility via the `colData` and `$` accessors, these fields are protected against arbitrary modification. This affects replacement operations to the following effects:
+<!-- While storing of `sample_id`s, the `in_tissue` indicator, and spatial `xy_coords` inside the `SpatialExperiment`'s `colData` enables directly accessibility via the `colData` and `$` accessors, these fields are protected against arbitrary modification. This affects replacement operations to the following effects: -->
 
-Renaming is generally not permitted:
+<!-- Renaming is generally not permitted: -->
 
-```{r error = TRUE}
-names(colData(ve))[1] <- "a"
-```
+<!-- ```{r error = TRUE} -->
+<!-- names(colData(ve))[1] <- "a" -->
+<!-- ``` -->
 
 Replacement of `sample_id`s is permitted provided that 
 

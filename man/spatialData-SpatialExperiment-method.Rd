@@ -4,13 +4,19 @@
 \alias{spatialData,SpatialExperiment-method}
 \title{spatialData}
 \usage{
-\S4method{spatialData}{SpatialExperiment}(se, sample_id = TRUE)
+\S4method{spatialData}{SpatialExperiment}(se, colDataCols = NULL, sample_id = TRUE, as.df = FALSE)
 }
 \arguments{
 \item{se}{A SpatialExperiment class object.}
 
+\item{colDataCols}{a character vector indicating additional columns to return 
+that can be retrieved from the \code{colData} structure.}
+
 \item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying sample 
-identifier(s); here, \code{TRUE} is equivalent to all samples 
+identifier(s); here, \code{TRUE} is equivalent to all samples.}
+
+\item{as.df}{logical indicating if the returned structure has to be a 
+data.frame (default is FALSE).
 and \code{NULL} specifies the first available entry (see details)}
 }
 \value{
