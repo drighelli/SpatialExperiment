@@ -6,10 +6,12 @@ Date: 2020-07-24
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
+        person("Davide", "Risso", role=c("aut"), 
+        email="risso.davide@gmail.com"),
         person("Helena L.", "Crowell", role=c("ctb"), 
         email="helena.crowell@uzh.ch"),
-        person("Davide", "Risso", role=c("aut"), 
-        email="risso.davide@gmail.com")
+        person("Lukas M.", "Weber", role=c("ctb"), 
+        email="lukas.weber.edu@gmail.com")
         )
 Description: Defines S4 classes for storing data for spatial experiments.
     Main examples are reported by using seqFISH and 10x-Visium Spatial Gene 
