@@ -31,10 +31,11 @@
 \arguments{
 \item{x}{a \code{\link{SpatialExperiment}}}
 
-\item{sample_id, }{image_id 
-character string, \code{TRUE} or \code{NULL} specifying sample/image 
-identifier(s); here, \code{TRUE} is equivalent to all samples/images 
-and \code{NULL} specifies the first available entry (see details)}
+\item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying 
+sample/image identifier(s); here, \code{TRUE} is equivalent to all 
+samples/images and \code{NULL} specifies the first available entry (see details)}
+
+\item{image_id}{see \code{sample_id}}
 
 \item{imageSource}{a character string specifying an image file name 
 (.png, .jpg or .tif) or URL to source the image from}

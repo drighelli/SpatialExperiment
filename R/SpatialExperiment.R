@@ -49,10 +49,8 @@
 #' Otherwise it builds the \code{image_id} from the \code{sample_id} and 
 #' the \code{imageSources}.
 #' If multiple samples have to be combined, please refer to 
-#' \link[SpatialExperiment]{cbind}.
+#' \code{\link{combine}}.
 #' 
-#' For additional information on the the spatialCoords please refer to 
-#' \link[SpatialExperiment]{spatialCoords},
 #' 
 #' @author Dario Righelli & Helena L. Crowell
 #' 
@@ -116,7 +114,7 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
-                        sample_id="Sample01",
+                        sample_id="sample_01",
                         spatialCoords=NULL,
                         scaleFactors=1,
                         imageSources=NULL,
@@ -147,7 +145,7 @@ SpatialExperiment <- function(...,
     
     spe <- new("SpatialExperiment", sce)
     
-    if(!is.null(spatialCoords)) spatialCoords(spe) <- spatialCoords
+    if(!is.null(spatialCoords)) spatialData(spe) <- spatialCoords
     
     if(!is.null(imgData))
     {

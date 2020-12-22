@@ -15,6 +15,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("devtools")
 devtools::install_github("drighelli/SpatialExperiment", ref="devel")
+
 ```
 
 # Spatial Analysis

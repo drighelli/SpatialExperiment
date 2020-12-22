@@ -13,16 +13,16 @@ readImgData(
 )
 }
 \arguments{
-\item{path}{...}
+\item{path}{a path where to find one or more images}
 
-\item{scaleFactors}{...}
+\item{sample_id}{the \code{sample_id} for the \code{SpatialExperiment} object}
+
+\item{imageSources}{the images source path(s)}
+
+\item{scaleFactors}{the json file where to find the scale factors}
 
 \item{load}{logical; should the image(s) be loaded into memory
 as a \code{grob}? If FALSE, will store the path/URL instead.}
-
-\item{sampleId}{...}
-
-\item{images}{...}
 }
 \value{
 a \code{\link{DataFrame}}
