@@ -71,10 +71,7 @@ combining the \code{image_id} if provided.
 Otherwise it builds the \code{image_id} from the \code{sample_id} and 
 the \code{imageSources}.
 If multiple samples have to be combined, please refer to 
-\link[SpatialExperiment]{cbind}.
-
-For additional information on the the spatialCoords please refer to 
-\link[SpatialExperiment]{spatialCoords},
+\code{\link{combine}}.
 }
 \examples{
 dir <- system.file(

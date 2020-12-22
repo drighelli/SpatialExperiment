@@ -25,16 +25,23 @@
 { 
     # allow 2 or 3 columns to support z-coordinate
     #is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
-    is_valid <- all(spatialDataNames(x) %in% SPATDATANAMES,
-                    is.numeric(x$x_coord), 
+    
+    if ( ! all( x@spaCoordsNms %in% SPATDATANAMES ) )
+    {
+        msg <- c(msg, paste(
+            "Attempt to modify spatialData Names!"))
+    }
+    
+    is_valid <- all(is.numeric(x$x_coord),
                     is.numeric(x$y_coord), 
-                    ifelse("z_coord" %in% spatialDataNames(x), 
+                    ifelse("z_coord" %in% colnames(x), 
                             is.numeric(x$z_coord), 
                             TRUE)
                 )
+    
     if (!is_valid)
         msg <- c(msg, paste(
-            "'spatialCoords' fields in 'colData' aren't correct"))
+            "'dataCoords' fields in 'colData' aren't valid"))
     return(msg)
 }
 
@@ -69,7 +76,6 @@
         {
             msg <- c(msg, "no 'x_coord' or 'y_coord' field in 'colData'")
         } else {
-            if(is.null(obj)) print("nullllllll")
             msg <- .colData_spatialCoords_validity(obj, msg)
         }
         return(msg)

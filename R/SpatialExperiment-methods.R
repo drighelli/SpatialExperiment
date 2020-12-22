@@ -1,5 +1,4 @@
 # setters ----------------------------------------------------------------------
-# #' @name SpatialExperiment-methods
 #' @title SpatialExperiment methods
 #' @aliases imgData imgData<- colData<- scaleFactors  
 #' 
@@ -34,12 +33,23 @@ setReplaceMethod("colData",
         se <- as(x, "SummarizedExperiment")
         colData(se) <- value
         new <- colData(se)
+        # new <- value
 
         # these 'colData' columns should remain existent & valid
         # nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
         if(!isEmpty(x@spaCoordsNms)) ## during initialization of the object the validity not works
         {
             nms <- x@spaCoordsNms
+            
+            if( (!isEmpty(setdiff(names(old), names(new))))
+                && (!isEmpty(grep("array", setdiff(names(old), names(new))))) )
+            {
+                if(!isEmpty(grep(setdiff(names(old), names(new)), nms))) 
+                {
+                    nms <- nms[-grep(setdiff(names(old), names(new)), nms)]
+                    x@spaCoordsNms <- nms
+                }
+            }
             
             # check if any of 'nms' are being renamed
             if (ncol(new) == ncol(old)
@@ -55,7 +65,7 @@ setReplaceMethod("colData",
             # (this is not handled by the check above)
             if (!all(nms %in% names(new))) {
                 warning(
-                    "cannot drop 'colData' fields",
+                    "cannot drop 'colData' fields ",
                     paste(sQuote(nms), collapse = ", "))
                 return(x)
             }
@@ -105,6 +115,8 @@ setReplaceMethod("colData",
 # similar to the above, we overwrite the default subsetting method
 # to assure that the 'imgData' is subsetted if samples are dropped
 #' @rdname SpatialExperiment-methods
+#' @param i when subsetting, the row index(es) to keep
+#' @param j when subsetting, the column index(es) to keep
 #' @importFrom methods callNextMethod
 #' @export
 setMethod("[", 
@@ -121,7 +133,7 @@ setMethod("[",
 
 
 
-#' spatialData<-
+#' @rdname SpatialExperiment-methods
 #' @description 
 #' a setter method which sets/replaces the spatial data in a
 #' SpatialExperiment class object.
@@ -140,7 +152,7 @@ setMethod("[",
 #' \code{pxl_row_in_fullres} and \code{pxl_col_in_fullres} storing them respectively as 
 #' \code{y_coord} and \code{x_coord}.
 #' While \code{in_tissue} \code{array_row} \code{array_col} are stored as they are.
-#' NB \code{in_tissue} have to be in logical form.
+#' NB \code{in_tissue} has to be in logical form.
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty
 #' @importFrom methods is
@@ -217,7 +229,7 @@ setMethod("scaleFactors", "SpatialExperiment",
 )
 
 
-#' spatialData
+#' @rdname SpatialExperiment-methods
 #' @description a getter method which returns the spatial coordinates 
 #' data structure previously stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
@@ -257,7 +269,7 @@ setMethod(f="spatialData", signature="SpatialExperiment",
 })
 
 
-#' spatialCoords
+#' @rdname SpatialExperiment-methods
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
@@ -301,12 +313,13 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
 })
 
 
-#' spatialDataNames
+#' @rdname SpatialExperiment-methods
+#' @name spatialDataNames
 #' @description getter method for the spatial coordinates names in a
 #' SpatialExperiment class object.
 #' @param x a SpatialExperiment class object.
 #'
-#' @return a vector with the colnames of the spatial coordinates.
+#' @return SpatialDataNames: a vector with the colnames of the spatial coordinates.
 #' @export
 #' @examples
 #' example(SpatialExperiment)
@@ -317,14 +330,15 @@ setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
 })
 
 
-#' isInTissue
-#' @description returns a mask of TRUE/FALSE Barcodes spots, indicating which
-#' ones are in tissue and which ones are not.
+#' @rdname SpatialExperiment-methods
+#' @title isInTissue
+#' @description isInTissue: returns a mask of TRUE/FALSE Barcodes spots, 
+#' indicating which ones are in tissue and which ones are not.
 #' @param x  a VisiumExperiment class object.
 #' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples 
 #' and \code{NULL} specifies the first available entry (see details)
-#' @return a TRUE/FALSE mask.
+#' @return isInTissue: a TRUE/FALSE mask.
 #' @export
 #' @examples
 #' data(ve)

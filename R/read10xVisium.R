@@ -143,9 +143,16 @@ read10xVisium <- function(samples="",
     {
         .read_xyz(xxx)
     })
-    spelist <- lapply(spelist, function(spe) {
-        spatialData(spe) <- coords[[1]][colnames(spe),]
-        return(spe)
+    # spelist <- lapply(spelist, function(spe) {
+    #     spatialData(spe) <- coords[[1]][colnames(spe),]
+    #     return(spe)
+    # })
+    
+    spelist <- lapply(c(1:length(spelist)) , function(i)
+    {
+        spatialData(spelist[[i]]) <- coords[[i]][colnames(spelist[[i]]),]
+        spelist[[i]]$sample_id <- sids[[i]]
+        return(spelist[[i]])
     })
     
     spe <- do.call(cbind, spelist)
@@ -158,6 +165,7 @@ read10xVisium <- function(samples="",
     # spatialCoords(spe) <- .read_xyz(xyz)[colnames(sce), ] 
     # read image data
     id <- readImgData(samples, sids, img, sfs, load)
+    
     imgData(spe) <- id
     return(spe)
 }

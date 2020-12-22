@@ -21,10 +21,10 @@
 #' } 
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
-#' @param sample_id, image_id 
-#'   character string, \code{TRUE} or \code{NULL} specifying sample/image 
-#'   identifier(s); here, \code{TRUE} is equivalent to all samples/images 
-#'   and \code{NULL} specifies the first available entry (see details)
+#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying 
+#'   sample/image identifier(s); here, \code{TRUE} is equivalent to all 
+#'   samples/images and \code{NULL} specifies the first available entry (see details)
+#' @param image_id see \code{sample_id}
 #' @param imageSource 
 #'   a character string specifying an image file name 
 #'   (.png, .jpg or .tif) or URL to source the image from
