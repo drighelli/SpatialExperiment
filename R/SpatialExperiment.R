@@ -140,14 +140,14 @@ SpatialExperiment <- function(...,
         }
         colData(sce) <- colData(sce)[,-which(colnames(colData(sce)) == "Sample")]
     } else {
+        
         sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
     }
-    
     spe <- new("SpatialExperiment", sce)
+
+    if( !is.null(spatialData) ) spatialData(spe) <- spatialData ## remove check logical on spatialcoords
     
-    if(!is.null(spatialData)) spatialData(spe) <- spatialData ## remove check logical on spatialcoords
-    
-    if(!is.null(imgData))
+    if ( !is.null(imgData) )
     {
         stopifnot( imgData$sample_id == spe$sample_id )
         imgData(spe) <- imgData

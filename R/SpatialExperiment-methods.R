@@ -175,7 +175,7 @@ setReplaceMethod(f="spatialData", signature="SpatialExperiment",
     if (!is(value, "DataFrame")){ value <- DataFrame(value) }
     if (!is.null(value))
     {
-        #samplesIdx <- 1:nrow(colData(x))
+        samplesIdx <- 1:nrow(colData(x))
         if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id) #### To fix
         i=1
         dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
@@ -253,6 +253,7 @@ setMethod("scaleFactors", "SpatialExperiment",
 setMethod(f="spatialData", signature="SpatialExperiment",
     function(se, cd_keep=NULL, sample_id=TRUE, as_df=FALSE)
 {
+    
     samplesIdx <- 1:nrow(colData(se))
     if ( !isTRUE( sample_id ) ) samplesIdx <- which(se$sample_id %in% sample_id)
     if ( !isEmpty( samplesIdx ) )
