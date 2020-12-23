@@ -196,10 +196,10 @@ setReplaceMethod(f="spatialData", signature="SpatialExperiment",
             x@spaCoordsNms <- spaCoords
         }
         
-        if ( "in_tissue" %in% spatialDataNames(x) ) 
-        {
-            if ( !is.logical(x$in_tissue) ) x$in_tissue <- as.logical(x$in_tissue)
-        }
+        # if ( "in_tissue" %in% spatialDataNames(x) ) 
+        # {
+        #     if ( !is.logical(x$in_tissue) ) x$in_tissue <- as.logical(x$in_tissue)
+        # }
     }
     # msg <- .colData_spatialCoords_validity(x)
     # if (length(msg)) { warning(msg); return(x) }
