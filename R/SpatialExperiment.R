@@ -16,7 +16,7 @@
 #' conformity with the \code{sample_id} in \code{imgData}
 #' It is automatically detected from the colData, if not present 
 #' it assigns the value present into this paramenter (default is "Sample01").
-#' @param spatialCoords 
+#' @param spatialData 
 #' the spatial coordinates DataFrame can have multiple 
 #' columns. \code{x_coord} and \code{y_coord} are mandatory, 
 #' while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
@@ -91,8 +91,8 @@
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-                              sample_id="Sample01",
-                              spatialCoords=NULL,
+                              sample_id="sample_01",
+                              spatialData=NULL,
                               scaleFactors=1,
                               imageSources=NULL,
                               image_id=NULL,
@@ -102,7 +102,7 @@ SpatialExperiment <- function(...,
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
                        sample_id=sample_id,
-                       spatialCoords=spatialCoords,
+                       spatialData=spatialData,
                        scaleFactors=scaleFactors,
                        imageSources=imageSources,
                        loadImage=loadImage,
@@ -115,7 +115,7 @@ SpatialExperiment <- function(...,
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
                         sample_id="sample_01",
-                        spatialCoords=NULL,
+                        spatialData=NULL,
                         scaleFactors=1,
                         imageSources=NULL,
                         image_id=NULL,
@@ -128,11 +128,11 @@ SpatialExperiment <- function(...,
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
-    stopifnot( length(sample_id)==1 )
-        
-    if ( "Sample" %in% colnames(colData(sce)) ) 
+    
+    ## check the sampleid with the one present into imgData
+    if ( "Sample" %in% colnames(colData(sce)) )
     {
-        if(sample_id == "Sample01")
+        if( is.null(sample_id) )
         {
             sce$sample_id <- sce$Sample
         } else {
@@ -145,10 +145,11 @@ SpatialExperiment <- function(...,
     
     spe <- new("SpatialExperiment", sce)
     
-    if(!is.null(spatialCoords)) spatialData(spe) <- spatialCoords
+    if(!is.null(spatialCoords)) spatialData(spe) <- spatialCoords ## remove check logical on spatialcoords
     
     if(!is.null(imgData))
     {
+        stopifnot( imgData$sample_id == spe$sample_id )
         imgData(spe) <- imgData
     } else if(!is.null(imageSources)) {
         if(is.null(image_id))
@@ -179,7 +180,7 @@ SpatialExperiment <- function(...,
 setAs(
     from="SingleCellExperiment", 
     to="SpatialExperiment", 
-    function(from) .sce_to_spe(from))
+    function(from) .sce_to_spe(from, sample_id=NULL))
 
 
 ################ global definitions to move into another file

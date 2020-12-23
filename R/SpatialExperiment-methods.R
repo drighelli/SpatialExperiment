@@ -172,29 +172,33 @@ setReplaceMethod(f="spatialData", signature="SpatialExperiment",
  {
 
     stopifnot(dim(value)[1]==dim(colData(x))[1])
-    if(!is(value, "DataFrame")){ value <- DataFrame(value) }
-    if(!is.null(value))
+    if (!is(value, "DataFrame")){ value <- DataFrame(value) }
+    if (!is.null(value))
     {
         samplesIdx <- 1:nrow(colData(x))
-        # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
+        # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id) #### To fix
         i=1
         dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
         spaCoords <- character()
-        for(i in 1:dim(dfexprs)[2]) 
+        for (i in 1:dim(dfexprs)[2]) 
         {
             idx <- grep(dfexprs[1,i], colnames(value))
-            if( !isEmpty(idx) )
+            if ( !isEmpty(idx) )
             {
                 colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
                 if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
             }
         }
         
-        if(isEmpty(x@spaCoordsNms)) 
+        if ( isEmpty(x@spaCoordsNms) ) 
         {
             names(spaCoords) <- NULL
             x@spaCoordsNms <- spaCoords
-            # names(x@spaCoordsNms) <- NULL
+        }
+        
+        if ( "in_tissue" %in% spatialDataNames(x) ) 
+        {
+            if ( !is.logical(x$in_tissue) ) x$in_tissue <- as.logical(x$in_tissue)
         }
     }
     # msg <- .colData_spatialCoords_validity(x)
