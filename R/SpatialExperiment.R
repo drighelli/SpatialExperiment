@@ -145,7 +145,7 @@ SpatialExperiment <- function(...,
     
     spe <- new("SpatialExperiment", sce)
     
-    if(!is.null(spatialCoords)) spatialData(spe) <- spatialCoords ## remove check logical on spatialcoords
+    if(!is.null(spatialData)) spatialData(spe) <- spatialData ## remove check logical on spatialcoords
     
     if(!is.null(imgData))
     {
