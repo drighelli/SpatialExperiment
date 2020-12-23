@@ -175,8 +175,8 @@ setReplaceMethod(f="spatialData", signature="SpatialExperiment",
     if (!is(value, "DataFrame")){ value <- DataFrame(value) }
     if (!is.null(value))
     {
-        samplesIdx <- 1:nrow(colData(x))
-        # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id) #### To fix
+        #samplesIdx <- 1:nrow(colData(x))
+        if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id) #### To fix
         i=1
         dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
         spaCoords <- character()
