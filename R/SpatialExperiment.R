@@ -149,7 +149,7 @@ SpatialExperiment <- function(...,
     
     if ( !is.null(imgData) )
     {
-        stopifnot( imgData$sample_id == spe$sample_id )
+        stopifnot( all(imgData$sample_id == spe$sample_id) )
         imgData(spe) <- imgData
     } else if(!is.null(imageSources)) {
         if(is.null(image_id))
