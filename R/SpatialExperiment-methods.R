@@ -277,8 +277,6 @@ setMethod(f="spatialData", signature="SpatialExperiment",
 #' @description a getter method which returns the spatial coordinates previously
 #' stored in a SpatialExperiment class object.
 #' @param se A SpatialExperiment class object.
-#' @param cd_keep a character vector indicating additional columns to return 
-#' that can be retrieved from the \code{colData} structure.
 #' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
 #' identifier(s); here, \code{TRUE} is equivalent to all samples.
 #' @param as_df logical indicating if the returned structure has to be a 
@@ -291,7 +289,7 @@ setMethod(f="spatialData", signature="SpatialExperiment",
 #' example(SpatialExperiment)
 #' spatialCoords(se)
 setMethod(f="spatialCoords", signature="SpatialExperiment",
-    function(se, cd_keep=NULL, sample_id=TRUE, as_df=FALSE)
+    function(se, sample_id=TRUE, as_df=FALSE)
 {
     samplesIdx <- 1:nrow(colData(se))
     if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
@@ -305,13 +303,7 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
         coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
                         colData(se)[samplesIdx,"y_coord", drop=FALSE])
     }
-    if(!is.null(cd_keep)) 
-    {
-        stopifnot( all( colDataCols %in% colnames(colData(se)) ) )
-        nms <- colnames(coords)
-        coords <- cbind(coords, colData(se)[[cd_keep]])
-        colnames(coords) <- c(nms, cd_keep)
-    }
+    
     if (as_df) return(as.data.frame(coords))
     else return(as.matrix(coords))
 })
