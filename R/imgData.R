@@ -10,7 +10,7 @@ setMethod("imgData", "SpatialExperiment",
 #' @export
 setReplaceMethod("imgData",
     c("SpatialExperiment", "DataFrame"),
-    function(x, value) { 
+    function(x, value) {
         msg <- .imgData_validity(value)
         if (!is.null(msg))
             stop(msg)

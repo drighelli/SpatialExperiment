@@ -8,12 +8,12 @@
 \alias{scaleFactors}
 \alias{colData<-,SpatialExperiment,NULL-method}
 \alias{[,SpatialExperiment,ANY,ANY,ANY-method}
-\alias{spatialData<-,SpatialExperiment-method}
-\alias{scaleFactors,SpatialExperiment-method}
+\alias{spatialData<-,SpatialExperiment,DataFrame-method}
 \alias{spatialData,SpatialExperiment-method}
+\alias{scaleFactors,SpatialExperiment-method}
 \alias{spatialCoords,SpatialExperiment-method}
 \alias{spatialDataNames}
-\alias{isInTissue,SpatialExperiment-method}
+\alias{inTissue,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
 \alias{imgData<-,SpatialExperiment,DataFrame-method}
 \alias{imgData<-,SpatialExperiment,NULL-method}
@@ -25,17 +25,17 @@
 
 \S4method{[}{SpatialExperiment,ANY,ANY,ANY}(x, i, j)
 
-\S4method{spatialData}{SpatialExperiment}(x, sample_id = TRUE) <- value
+\S4method{spatialData}{SpatialExperiment,DataFrame}(x) <- value
+
+\S4method{spatialData}{SpatialExperiment}(se, cd_keep = NULL, sample_id = TRUE, as_df = FALSE)
 
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
 
-\S4method{spatialData}{SpatialExperiment}(se, colDataCols = NULL, sample_id = TRUE, as.df = FALSE)
-
-\S4method{spatialCoords}{SpatialExperiment}(se, colDataCols = NULL, sample_id = TRUE, as.df = FALSE)
+\S4method{spatialCoords}{SpatialExperiment}(se, sample_id = TRUE, as_df = FALSE)
 
 \S4method{spatialDataNames}{SpatialExperiment}(x)
 
-\S4method{isInTissue}{SpatialExperiment}(x, sample_id = TRUE)
+\S4method{inTissue}{SpatialExperiment}(x, sample_id = TRUE)
 
 \S4method{imgData}{SpatialExperiment}(x)
 
@@ -61,6 +61,10 @@ and \code{NULL} specifies the first available entry (see details)}
 \item{j}{when subsetting, the column index(es) to keep}
 
 \item{se}{A SpatialExperiment class object.}
+
+\item{as_df}{logical indicating if the returned structure has to be a 
+data.frame (default is FALSE).
+and \code{NULL} specifies the first available entry (see details)}
 
 \item{colDataCols}{a character vector indicating additional columns to return 
 that can be retrieved from the \code{colData} structure.}
@@ -105,7 +109,7 @@ additionally, for the 10x Visium, it recognizes the
 \code{pxl_row_in_fullres} and \code{pxl_col_in_fullres} storing them respectively as 
 \code{y_coord} and \code{x_coord}.
 While \code{in_tissue} \code{array_row} \code{array_col} are stored as they are.
-NB \code{in_tissue} have to be in logical form.
+NB \code{in_tissue} has to be in logical form.
 }
 \examples{
 example(SpatialExperiment)
@@ -124,7 +128,7 @@ spatialCoords(se)
 example(SpatialExperiment)
 spatialDataNames(se)
 data(ve)
-isInTissue(ve)
-sum(isInTissue(ve))
-ve[isInTissue(ve),]
+inTissue(ve)
+sum(inTissue(ve))
+ve[inTissue(ve),]
 }

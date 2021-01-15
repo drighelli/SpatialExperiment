@@ -85,7 +85,9 @@
 #' (se <- SpatialExperiment(
 #'     assays = list(counts = assay(sce)),
 #'     colData = colData(sce), rowData = rd, imgData = img,
-#'     spatialCoords=xyz, sample_id="foo"))
+#'     spatialData=xyz, 
+#'     spatialCoordsNames=c("array_col", "array_row"),
+#'     sample_id="foo"))
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
@@ -93,6 +95,7 @@
 SpatialExperiment <- function(..., 
                               sample_id="sample_01",
                               spatialData=NULL,
+                              spatialCoordsNames=c("x", "y"),
                               scaleFactors=1,
                               imageSources=NULL,
                               image_id=NULL,
@@ -103,6 +106,7 @@ SpatialExperiment <- function(...,
     spe <- .sce_to_spe(sce=sce,
                        sample_id=sample_id,
                        spatialData=spatialData,
+                       spatialCoordsNames=spatialCoordsNames,
                        scaleFactors=scaleFactors,
                        imageSources=imageSources,
                        loadImage=loadImage,
@@ -116,12 +120,12 @@ SpatialExperiment <- function(...,
 .sce_to_spe <- function(sce,
                         sample_id="sample_01",
                         spatialData=NULL,
+                        spatialCoordsNames=c("x", "y"),
                         scaleFactors=1,
                         imageSources=NULL,
                         image_id=NULL,
                         loadImage=TRUE,
                         imgData=NULL)
-    ## provide path to load 10x data with read10x function
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -136,23 +140,30 @@ SpatialExperiment <- function(...,
         {
             sce$sample_id <- sce$Sample
         } else {
-            sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+            ## check how to handle multiple sample_id(s)
+            sce$sample_id <- sample_id 
         }
         colData(sce) <- colData(sce)[,-which(colnames(colData(sce)) == "Sample")]
     } else {
-        
-        sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+        ## check how to handle multiple sample_id(s)
+        if ( !isEmpty(colData(sce)) ) sce$sample_id <- sample_id 
     }
     spe <- new("SpatialExperiment", sce)
 
-    if( !is.null(spatialData) ) spatialData(spe) <- spatialData ## remove check logical on spatialcoords
+    if ( !is.null(spatialData) ) 
+    {
+        stopifnot( all(spatialCoordsNames %in% colnames(spatialData)) )
+        spe@spaCoordsNms <- spatialCoordsNames
+        spatialData(spe) <- DataFrame(spatialData)
+    }
+        
     
     if ( !is.null(imgData) )
     {
         stopifnot( all(imgData$sample_id == spe$sample_id) )
         imgData(spe) <- imgData
-    } else if(!is.null(imageSources)) {
-        if(is.null(image_id))
+    } else if ( !is.null(imageSources) ) {
+        if ( is.null(image_id) )
         {
             image_id=paste0(sample_id, "_",
                             sub(pattern="(.*)\\..*$", 
@@ -163,7 +174,7 @@ SpatialExperiment <- function(...,
             stopifnot(length(image_id) != length(imageSources))
         }
         
-        for(i in 1:length(imageSources))
+        for ( i in 1:length(imageSources) )
         {
             spe <- addImg(spe, imageSource=imageSources[i], 
                         scaleFactor=.loadScaleFacts(scaleFactors, 

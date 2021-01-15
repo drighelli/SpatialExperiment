@@ -18,10 +18,9 @@
 #' @importFrom methods callNextMethod
 .spe_show <- function(object) {
     callNextMethod()
-    coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
-    # if(any(spatialDataNames(object) %in% "in_tissue"))
-    #     coolcat("inTissue(%d): %s\n", sum(isInTissue(object)))
-    coolcat("imgData(%d): %s\n", names(imgData(object)))
+    # coolcat("imgData(%d): %s\n", names(imgData(object)))
+    # coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
+    
     
 }
 

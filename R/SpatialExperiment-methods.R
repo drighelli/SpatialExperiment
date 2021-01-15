@@ -37,64 +37,65 @@ setReplaceMethod("colData",
 
         # these 'colData' columns should remain existent & valid
         # nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
-        if(!isEmpty(x@spaCoordsNms)) ## during initialization of the object the validity not works
-        {
-            nms <- x@spaCoordsNms
+        #if(!isEmpty(x@spaCoordsNms)) ## during initialization of the object the validity not works
+        #{
+            # nms <- x@spaCoordsNms
             
-            if( (!isEmpty(setdiff(names(old), names(new))))
-                && (!isEmpty(grep("array", setdiff(names(old), names(new))))) )
-            {
-                if(!isEmpty(grep(setdiff(names(old), names(new)), nms))) 
-                {
-                    nms <- nms[-grep(setdiff(names(old), names(new)), nms)]
-                    x@spaCoordsNms <- nms
-                }
-            }
-            
-            # check if any of 'nms' are being renamed
-            if (ncol(new) == ncol(old)
-                && !setequal(names(old), names(new))
-                && any(nms %in% setdiff(names(old), names(new)))) {
-                    warning(
-                        "cannot rename 'colData' fields ",
-                        paste(sQuote(nms), collapse = ", "))
-                    return(x)
-            }
-    
-            # check that 'nms' still exist
-            # (this is not handled by the check above)
-            if (!all(nms %in% names(new))) {
-                warning(
-                    "cannot drop 'colData' fields ",
-                    paste(sQuote(nms), collapse = ", "))
-                return(x)
-            }
-    
+            # if( (!isEmpty(setdiff(names(old), names(new))))
+            #     && (!isEmpty(grep("array", setdiff(names(old), names(new))))) )
+            # {
+            #     if(!isEmpty(grep(setdiff(names(old), names(new)), nms))) 
+            #     {
+            #         nms <- nms[-grep(setdiff(names(old), names(new)), nms)]
+            #         x@spaCoordsNms <- nms
+            #     }
+            # }
+            # 
+            # # check if any of 'nms' are being renamed
+            # if (ncol(new) == ncol(old)
+            #     && !setequal(names(old), names(new))
+            #     && any(nms %in% setdiff(names(old), names(new)))) {
+            #         warning(
+            #             "cannot rename 'colData' fields ",
+            #             paste(sQuote(nms), collapse = ", "))
+            #         return(x)
+            # }
+            # 
+            # # check that 'nms' still exist
+            # # (this is not handled by the check above)
+            # if (!all(nms %in% names(new))) {
+            #     warning(
+            #         "cannot drop 'colData' fields ",
+            #         paste(sQuote(nms), collapse = ", "))
+            #     return(x)
+            # }
+            # 
             # check that 'sample_id's remain valid & update 'imgData' accordingly
             ns_old <- length(sids_old <- unique(old$sample_id))
             ns_new <- length(sids_new <- unique(new$sample_id))
             if (ns_old != ns_new) {
                 warning(sprintf(
-                    "Number of unique 'sample_id's is %s, but %s %s provided.\nOverwriting",
-                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was"))) 
-                return(x) 
+                    "Number of unique 'sample_id's is %s, but %s %s provided.\n",#Overwriting",
+                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
+                # return(x)
             } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
                 warning("New 'sample_id's must map uniquely")
-                return(x)
-            } else if (!is.null(imgData(x))) {
+                # return(x)
+            } else if (!is.null(imgData(x))) 
+            {
                 m <- match(imgData(x)$sample_id, sids_old)
                 imgData(x)$sample_id <- sids_new[m]
             }
     
             # check that 'inTissue' & 'xyzData' remain valid
-            msg <- .colData_inTissue_validity(new$in_tissue)
-            if (length(msg)) { warning(msg); return(x) }
+            # msg <- .colData_inTissue_validity(new$in_tissue)
+            # if (length(msg)) { warning(msg); return(x) }
     
-            msg <- .colData_spatialCoords_validity(x)
-            if (length(msg)) { warning(msg); return(x) }
+            # msg <- .colData_spatialCoords_validity(x)
+            # if (length(msg)) { warning(msg); return(x) }
             # overwrite 'colData' if all checks pasted
            
-        }
+       # }
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
         
         
@@ -108,8 +109,8 @@ setReplaceMethod("colData",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
         # keep required fields only
-        cd <- colData(x)[, c("sample_id", x@spaCoordsNms)] 
-        BiocGenerics:::replaceSlots(x, colData=cd, check=FALSE)
+        # cd <- colData(x)[, c("sample_id", x@spaCoordsNms)] 
+        BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
     })
 
 # similar to the above, we overwrite the default subsetting method
@@ -167,43 +168,30 @@ setMethod("[",
 #' colnames(oneCoord) <- c("pxl_row_in_fullres") # assigns it to the y_coord
 #' spatialData(se) <- oneCoord
 #' spatialData(se)
-setReplaceMethod(f="spatialData", signature="SpatialExperiment", 
-    function(x, value=NULL, sample_id=TRUE)
+setReplaceMethod(f="spatialData", 
+    c("SpatialExperiment", "DataFrame"),
+    function(x, value)
  {
 
     stopifnot(dim(value)[1]==dim(colData(x))[1])
-    if (!is(value, "DataFrame")){ value <- DataFrame(value) }
-    if (!is.null(value))
+    spd <- value
+    if ( !("in_tissue" %in% colnames(value)) )
     {
-        samplesIdx <- 1:nrow(colData(x))
-        if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id) #### To fix
-        i=1
-        dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
-        spaCoords <- character()
-        for (i in 1:dim(dfexprs)[2]) 
-        {
-            idx <- grep(dfexprs[1,i], colnames(value))
-            if ( !isEmpty(idx) )
-            {
-                colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
-                if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
-            }
-        }
-        
-        if ( isEmpty(x@spaCoordsNms) ) 
-        {
-            names(spaCoords) <- NULL
-            x@spaCoordsNms <- spaCoords
-        }
-        
-        # if ( "in_tissue" %in% spatialDataNames(x) ) 
-        # {
-        #     if ( !is.logical(x$in_tissue) ) x$in_tissue <- as.logical(x$in_tissue)
-        # }
+        spd <- cbind(value, 1)
+        colnames(spd) <- colnames(value, "in_tissue")
     }
-    # msg <- .colData_spatialCoords_validity(x)
-    # if (length(msg)) { warning(msg); return(x) }
+    msg <- .spatialData_validity(spd, x@spaCoordsNms)
+    if (!is.null(msg)) stop(msg)
+    x@spatialData <- spd
     return(x) 
+})
+
+setReplaceMethod(f="spatialData", 
+    c("SpatialExperiment", "NULL"),
+    function(x, value)
+{
+    x@spatialData <- value
+    x@spaCoordsNms <- value
 })
 
 #' 
@@ -220,17 +208,6 @@ setReplaceMethod(f="spatialData", signature="SpatialExperiment",
 
 
 # getters ----------------------------------------------------------------------
-
-#' @rdname SpatialExperiment-methods
-#' @export
-setMethod("scaleFactors", "SpatialExperiment",
-    function(x, sample_id=TRUE, image_id=TRUE)
-    {
-        stopifnot(!is.null(int_metadata(x)$imgData))
-        idx <- .get_img_idx(x, sample_id, image_id)
-        imgData(x)$scaleFactor[idx]
-    }
-)
 
 
 #' @rdname SpatialExperiment-methods
@@ -254,15 +231,15 @@ setMethod(f="spatialData", signature="SpatialExperiment",
     function(se, cd_keep=NULL, sample_id=TRUE, as_df=FALSE)
 {
     
-    samplesIdx <- 1:nrow(colData(se))
+    samplesIdx <- 1:nrow(se@spatialData)
     if ( !isTRUE( sample_id ) ) samplesIdx <- which(se$sample_id %in% sample_id)
     if ( !isEmpty( samplesIdx ) )
     {
-        coords <- colData(se)[samplesIdx, se@spaCoordsNms]
+        coords <- se@spatialData[samplesIdx, ]
     } else {
-        stop("Provided sample_id is not valid.")
+        stop("Not valid sample_id.")
     }
-    if(!is.null(cd_keep)) 
+    if ( !is.null(cd_keep) )
     {
         stopifnot( all( cd_keep %in% colnames(colData(se)) ) )
         nms <- colnames(coords)
@@ -272,6 +249,18 @@ setMethod(f="spatialData", signature="SpatialExperiment",
     if ( as_df ) return(as.data.frame(coords))
     return(coords)
 })
+
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setMethod("scaleFactors", "SpatialExperiment",
+          function(x, sample_id=TRUE, image_id=TRUE)
+          {
+              stopifnot(!is.null(int_metadata(x)$imgData))
+              idx <- .get_img_idx(x, sample_id, image_id)
+              imgData(x)$scaleFactor[idx]
+          }
+)
 
 
 #' @rdname SpatialExperiment-methods
@@ -293,16 +282,13 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
     function(se, sample_id=TRUE, as_df=FALSE)
 {
     samplesIdx <- 1:nrow(colData(se))
-    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-    z_idx <- grep("z_coord", colnames(colData(se)))
-    if(length(z_idx) != 0)
+    if ( !isTRUE(sample_id) ) samplesIdx <- which(se$sample_id %in% sample_id)
+    
+    if ( !isEmpty( samplesIdx ) )
     {
-        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"y_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"z_coord", drop=FALSE])
+        coords <- spatialData(se)[samplesIdx, se@spaCoordsNms]
     } else {
-        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"y_coord", drop=FALSE])
+        stop("Not valid sample_id.")
     }
     
     if (as_df) return(as.data.frame(coords))
@@ -323,7 +309,7 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
 #' spatialDataNames(se)
 setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
 {
-    return(x@spaCoordsNms)
+    return(colnames(spatialData(x)))
 })
 
 
@@ -339,10 +325,10 @@ setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
 #' @export
 #' @examples
 #' data(ve)
-#' isInTissue(ve)
-#' sum(isInTissue(ve))
-#' ve[isInTissue(ve),]
-setMethod(f="isInTissue", signature="SpatialExperiment", function(x, sample_id=TRUE)
+#' inTissue(ve)
+#' sum(inTissue(ve))
+#' ve[inTissue(ve),]
+setMethod(f="inTissue", signature="SpatialExperiment", function(x, sample_id=TRUE)
 {
     if(!("in_tissue" %in% x@spaCoordsNms)) stop("No tissue mask loaded!")
     samplesIdx <- 1:nrow(colData(x))

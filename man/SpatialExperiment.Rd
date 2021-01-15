@@ -8,8 +8,9 @@
 \usage{
 SpatialExperiment(
   ...,
-  sample_id = "Sample01",
-  spatialCoords = NULL,
+  sample_id = "sample_01",
+  spatialData = NULL,
+  spatialCoordsNames = c("x", "y"),
   scaleFactors = 1,
   imageSources = NULL,
   image_id = NULL,
@@ -26,7 +27,7 @@ conformity with the \code{sample_id} in \code{imgData}
 It is automatically detected from the colData, if not present 
 it assigns the value present into this paramenter (default is "Sample01").}
 
-\item{spatialCoords}{the spatial coordinates DataFrame can have multiple 
+\item{spatialData}{the spatial coordinates DataFrame can have multiple 
 columns. \code{x_coord} and \code{y_coord} are mandatory, 
 while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
 \code{array_row}, \code{array_col}.}
@@ -102,7 +103,9 @@ rd <- S4Vectors::DataFrame(
 (se <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     colData = colData(sce), rowData = rd, imgData = img,
-    spatialCoords=xyz, sample_id="foo"))
+    spatialData=xyz, 
+    spatialCoordsNames=c("array_col", "array_row"),
+    sample_id="foo"))
 }
 \author{
 Dario Righelli & Helena L. Crowell
