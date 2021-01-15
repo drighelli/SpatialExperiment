@@ -133,7 +133,6 @@ SpatialExperiment <- function(...,
         on.exit(S4Vectors:::disableValidity(old))
     }
     
-    
     if ( "Sample" %in% colnames(colData(sce)) )
     {
         if( is.null(sample_id) )

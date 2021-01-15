@@ -16,7 +16,7 @@
 
 .spatialData_validity <- function(df, coordnames, msg=NULL) 
 {
-    is_valid <- all( apply(df[, coordnames], 2, is.numeric),
+    is_valid <- all( apply(df[, coordnames], 2, is.numeric), 
                     TRUE)
     if (!is_valid)
         msg <- c(msg, paste("'spatialData' fields aren't valid"))
@@ -82,7 +82,7 @@
 {
     msg <- NULL
     msg <- .colData_validity(object, msg)
-    msg <- .spatialData_validity(object, object@spaCoordsNms, msg)
+    msg <- .spatialData_validity(object@spatialData, object@spaCoordsNms, msg)
     msg <- .imgData_validity(imgData(object), msg)
     if (length(msg)) return(msg)
     return(TRUE)

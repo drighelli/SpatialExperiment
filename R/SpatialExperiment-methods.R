@@ -180,8 +180,8 @@ setReplaceMethod(f="spatialData",
         spd <- cbind(value, 1)
         colnames(spd) <- colnames(value, "in_tissue")
     }
-    msg <- .spatialData_validity(spd, x@spaCoordsNms)
-    if (!is.null(msg)) stop(msg)
+    # msg <- .spatialData_validity(spd, x@spaCoordsNms)
+    # if (!is.null(msg)) stop(msg)
     x@spatialData <- spd
     return(x) 
 })
