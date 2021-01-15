@@ -133,7 +133,7 @@ SpatialExperiment <- function(...,
         on.exit(S4Vectors:::disableValidity(old))
     }
     
-    ## check the sampleid with the one present into imgData
+    
     if ( "Sample" %in% colnames(colData(sce)) )
     {
         if( is.null(sample_id) )
@@ -150,7 +150,7 @@ SpatialExperiment <- function(...,
     }
     spe <- new("SpatialExperiment", sce)
 
-    if ( !is.null(spatialData) ) 
+    if ( !is.null(spatialData) )
     {
         stopifnot( all(spatialCoordsNames %in% colnames(spatialData)) )
         spe@spaCoordsNms <- spatialCoordsNames

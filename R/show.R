@@ -18,9 +18,8 @@
 #' @importFrom methods callNextMethod
 .spe_show <- function(object) {
     callNextMethod()
-    # coolcat("imgData(%d): %s\n", names(imgData(object)))
-    # coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
-    
+    coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
+    coolcat("imgData names(%d): %s\n", names(imgData(object)))
     
 }
 
