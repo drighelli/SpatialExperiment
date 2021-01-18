@@ -92,19 +92,15 @@ setReplaceMethod("colData",
 #' @export
 #' @examples
 #' example(SpatialExperiment)
-#' fakeCoords <- cbind(spatialData(se)$x_coord, spatialData(se)$x_coord)
-#' colnames(fakeCoords) <- c("x", "y")
-#' spatialData(se) <- fakeCoords
-#' spatialData(se)
-#' oneCoord <- cbind(spatialData(se)$y_coord)
-#' colnames(oneCoord) <- c("pxl_row_in_fullres") # assigns it to the y_coord
-#' spatialData(se) <- oneCoord
+#' fakeSpData <- spatialData(se)
+#' fakeSpData$array_col <- fakeSpData$array_row
+#' spatialData(se) <- as.data.frame(fakeSpData)
 #' spatialData(se)
 setReplaceMethod(f="spatialData", 
     c("SpatialExperiment", "ANY"),
     function(x, value)
     {
-        stopifnot( is.data.frame(value) || class(value)=="DataFrame"  )
+        stopifnot( is.data.frame(value) || class(value)=="DataFrame")
         if ( is.data.frame(value) ) value <- DataFrame(value)
         stopifnot(dim(value)[1]==dim(colData(x))[1])
         spd <- value

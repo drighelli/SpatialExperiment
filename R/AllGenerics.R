@@ -61,3 +61,9 @@ setGeneric("inTissue", function(x, ...) standardGeneric("inTissue"))
 #' @export
 setGeneric("spatialDataNames", function(x) standardGeneric("spatialDataNames"))
 
+# SpatialExperiment assays methods ---------.-----------------------------------
+#' @export
+setGeneric("molecules", function(x, ...) standardGeneric("molecules"))
+
+#' @export
+setGeneric("molecules<-", function(x, ..., value) standardGeneric("molecules<-"))

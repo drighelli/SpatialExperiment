@@ -94,7 +94,6 @@ xyz <- read.csv(fnm, header = FALSE, row.names = 1,
   col.names = c(
     "barcode", "in_tissue", "array_row", "array_col",
     "pxl_row_in_fullres", "pxl_col_in_fullres"))
-xyz$in_tissue <- as.logical(xyz$in_tissue)
 # construct observation & feature metadata
 rd <- S4Vectors::DataFrame(
   symbol = rowData(sce)$Symbol)

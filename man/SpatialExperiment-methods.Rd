@@ -106,13 +106,9 @@ NB \code{in_tissue} has to be in logical form.
 }
 \examples{
 example(SpatialExperiment)
-fakeCoords <- cbind(spatialData(se)$x_coord, spatialData(se)$x_coord)
-colnames(fakeCoords) <- c("x", "y")
-spatialData(se) <- fakeCoords
-spatialData(se)
-oneCoord <- cbind(spatialData(se)$y_coord)
-colnames(oneCoord) <- c("pxl_row_in_fullres") # assigns it to the y_coord
-spatialData(se) <- oneCoord
+fakeSpData <- spatialData(se)
+fakeSpData$array_col <- fakeSpData$array_row
+spatialData(se) <- as.data.frame(fakeSpData)
 spatialData(se)
 example(SpatialExperiment)
 spatialData(se)
