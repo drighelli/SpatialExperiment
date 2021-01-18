@@ -22,11 +22,9 @@ jobs:
         - { os: windows-latest, r: 'devel', bioc: 'devel'}
         #
         - { os: macOS-latest, r: 'devel', bioc: 'devel'}
-        - { os: macOS-latest, r: 'release', bioc: 'devel'}
         #
         - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:devel'}
         - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
-        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:devel'}
         - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
 
     env:
@@ -90,12 +88,14 @@ jobs:
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
           sudo apt-get update && sudo apt-get -y install libcurl4-openssl-dev
+          sudo apt-get update && sudo apt-get -y install libmagick++-dev
       - name: Install dependencies
         run: |
           local_deps <- remotes::local_package_deps(dependencies = TRUE)
           deps <- remotes::dev_package_deps(dependencies = TRUE, repos = BiocManager::repositories())
           BiocManager::install(local_deps[local_deps %in% deps$package[deps$diff != 0]], Ncpu = 2L)
           remotes::install_cran('rcmdcheck', Ncpu = 2L)
+          BiocManager::install(c("magick","DelayedMatrixStats"))
         shell: Rscript {0}
 
       - name: Session info
