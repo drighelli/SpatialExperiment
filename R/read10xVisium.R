@@ -56,8 +56,8 @@
 #' 
 #' # tabulate number of spots mapped to tissue
 #' table(
-#'   in_tissue = ve$in_tissue, 
-#'   sample_id = ve$sample_id)
+#'   in_tissue = inTissue(ve), 
+#'   sample_id = ve$sample_id )
 #' 
 #' # view available images
 #' imgData(ve)

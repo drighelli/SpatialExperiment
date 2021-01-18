@@ -7,8 +7,7 @@
 \alias{colData<-}
 \alias{scaleFactors}
 \alias{colData<-,SpatialExperiment,NULL-method}
-\alias{[,SpatialExperiment,ANY,ANY,ANY-method}
-\alias{spatialData<-,SpatialExperiment,DataFrame-method}
+\alias{spatialData<-,SpatialExperiment,ANY-method}
 \alias{spatialData,SpatialExperiment-method}
 \alias{scaleFactors,SpatialExperiment-method}
 \alias{spatialCoords,SpatialExperiment-method}
@@ -23,9 +22,7 @@
 
 \S4method{colData}{SpatialExperiment,`NULL`}(x) <- value
 
-\S4method{[}{SpatialExperiment,ANY,ANY,ANY}(x, i, j)
-
-\S4method{spatialData}{SpatialExperiment,DataFrame}(x) <- value
+\S4method{spatialData}{SpatialExperiment,ANY}(x) <- value
 
 \S4method{spatialData}{SpatialExperiment}(se, cd_keep = NULL, sample_id = TRUE, as_df = FALSE)
 
@@ -55,10 +52,6 @@ and \code{NULL} specifies the first available entry (see details)}
 \item{image_id}{character string, \code{TRUE} or \code{NULL} specifying sample/image 
 identifier(s); here, \code{TRUE} is equivalent to all samples/images 
 and \code{NULL} specifies the first available entry (see details)}
-
-\item{i}{when subsetting, the row index(es) to keep}
-
-\item{j}{when subsetting, the column index(es) to keep}
 
 \item{se}{A SpatialExperiment class object.}
 

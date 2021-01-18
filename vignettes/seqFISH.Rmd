@@ -74,10 +74,10 @@ coords <- read.table(
 fse <- SpatialExperiment(rowData=rownames(counts),
                         colData=labels,
                         assays=SimpleList(counts=as.matrix(counts)),
-                        spatialCoords=coords)
-
+                        spatialData=coords)
+spatialData(fse)
 spatialDataNames(fse)
-ggplot(as.data.frame(colData(fse)), aes(x_coord, y_coord, col = class)) + 
+ggplot(spatialData(fse, cd_keep="class", as_df=TRUE), aes(x, y, col = class)) + 
     geom_point() + coord_equal()
 ```
 

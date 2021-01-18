@@ -49,7 +49,8 @@
 NULL
 
 #' @importFrom BiocGenerics rbind cbind
-setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1) 
+setMethod("cbind", "SpatialExperiment", 
+    function(..., deparse.level=1) 
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -61,7 +62,8 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
     ################################# keeping sample_id unique
     # sampleids <- .createSampleIds(args)
     # colData(out)$sample_id <- rep(names(sampleids), times=sampleids)
-    
+    outspd <- do.call(rbind, lapply(args, spatialData))
+    out@spatialData <- outspd
     ############################## creating new imgData
     if(!is.null(imgData(args[[1]]))) ## handle imgData across multiple samples
     { 
@@ -73,29 +75,29 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1)
     } 
     return(out)
 })
-
-.getIdsTable <- function(args, speFUN)
-{
-    idsTab <- unlist(lapply(args, function(spE)
-    {
-        sids <- table(speFUN(spE)$sample_id)
-        sids <- sids[order(unique(speFUN(spE)$sample_id))]
-        return(sids)
-    }))
-    return(idsTab)
-}
-
-.createSampleIds <- function(args)
-{
-    sampleids <- .getIdsTable(args, colData)
-    dups <- duplicated(names(sampleids))
-    # names(sampleids)[!dups] <- lapply(names(sampleids)[!dups], function(x) paste0(x, 0))
-    i <- 1
-    while( sum(dups) != 0 )
-    {
-        names(sampleids)[dups] <- lapply(names(sampleids)[dups], function(x) paste0(x, i)) 
-        dups <- duplicated(names(sampleids))
-        i <- i+1 
-    }
-    return(sampleids)
-}
+# 
+# .getIdsTable <- function(args, speFUN)
+# {
+#     idsTab <- unlist(lapply(args, function(spE)
+#     {
+#         sids <- table(speFUN(spE)$sample_id)
+#         sids <- sids[order(unique(speFUN(spE)$sample_id))]
+#         return(sids)
+#     }))
+#     return(idsTab)
+# }
+# 
+# .createSampleIds <- function(args)
+# {
+#     sampleids <- .getIdsTable(args, colData)
+#     dups <- duplicated(names(sampleids))
+#     # names(sampleids)[!dups] <- lapply(names(sampleids)[!dups], function(x) paste0(x, 0))
+#     i <- 1
+#     while( sum(dups) != 0 )
+#     {
+#         names(sampleids)[dups] <- lapply(names(sampleids)[dups], function(x) paste0(x, i)) 
+#         dups <- duplicated(names(sampleids))
+#         i <- i+1 
+#     }
+#     return(sampleids)
+# }
