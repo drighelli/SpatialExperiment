@@ -5,19 +5,6 @@
 \alias{SpatialExperiment-class}
 \alias{SpatialExperiment}
 \title{The SpatialExperiment class}
-\usage{
-SpatialExperiment(
-  ...,
-  sample_id = "sample_01",
-  spatialData = NULL,
-  spatialCoordsNames = c("x", "y"),
-  scaleFactors = 1,
-  imageSources = NULL,
-  image_id = NULL,
-  loadImage = TRUE,
-  imgData = NULL
-)
-}
 \arguments{
 \item{...}{arguments to be passed to the \code{\link{SingleCellExperiment}} 
 constructor to fill the slots of the base class.}
@@ -25,12 +12,14 @@ constructor to fill the slots of the base class.}
 \item{sample_id}{a character of a sample identifier in
 conformity with the \code{sample_id} in \code{imgData}
 It is automatically detected from the colData, if not present 
-it assigns the value present into this paramenter (default is "Sample01").}
+it assigns the value present into this paramenter (default is "sample_01").}
 
-\item{spatialData}{the spatial coordinates DataFrame can have multiple 
-columns. \code{x_coord} and \code{y_coord} are mandatory, 
-while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
-\code{array_row}, \code{array_col}.}
+\item{spatialData}{the spatial coordinates DataFrame can have multiple columns. 
+The coordinates must be named as specified into the \code{spatialCoordsNames} 
+argument.}
+
+\item{spatialCoordsNames}{a character vector indicating the names of the 
+coordinates into the \code{spatialData} structure. (Default is \code{c("x", "y")})}
 
 \item{scaleFactors}{the scale factors to be associated with the image(s) (optional, default 1).
 It can be a number, a file path linking to a JSON file or the values read 
@@ -40,28 +29,27 @@ it automatically detects which factor
 has to be loaded, depending on the resolution of the loaded image 
 (see \code{imageSources}).}
 
+\item{imgData}{(optional)
+a \code{DataFrame} storing the image data (see details).}
+
 \item{imageSources}{(optional)
 one or more image sources, they can be local paths or URLs.}
 
 \item{image_id}{(optional)
 a character vector of the same length of \code{imageSources} within unique 
-image_ids.}
+\code{image_id}(s).}
 
 \item{loadImage}{a logical indicating if the image has to be loaded in memory 
-(default is TRUE).}
-
-\item{imgData}{(optional)
-a \code{DataFrame} storing the image data (see details)}
+(default is FALSE).}
 }
 \value{
 a \code{SpatialExperiment} object
 }
 \description{
-The SpatialExperiment class is designed to represent spatial transcriptomics 
-(ST) data. It inherits from the \linkS4class{SingleCellExperiment} class and
+The SpatialExperiment class is designed to represent spatial omics data. 
+It inherits from the \linkS4class{SingleCellExperiment} class and
 is used in the same manner. In addition, the class supports storage of images
-for multiple samples and of different resolutions via \code{\link{imgData}}, 
-and requires certain observation metadata specific to ST data to be present.
+for multiple samples and of different resolutions via \code{\link{imgData}}.
 }
 \details{
 The contructor expects the user to provide a \code{sample_id} column into the
@@ -94,6 +82,7 @@ xyz <- read.csv(fnm, header = FALSE, row.names = 1,
   col.names = c(
     "barcode", "in_tissue", "array_row", "array_col",
     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+    
 # construct observation & feature metadata
 rd <- S4Vectors::DataFrame(
   symbol = rowData(sce)$Symbol)

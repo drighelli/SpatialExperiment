@@ -15,6 +15,11 @@ editor_options:
 
 <style type="text/css"> .smaller { font-size: 10px } </style>
 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+```
+
 # Introduction
 
 The SpatialExperiment package provides classes and methods for single cell 

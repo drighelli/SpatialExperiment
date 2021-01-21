@@ -56,6 +56,14 @@ setGeneric("spatialData<-", function(x, value)
     standardGeneric("spatialData<-"))
 
 #' @export
+setGeneric("spatialCoordsNames<-", function(x, value)
+    standardGeneric("spatialCoordsNames<-"))
+
+#' @export
+setGeneric("spatialCoordsNames", function(x)
+    standardGeneric("spatialCoordsNames"))
+
+#' @export
 setGeneric("inTissue", function(x, ...) standardGeneric("inTissue"))
 
 #' @export

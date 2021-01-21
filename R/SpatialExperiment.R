@@ -1,12 +1,12 @@
+#' @name SpatialExperiment
 #' @rdname SpatialExperiment
 #' @title The SpatialExperiment class
 #' 
 #' @description
-#' The SpatialExperiment class is designed to represent spatial transcriptomics 
-#' (ST) data. It inherits from the \linkS4class{SingleCellExperiment} class and
+#' The SpatialExperiment class is designed to represent spatial omics data. 
+#' It inherits from the \linkS4class{SingleCellExperiment} class and
 #' is used in the same manner. In addition, the class supports storage of images
-#' for multiple samples and of different resolutions via \code{\link{imgData}}, 
-#' and requires certain observation metadata specific to ST data to be present.
+#' for multiple samples and of different resolutions via \code{\link{imgData}}.
 #'
 #' @param ... 
 #'   arguments to be passed to the \code{\link{SingleCellExperiment}} 
@@ -15,12 +15,13 @@
 #' a character of a sample identifier in
 #' conformity with the \code{sample_id} in \code{imgData}
 #' It is automatically detected from the colData, if not present 
-#' it assigns the value present into this paramenter (default is "Sample01").
+#' it assigns the value present into this paramenter (default is "sample_01").
 #' @param spatialData 
-#' the spatial coordinates DataFrame can have multiple 
-#' columns. \code{x_coord} and \code{y_coord} are mandatory, 
-#' while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
-#' \code{array_row}, \code{array_col}.
+#' the spatial coordinates DataFrame can have multiple columns. 
+#' The coordinates must be named as specified into the \code{spatialCoordsNames} 
+#' argument.
+#' @param spatialCoordsNames a character vector indicating the names of the 
+#' coordinates into the \code{spatialData} structure. (Default is \code{c("x", "y")})
 #' @param scaleFactors 
 #' the scale factors to be associated with the image(s) (optional, default 1).
 #' It can be a number, a file path linking to a JSON file or the values read 
@@ -30,15 +31,15 @@
 #' has to be loaded, depending on the resolution of the loaded image 
 #' (see \code{imageSources}).
 #' @param imgData (optional)
-#'   a \code{DataFrame} storing the image data (see details)
+#'   a \code{DataFrame} storing the image data (see details).
 #' @param imageSources (optional)
 #' one or more image sources, they can be local paths or URLs.
 #' @param image_id (optional)
 #' a character vector of the same length of \code{imageSources} within unique 
-#' image_ids.
+#' \code{image_id}(s).
 #' @param loadImage 
 #' a logical indicating if the image has to be loaded in memory 
-#' (default is TRUE).
+#' (default is FALSE).
 #' 
 #' @details 
 #' The contructor expects the user to provide a \code{sample_id} column into the
@@ -76,6 +77,7 @@
 #'   col.names = c(
 #'     "barcode", "in_tissue", "array_row", "array_col",
 #'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+#'     
 #' # construct observation & feature metadata
 #' rd <- S4Vectors::DataFrame(
 #'   symbol = rowData(sce)$Symbol)
@@ -87,6 +89,7 @@
 #'     spatialData=xyz, 
 #'     spatialCoordsNames=c("array_col", "array_row"),
 #'     sample_id="foo"))
+NULL
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
@@ -98,7 +101,7 @@ SpatialExperiment <- function(...,
                               scaleFactors=1,
                               imageSources=NULL,
                               image_id=NULL,
-                              loadImage=TRUE,
+                              loadImage=FALSE,
                               imgData=NULL)
 {
     sce <- SingleCellExperiment(...)
@@ -148,12 +151,13 @@ SpatialExperiment <- function(...,
     }
     spe <- new("SpatialExperiment", sce)
 
+    
     if ( !is.null(spatialData) )
     {
         stopifnot( all(spatialCoordsNames %in% colnames(spatialData)) )
-        spe@spaCoordsNms <- spatialCoordsNames
-        spatialData(spe) <- spatialData
     }
+    spe@spaCoordsNms <- spatialCoordsNames
+    spatialData(spe) <- spatialData
         
     
     if ( !is.null(imgData) )

@@ -49,7 +49,7 @@
 #'   
 #' list.files(samples[1])
 #' list.files(file.path(samples[1], "spatial"))
-#' list.files(file.path(samples[1], "raw_feature_bc_matrix"))
+#' file.path(samples[1], "raw_feature_bc_matrix")
 #' 
 #' (ve <- read10xVisium(samples, sample_ids, type="HDF5",
 #'   images = c("lowres"), load = FALSE))
@@ -150,6 +150,7 @@ read10xVisium <- function(samples="",
     
     spelist <- lapply(c(1:length(spelist)) , function(i)
     {
+        spatialCoordsNames(spelist[[i]]) <- c("array_col", "array_row")
         spatialData(spelist[[i]]) <- coords[[i]][colnames(spelist[[i]]),]
         spelist[[i]]$sample_id <- sids[[i]]
         return(spelist[[i]])
