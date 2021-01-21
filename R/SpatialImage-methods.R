@@ -1,6 +1,6 @@
 #' @name SpatialImage-methods
 #' @title SpatialImage methods
-#' @aliases imgGrob imgPath imgUrl imgGrob<- imgPath<- imgUrl<-
+#' @aliases imgGrob imgPath imgUrl imgGrob<- imgPath<- imgUrl<- 
 #' 
 #' @description 
 #' Getters, setters and additional methods 

@@ -7,7 +7,6 @@
 #' It inherits from the \linkS4class{SingleCellExperiment} class and
 #' is used in the same manner. In addition, the class supports storage of images
 #' for multiple samples and of different resolutions via \code{\link{imgData}}.
-#'
 #' @param ... 
 #'   arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #'   constructor to fill the slots of the base class.

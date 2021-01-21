@@ -26,6 +26,7 @@
 .colData_validity <- function(obj, msg=NULL)
 {
     df <- colData(obj)
+    if ( isEmpty(df) ) return(msg)
     if ( is.null(df$sample_id) )  
     {
         msg <- c(msg, "no 'sample_id' field in 'colData'")

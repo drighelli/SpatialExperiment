@@ -8,6 +8,8 @@
 \alias{imgGrob<-}
 \alias{imgPath<-}
 \alias{imgUrl<-}
+\alias{imgGrob,SpatialExperiment,ANY,ANY-method}
+\alias{imgGrob<-,SpatialExperiment,ANY,ANY-method}
 \alias{imgPath,SpatialImage-method}
 \alias{imgUrl,SpatialImage-method}
 \alias{imgGrob<-,SpatialImage,rastergrob-method}

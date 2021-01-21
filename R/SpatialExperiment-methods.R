@@ -17,6 +17,7 @@
 #' argument.
 #' See the parameter description for additional information.
 #'  \describe{
+#'  \itemize{
 #' \item{\code{spatialData(x) <- value}:}{The spatialData setter expects a 
 #' data.frame/DataFrame object named with the
 #' previously defined colnames for the spatial coordinates.
@@ -36,9 +37,11 @@
 #' spatial coordinates in a matrix-like form, but it is possible to retrieve 
 #' them in a data.frame form by setting \code{as_df=TRUE}.}
 #'}
+#'}
+#'
 #' @section spatialNames Methods:
-#' 
 #' \describe{
+#' \itemize{
 #' \item{\code{spatialDataNames(x)}:}{Returns the names of the spatialData 
 #' structure.}
 #' \item{\code{spatialCoordsNames(x)<-value}:}{Sets the names of the spatial 
@@ -46,8 +49,21 @@
 #' \item{\code{spatialCoordsNames(x)}:}{Returns the stored names of the spatial 
 #' coordinates.}
 #' }
+#' }
+#' 
+#' @section imgData Methods:
+#' \describe{
+#' \itemize{
+#' \item{\code{imgData(x)<-value}:}{This setter allows to set a DataFrame 
+#' object as imgData of the SpatialExperiment object class.}
+#' \item{\code{imgData(x)}:}{This getter returns the imgData DataFrame.}
+#' }
+#' }
+#' 
+#' 
 #' @section Other Methods:
 #' \describe{
+#' \itemize{
 #' \item{\code{scaleFactors(x, sample_id, image_id)}:}{This getter returns 
 #' the scale factors associated to the \code{sample_id}(s) 
 #' and \code{image_id}(s) passed as input.
@@ -60,17 +76,24 @@
 #' This is typical related to 10x Visium experiments.
 #' See the \code{sample_id} section description for further details.}
 #' }
+#' }
 #' 
 #' @param x a SpatialExperiment class object
 #' @param value it varies depending on the invoked method see methods details.
-#' @param sample_id character string, \code{TRUE} specifying sample 
+#' @param sample_id character string specifying sample 
 #' identifier(s); \code{TRUE} is equivalent to all samples.
-#' @param cd_keep a character vector indicating additional columns to return 
+#' @param image_id character string indicating the image identifiers(s), 
+#' \code{TRUE} is equivalent to all images.
+#' @param cd_bind a character vector indicating additional columns to return 
 #' that can be retrieved from the \code{colData} structure.
 #' @param as_df logical indicating if the returned structure has to be a 
 #' data.frame (default is FALSE).
 #' 
 #' @return see methods details.
+#' 
+#' @aliases spatialData spatialData<- spatialCoords spatialCoordsNames 
+#' spatialCoordsNames<- scaleFactors inTissue spatialDataNames imgData imgData<-
+#' 
 #' 
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty
@@ -82,15 +105,24 @@
 #' fakeSpData$array_col <- fakeSpData$array_row
 #' spatialData(se) <- as.data.frame(fakeSpData)
 #' 
-#' spatialData(se)
+#' # spatialData returns a DataFrame
+#' head(spatialData(se))
 #' 
-#' spatialCoords(se)
+#' # for combining spatialData with colData use cd_bind 
+#' # use as_df for spatialData to return a data.frame 
+#' head(spatialData(se, cd_bind="sample_id", as_df=TRUE))
+#'  
+#' # spatialCoords returns a matrix of coordinates
+#' head(spatialCoords(se))
 #' 
+#' # changing spatial coordinates Names
 #' spatialCoordsNames(se)
 #' spatialCoordsNames(se) <- c("x","y")
 #' spatialCoordsNames(se)
-#' spatialData(se)
+#' head(spatialData(se))
 #' 
+#' # imgData
+#' imgData(se)
 #' 
 #' scaleFactors(se)
 #' 
@@ -101,6 +133,7 @@ NULL
 
 
 ### spatialData-methods --------------------------------------------------------
+#' @rdname SpatialExperiment-methods
 #' @export
 setReplaceMethod(f="spatialData", 
     c("SpatialExperiment", "ANY"),
@@ -125,7 +158,7 @@ setReplaceMethod(f="spatialData",
 )
 
 
-
+#' @rdname SpatialExperiment-methods
 #' @export
 setReplaceMethod(f="spatialData", 
     c("SpatialExperiment", "NULL"),
@@ -137,43 +170,45 @@ setReplaceMethod(f="spatialData",
     }
 )
 
+#' @rdname SpatialExperiment-methods
 #' @export
 setMethod(f="spatialData", 
     signature="SpatialExperiment",
-    function(se, cd_keep=NULL, sample_id=TRUE, as_df=FALSE)
+    function(x, cd_bind=NULL, sample_id=TRUE, as_df=FALSE)
     {
-        if ( isEmpty(se@spatialData) ) return(se@spatialData)
+        if ( isEmpty(x@spatialData) ) return(x@spatialData)
         
-        samplesIdx <- 1:nrow(se@spatialData)
-        if ( !isTRUE( sample_id ) ) samplesIdx <- which(se$sample_id %in% sample_id)
+        samplesIdx <- 1:nrow(x@spatialData)
+        if ( !isTRUE( sample_id ) ) samplesIdx <- which(x$sample_id %in% sample_id)
         if ( !isEmpty( samplesIdx ) )
         {
-            coords <- se@spatialData[samplesIdx, ]
+            coords <- x@spatialData[samplesIdx, ]
         } else {
             stop("Not valid sample_id.")
         }
-        if ( !is.null(cd_keep) )
+        if ( !is.null(cd_bind) )
         {
-            stopifnot( all( cd_keep %in% colnames(colData(se)) ) )
+            stopifnot( all( cd_bind %in% colnames(colData(x)) ) )
             nms <- colnames(coords)
-            coords <- cbind(coords, colData(se)[[cd_keep]])
-            colnames(coords) <- c(nms, cd_keep)
+            coords <- cbind(coords, colData(x)[[cd_bind]])
+            colnames(coords) <- c(nms, cd_bind)
         }
         if ( as_df ) return(as.data.frame(coords))
         return(coords)
     }
 )
 
+#' @rdname SpatialExperiment-methods
 #' @export
 setMethod(f="spatialCoords", signature="SpatialExperiment",
-    function(se, sample_id=TRUE, as_df=FALSE)
+    function(x, sample_id=TRUE, as_df=FALSE)
     {
-        samplesIdx <- 1:nrow(colData(se))
-        if ( !isTRUE(sample_id) ) samplesIdx <- which(se$sample_id %in% sample_id)
+        samplesIdx <- 1:nrow(colData(x))
+        if ( !isTRUE(sample_id) ) samplesIdx <- which(x$sample_id %in% sample_id)
       
         if ( !isEmpty( samplesIdx ) )
         {
-            coords <- spatialData(se)[samplesIdx, se@spaCoordsNms]
+            coords <- spatialData(x)[samplesIdx, x@spaCoordsNms]
         } else {
             stop("Not valid sample_id.")
         }
@@ -183,6 +218,9 @@ setMethod(f="spatialCoords", signature="SpatialExperiment",
     }
 )
 
+### spatialNames-methods -------------------------------------------------------
+
+#' @rdname SpatialExperiment-methods
 #' @export
 setMethod(f="spatialCoordsNames", 
     signature="SpatialExperiment", 
@@ -192,6 +230,7 @@ setMethod(f="spatialCoordsNames",
     }
 )
 
+#' @rdname SpatialExperiment-methods
 #' @export
 setReplaceMethod(f="spatialCoordsNames", 
     signature=c("SpatialExperiment", "character"), 
@@ -200,14 +239,14 @@ setReplaceMethod(f="spatialCoordsNames",
         if ( !isEmpty(x@spaCoordsNms) ) 
         {
             idx <- which(spatialDataNames(x) %in% x@spaCoordsNms)
-            spatialData(x)[,idx] <- value
+            colnames(x@spatialData)[idx] <- value
         }
         x@spaCoordsNms  <- value
         return(x)
     }
 )
 
-
+#' @rdname SpatialExperiment-methods
 #' @export
 setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
     {
@@ -218,6 +257,7 @@ setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
 
 
 ### scaleFactors-methods -------------------------------------------------------
+#' @rdname SpatialExperiment-methods
 #' @export
 setMethod("scaleFactors", "SpatialExperiment",
     function(x, sample_id=TRUE, image_id=TRUE)
@@ -228,7 +268,7 @@ setMethod("scaleFactors", "SpatialExperiment",
     }
 )
 
-
+#' @rdname SpatialExperiment-methods
 #' @export
 setMethod(f="inTissue", 
     signature="SpatialExperiment", 

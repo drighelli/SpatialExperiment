@@ -1,5 +1,4 @@
 #' @rdname SpatialExperiment
-#' 
 #' @importFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
         contains = "SingleCellExperiment",

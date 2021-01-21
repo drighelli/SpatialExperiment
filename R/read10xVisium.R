@@ -118,18 +118,13 @@ read10xVisium <- function(samples="",
             sample.names=sids[i],
             col.names=TRUE)
     }) 
-    # sce <- read10xCounts(
-    #     samples=counts, 
-    #     sample.names=sids,
-    #     col.names=TRUE)
+
     # TODO: 
     # read10xCounts() gives a 'DelayedMatrix',
     # which doesn't work with 'scater'...
     # any way to better fix that?
     #assay(sce) <- as(as.matrix(assay(sce)), "dgCMatrix")
-    
-    # read spatial data
-    # colData(sce) <- .read_xyz(xyz)[colnames(sce), ] see below
+
     
     # construct 'SpatialExperiment'
     spelist <- lapply(scelist, function(sce)
@@ -143,10 +138,6 @@ read10xVisium <- function(samples="",
     {
         .read_xyz(xxx)
     })
-    # spelist <- lapply(spelist, function(spe) {
-    #     spatialData(spe) <- coords[[1]][colnames(spe),]
-    #     return(spe)
-    # })
     
     spelist <- lapply(c(1:length(spelist)) , function(i)
     {
@@ -157,13 +148,7 @@ read10xVisium <- function(samples="",
     })
     
     spe <- do.call(cbind, spelist)
-    # sce$sample_id <- sce$Sample
-    # rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
-    # metadata(sce)$Sample <- NULL
-    # spe <- as(sce, "SpatialExperiment")
-    # SpatialExperiment(sce, spatialCoords=.read_xyz(xyz)[colnames(sce), ])
-    ##### using the setter
-    # spatialCoords(spe) <- .read_xyz(xyz)[colnames(sce), ] 
+    
     # read image data
     id <- readImgData(samples, sids, img, sfs, load)
     
@@ -188,8 +173,4 @@ read10xVisium <- function(samples="",
     df <- do.call(rbind, df)
     df$in_tissue <- as.logical(df$in_tissue)
     return(df)
-    ###### they are not stored as matrix anymore
-    # xy <- grep("pxl", names(df))
-    # mat <- as.matrix(df[, xy])
-    # DataFrame(df[, -xy], xy_coords=I(mat))
 }
