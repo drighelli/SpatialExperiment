@@ -1,4 +1,10 @@
-changes in versionn 0.99.4 (2020-24-07)
+changes in versionn 0.99.5 (2021-22-01)
++ merging VisiumExperiment into SpatialExperiment
++ adding spatialData and spaCoordsNms slots
++ adding imgData and other methods for image handlings
++ adding SpatialImage
+
+changes in version 0.99.4 (2020-24-07)
 + implementing bioconductor revisions first round
 changes in versionn 0.99.3 (2020-21-07)
 + implementing imagePaths in VisiumExperiment class
