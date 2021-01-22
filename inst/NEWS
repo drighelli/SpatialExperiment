@@ -1,3 +1,7 @@
+changes in version 0.99.42 (2021-21-01)
++ implementing new SpatialExperiment class
++ spatialData slot 
++ imgData and image handling methods (HLC)
 changes in versionn 0.99.4 (2020-24-07)
 + implementing bioconductor revisions first round
 changes in versionn 0.99.3 (2020-21-07)
