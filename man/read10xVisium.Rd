@@ -64,15 +64,15 @@ samples <- file.path(dir, sample_ids)
   
 list.files(samples[1])
 list.files(file.path(samples[1], "spatial"))
-list.files(file.path(samples[1], "raw_feature_bc_matrix"))
+file.path(samples[1], "raw_feature_bc_matrix")
 
 (ve <- read10xVisium(samples, sample_ids, type="HDF5",
   images = c("lowres"), load = FALSE))
 
 # tabulate number of spots mapped to tissue
 table(
-  in_tissue = ve$in_tissue, 
-  sample_id = ve$sample_id)
+  in_tissue = inTissue(ve), 
+  sample_id = ve$sample_id )
 
 # view available images
 imgData(ve)

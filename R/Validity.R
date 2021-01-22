@@ -2,85 +2,47 @@
 
 .colData_sample_id_validity <- function(x, msg=NULL) 
 {
-    if (!is.character(x$sample_id))
+    if ( !is.character(x$sample_id) )
         msg <- c(msg, "'sample_id' field in 'colData' should be 'character'")
     
-    if (!is.null(img <- imgData(x))) {
+    if ( !is.null(img <- imgData(x)) ) 
+    {
         sids <- unique(x$sample_id)
-        if (!all(img$sample_id %in% sids))
+        if ( !all(img$sample_id %in% sids) )
             msg <- c(msg, "all 'sample_id's in 'imgData'",
                 " should be in the 'colData's 'sample_id' field")
     }
 }
 
-.colData_inTissue_validity <- function(x, msg=NULL) 
+.spatialData_validity <- function(df, coordnames, msg=NULL) 
 {
-    is_valid <- is.logical(x)
-    if (!is_valid) 
-        msg <- c(msg, "'in_tissue' field in 'colData' should be 'logical'")
-    return(msg)
-}
-
-.colData_spatialCoords_validity <- function(x, msg=NULL) 
-{ 
-    # allow 2 or 3 columns to support z-coordinate
-    #is_valid <- all(c(is.matrix(x), ncol(x) %in% c(2, 3), is.numeric(x)))
-    
-    if ( ! all( x@spaCoordsNms %in% SPATDATANAMES ) )
-    {
-        msg <- c(msg, paste(
-            "Attempt to modify spatialData Names!"))
-    }
-    
-    is_valid <- all(is.numeric(x$x_coord),
-                    is.numeric(x$y_coord), 
-                    ifelse("z_coord" %in% colnames(x), 
-                            is.numeric(x$z_coord), 
-                            TRUE)
-                )
-    
+    is_valid <- all( apply(df[, coordnames], 2, is.numeric), 
+                    TRUE)
     if (!is_valid)
-        msg <- c(msg, paste(
-            "'dataCoords' fields in 'colData' aren't valid"))
+        msg <- c(msg, paste("'spatialData' fields aren't valid"))
     return(msg)
 }
 
 .colData_validity <- function(obj, msg=NULL)
 {
-    if(!isEmpty(obj@spaCoordsNms))
+    df <- colData(obj)
+    if ( isEmpty(df) ) return(msg)
+    if ( is.null(df$sample_id) )  
     {
-        df <- colData(obj)
-        if (is.null(df$sample_id)) 
+        msg <- c(msg, "no 'sample_id' field in 'colData'")
+    } else {
+        if ( !is.null(imgData(obj)) ) 
         {
-            msg <- c(msg, "no 'sample_id' field in 'colData'")
-        } else {
-            if(!is.null(imgData(obj)))
+            sids <- unique(df$sample_id)
+            isids <- unique(imgData(obj)$sample_id)
+            if ( any( !(sids %in% isids), !(isids %in% sids) ) )
             {
-                sids <- unique(df$sample_id)
-                isids <- unique(imgData(obj)$sample_id)
-                if( any( !(sids %in% isids), !(isids %in% sids) ) )
-                {
-                    msg <- c(msg, "sample_id(s) don't match between ",
-                             "imgData and colData")
-                }
+                msg <- c(msg, "sample_id(s) don't match between ",
+                         "imgData and colData")
             }
         }
-        
-        # if (is.null(df$in_tissue)) { ## it can also be not stored
-        #     msg <- c(msg, "no 'in_tissue' field in 'colData'")
-        # } else 
-        if ((!is.null(df$in_tissue)) && (!is.logical(df$in_tissue)))
-            msg <- .colData_inTissue_validity(df$inTissue, msg)
-        
-        if ( any(is.null(df$x_coord), is.null(df$y_coord)) )
-        {
-            msg <- c(msg, "no 'x_coord' or 'y_coord' field in 'colData'")
-        } else {
-            msg <- .colData_spatialCoords_validity(obj, msg)
-        }
-        return(msg)
     }
-    
+    return(msg)
 }
 
 #' @importFrom methods is
@@ -121,9 +83,9 @@
 {
     msg <- NULL
     msg <- .colData_validity(object, msg)
+    msg <- .spatialData_validity(object@spatialData, object@spaCoordsNms, msg)
     msg <- .imgData_validity(imgData(object), msg)
-    if (length(msg)) 
-        return(msg)
+    if (length(msg)) return(msg)
     return(TRUE)
 }
 

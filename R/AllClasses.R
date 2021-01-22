@@ -1,10 +1,10 @@
 #' @rdname SpatialExperiment
-#' 
 #' @importFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
         contains = "SingleCellExperiment",
         slots=c(
-            spaCoordsNms="character" # changes accordingly to the spatialCoords loaded by the constructor
+            spatialData="DataFrame",
+            spaCoordsNms="character"
         )
 )
 

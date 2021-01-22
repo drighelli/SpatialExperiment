@@ -1,13 +1,12 @@
+#' @name SpatialExperiment
 #' @rdname SpatialExperiment
 #' @title The SpatialExperiment class
 #' 
 #' @description
-#' The SpatialExperiment class is designed to represent spatial transcriptomics 
-#' (ST) data. It inherits from the \linkS4class{SingleCellExperiment} class and
+#' The SpatialExperiment class is designed to represent spatial omics data. 
+#' It inherits from the \linkS4class{SingleCellExperiment} class and
 #' is used in the same manner. In addition, the class supports storage of images
-#' for multiple samples and of different resolutions via \code{\link{imgData}}, 
-#' and requires certain observation metadata specific to ST data to be present.
-#'
+#' for multiple samples and of different resolutions via \code{\link{imgData}}.
 #' @param ... 
 #'   arguments to be passed to the \code{\link{SingleCellExperiment}} 
 #'   constructor to fill the slots of the base class.
@@ -15,12 +14,13 @@
 #' a character of a sample identifier in
 #' conformity with the \code{sample_id} in \code{imgData}
 #' It is automatically detected from the colData, if not present 
-#' it assigns the value present into this paramenter (default is "Sample01").
-#' @param spatialCoords 
-#' the spatial coordinates DataFrame can have multiple 
-#' columns. \code{x_coord} and \code{y_coord} are mandatory, 
-#' while other recognized (optional) ones are \code{z_coord}, \code{in_tissue}, 
-#' \code{array_row}, \code{array_col}.
+#' it assigns the value present into this paramenter (default is "sample_01").
+#' @param spatialData 
+#' the spatial coordinates DataFrame can have multiple columns. 
+#' The coordinates must be named as specified into the \code{spatialCoordsNames} 
+#' argument.
+#' @param spatialCoordsNames a character vector indicating the names of the 
+#' coordinates into the \code{spatialData} structure. (Default is \code{c("x", "y")})
 #' @param scaleFactors 
 #' the scale factors to be associated with the image(s) (optional, default 1).
 #' It can be a number, a file path linking to a JSON file or the values read 
@@ -30,15 +30,15 @@
 #' has to be loaded, depending on the resolution of the loaded image 
 #' (see \code{imageSources}).
 #' @param imgData (optional)
-#'   a \code{DataFrame} storing the image data (see details)
+#'   a \code{DataFrame} storing the image data (see details).
 #' @param imageSources (optional)
 #' one or more image sources, they can be local paths or URLs.
 #' @param image_id (optional)
 #' a character vector of the same length of \code{imageSources} within unique 
-#' image_ids.
+#' \code{image_id}(s).
 #' @param loadImage 
 #' a logical indicating if the image has to be loaded in memory 
-#' (default is TRUE).
+#' (default is FALSE).
 #' 
 #' @details 
 #' The contructor expects the user to provide a \code{sample_id} column into the
@@ -76,7 +76,7 @@
 #'   col.names = c(
 #'     "barcode", "in_tissue", "array_row", "array_col",
 #'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
-#' xyz$in_tissue <- as.logical(xyz$in_tissue)
+#'     
 #' # construct observation & feature metadata
 #' rd <- S4Vectors::DataFrame(
 #'   symbol = rowData(sce)$Symbol)
@@ -85,24 +85,29 @@
 #' (se <- SpatialExperiment(
 #'     assays = list(counts = assay(sce)),
 #'     colData = colData(sce), rowData = rd, imgData = img,
-#'     spatialCoords=xyz, sample_id="foo"))
+#'     spatialData=xyz, 
+#'     spatialCoordsNames=c("array_col", "array_row"),
+#'     sample_id="foo"))
+NULL
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-                              sample_id="Sample01",
-                              spatialCoords=NULL,
+                              sample_id="sample_01",
+                              spatialData=NULL,
+                              spatialCoordsNames=c("x", "y"),
                               scaleFactors=1,
                               imageSources=NULL,
                               image_id=NULL,
-                              loadImage=TRUE,
+                              loadImage=FALSE,
                               imgData=NULL)
 {
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
                        sample_id=sample_id,
-                       spatialCoords=spatialCoords,
+                       spatialData=spatialData,
+                       spatialCoordsNames=spatialCoordsNames,
                        scaleFactors=scaleFactors,
                        imageSources=imageSources,
                        loadImage=loadImage,
@@ -115,54 +120,62 @@ SpatialExperiment <- function(...,
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
                         sample_id="sample_01",
-                        spatialCoords=NULL,
+                        spatialData=NULL,
+                        spatialCoordsNames=c("x", "y"),
                         scaleFactors=1,
                         imageSources=NULL,
                         image_id=NULL,
                         loadImage=TRUE,
                         imgData=NULL)
-    ## provide path to load 10x data with read10x function
 {
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
-    stopifnot( length(sample_id)==1 )
-        
-    if ( "Sample" %in% colnames(colData(sce)) ) 
+    
+    if ( "Sample" %in% colnames(colData(sce)) )
     {
-        if(sample_id == "Sample01")
+        if( is.null(sample_id) )
         {
             sce$sample_id <- sce$Sample
         } else {
-            sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+            ## check how to handle multiple sample_id(s)
+            sce$sample_id <- sample_id 
         }
         colData(sce) <- colData(sce)[,-which(colnames(colData(sce)) == "Sample")]
     } else {
-        sce$sample_id <- sample_id ## check how to handle multiple sample_id(s)
+        ## check how to handle multiple sample_id(s)
+        if ( !isEmpty(colData(sce)) ) sce$sample_id <- sample_id 
     }
-    
     spe <- new("SpatialExperiment", sce)
+
     
-    if(!is.null(spatialCoords)) spatialData(spe) <- spatialCoords
-    
-    if(!is.null(imgData))
+    if ( !is.null(spatialData) )
     {
+        stopifnot( all(spatialCoordsNames %in% colnames(spatialData)) )
+    }
+    spe@spaCoordsNms <- spatialCoordsNames
+    spatialData(spe) <- spatialData
+        
+    
+    if ( !is.null(imgData) )
+    {
+        stopifnot( all(imgData$sample_id == spe$sample_id) )
         imgData(spe) <- imgData
-    } else if(!is.null(imageSources)) {
-        if(is.null(image_id))
+    } else if ( !is.null(imageSources) ) {
+        if ( is.null(image_id) )
         {
             image_id=paste0(sample_id, "_",
                             sub(pattern="(.*)\\..*$", 
                                 replacement="\\1", 
                                 basename(imageSources)), 
-                            1:length(imageSources))
+                            seq_along(imageSources))
         } else {
             stopifnot(length(image_id) != length(imageSources))
         }
         
-        for(i in 1:length(imageSources))
+        for ( i in seq_along(imageSources) )
         {
             spe <- addImg(spe, imageSource=imageSources[i], 
                         scaleFactor=.loadScaleFacts(scaleFactors, 
@@ -179,11 +192,5 @@ SpatialExperiment <- function(...,
 setAs(
     from="SingleCellExperiment", 
     to="SpatialExperiment", 
-    function(from) .sce_to_spe(from))
+    function(from) .sce_to_spe(from, sample_id=NULL))
 
-
-################ global definitions to move into another file
-EXPRSNAMES <- c("^([x|X]|pxl_col)", "^([y|Y]|pxl_row)", "^([z|Z])", 
-                "in_tissue", "array_row", "array_col")
-SPATDATANAMES <- c("x_coord", "y_coord", "z_coord", 
-                  "in_tissue", "array_row", "array_col")

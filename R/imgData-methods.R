@@ -1,6 +1,7 @@
 #' @name imgData-methods
 #' @title Methods for handling image-related data
-#' @aliases loadImg unloadImg addImg removeImg
+#' @aliases loadImg unloadImg addImg removeImg imgGrob imgPath imgUrl 
+#' imgGrob<- imgPath<- imgUrl<- 
 #' 
 #' @description 
 #' The set of functions described below is designed to handle 
@@ -18,9 +19,26 @@
 #' \item{\code{add/removeImg()} 
 #'   to add/remove an image entry to/from 
 #'   the \code{imgData} \code{DataFrame}}
+#' }
+#' \describe{
+#' Getters, setters and additional methods 
+#' for the \code{\link{SpatialImage}} class.
+#' \item{getters & setters:}{
+#' \itemize{
+#' \item{\code{imgGrob(x), imgGrob(x) <- value} \cr gets/sets the image's \code{grob}}
+#' \item{\code{imgPath(x), imgPath(x) <- value} \cr gets/sets the image's file path}
+#' \item{\code{imgUrl(x), imgUrl(x) <- value} \cr gets/sets the image's source URL}
+#' }  
+#' }
+#' \item{image methods:}{
+#' \itemize{
+#' \item{\code{loadImg(x)} loads an image as a \code{grob} from its path or URL}
+#' \item{\code{unloadImg(x)} unloads an image by dropping the \code{grob}}
 #' } 
+#' }
+#' }
 #' 
-#' @param x a \code{\link{SpatialExperiment}}
+#' @param x a \code{\link{SpatialExperiment}} or a \code{\link{SpatialImage}}
 #' @param sample_id character string, \code{TRUE} or \code{NULL} specifying 
 #'   sample/image identifier(s); here, \code{TRUE} is equivalent to all 
 #'   samples/images and \code{NULL} specifies the first available entry (see details)
@@ -33,6 +51,8 @@
 #'   coordinates according to the image's resolution
 #' @param load logical; should the image(s) be loaded as a \code{grob}?
 #'   if FALSE, will store the path/URL instead
+#' @param value  a \code{grob} for \code{imgGrob}, 
+#'   a character string for \code{imgPath/Url}
 #' 
 #' @return 
 #' \code{add/removeImg()} return a \code{\link{SpatialExperiment}} 
@@ -45,7 +65,7 @@
 #' a character string or vector is returned by \code{imgPath/Url()},
 #' and a single or list of \code{grob}(s) is returned by \code{imgGrob()}.
 #'   
-#' #' @examples
+#' @examples
 #' data(ve)
 #' (df <- imgData(ve))
 #' 
@@ -86,23 +106,34 @@
 #'   sample_id = "section1",
 #'   image_id = "pomeranian")
 #' grid::grid.draw(grb)
-
+#' 
+#' 
+#' ##### construct 'SpatialImage'
+#' 
+#' dir <- file.path("extdata", "10xVisium", "section1", "spatial")
+#' fnm <- file.path(dir, "tissue_lowres_image.png")
+#' imgPath <- system.file(fnm, package = "SpatialExperiment")
+#' (img <- SpatialImage(path = imgPath))
+#' 
+#' # load image as a 'grob'
+#' img <- loadImg(img)
+#' 
+#' # accessors
+#' imgGrob(img)
+#' imgPath(img)
+#' imgUrl(img)
+#' 
+#' # draw the image
+#' grb <- imgGrob(img)
+#' grid::grid.draw(grb)
+#' 
+#' # unload it, i.e. the 'grob'
+#' img <- unloadImg(img)
+#' imgGrob(img)
+#'   
 #' @author Helena L. Crowell
 
 # getters ----------------------------------------------------------------------
-
-#' @rdname imgData-methods
-#' @export
-setMethod("imgGrob", "SpatialExperiment", 
-    function(x, sample_id=NULL, image_id=NULL) 
-    {
-        idx <- .get_img_idx(x, sample_id, image_id)
-        si <- imgData(x)$data[idx]
-        gs <- lapply(si, imgGrob)
-        if (length(gs) > 1) 
-            return(gs)
-        gs[[1]]
-    })
 
 #' @rdname imgData-methods
 #' @export
@@ -113,6 +144,20 @@ setMethod("imgPath", "SpatialExperiment",
         si <- imgData(x)$data[idx]
         vapply(si, imgPath, character(1))
     })
+
+
+#' @rdname imgData-methods
+#' @export
+setMethod("imgGrob", "SpatialExperiment", 
+          function(x, sample_id=NULL, image_id=NULL) 
+          {
+              idx <- .get_img_idx(x, sample_id, image_id)
+              si <- imgData(x)$data[idx]
+              gs <- lapply(si, imgGrob)
+              if (length(gs) > 1) 
+                  return(gs)
+              gs[[1]]
+          })
 
 #' @rdname imgData-methods
 #' @export

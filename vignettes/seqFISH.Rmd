@@ -15,6 +15,11 @@ editor_options:
 
 <style type="text/css"> .smaller { font-size: 10px } </style>
 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+```
+
 # Introduction
 
 The SpatialExperiment package provides classes and methods for single cell 
@@ -42,7 +47,6 @@ We stored the provided seqFish and scRNA-seq data inside the SpatialExperiment
 external data seqFISH folder.
 
 ```{r message = FALSE}
-library(ggplot2)
 library(SpatialExperiment)
 ```
 
@@ -74,10 +78,15 @@ coords <- read.table(
 fse <- SpatialExperiment(rowData=rownames(counts),
                         colData=labels,
                         assays=SimpleList(counts=as.matrix(counts)),
-                        spatialCoords=coords)
-
+                        spatialData=coords)
+spatialData(fse)
 spatialDataNames(fse)
-ggplot(as.data.frame(colData(fse)), aes(x_coord, y_coord, col = class)) + 
+```
+
+Here we provide a ggplot example usage, without running it.
+
+```{r fig.width=6, fig.height=3, eval=FALSE}
+ggplot(spatialData(fse, cd_bind="class", as_df=TRUE), aes(x, y, col = class)) + 
     geom_point() + coord_equal()
 ```
 

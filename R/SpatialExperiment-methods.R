@@ -1,222 +1,262 @@
-# setters ----------------------------------------------------------------------
-#' @title SpatialExperiment methods
-#' @aliases imgData imgData<- colData<- scaleFactors  
-#' 
-#' @param x a \code{\link{SpatialExperiment}}
-#' @param value a \code{\link[S4Vectors]{DataFrame}}
-#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample/image 
-#'   identifier(s); here, \code{TRUE} is equivalent to all samples/images 
-#'   and \code{NULL} specifies the first available entry (see details)
-#' @param image_id character string, \code{TRUE} or \code{NULL} specifying sample/image 
-#'   identifier(s); here, \code{TRUE} is equivalent to all samples/images 
-#'   and \code{NULL} specifies the first available entry (see details)
-
-# the following overwrites 'SummarizedExperiment's 'colData' 
-# replacement method to assure the 'SpatialExperiment' remains valid
-# - in case of an invalid replacement, we throw a warning 
-#   (not an error) and return the (unmodified) input object
-# - in case of replacement by NULL, we retain required fields only
-
-# TODO: should invalid replacement return a warning or message?
-
+#' @name SpatialExperiment-methods
 #' @rdname SpatialExperiment-methods
-#' @importFrom S4Vectors DataFrame
-#' @importFrom SummarizedExperiment colData colData<-
-#' @export
-setReplaceMethod("colData",
-    c("SpatialExperiment", "DataFrame"),
-    function(x, value, sample_id, image_id) {
-        # store original 'colData'
-        old <- colData(x)
-
-        # do the replacement
-        se <- as(x, "SummarizedExperiment")
-        colData(se) <- value
-        new <- colData(se)
-        # new <- value
-
-        # these 'colData' columns should remain existent & valid
-        # nms <- c("sample_id", "in_tissue", "x_coord", "y_coord")#, "z_coord")
-        if(!isEmpty(x@spaCoordsNms)) ## during initialization of the object the validity not works
-        {
-            nms <- x@spaCoordsNms
-            
-            if( (!isEmpty(setdiff(names(old), names(new))))
-                && (!isEmpty(grep("array", setdiff(names(old), names(new))))) )
-            {
-                if(!isEmpty(grep(setdiff(names(old), names(new)), nms))) 
-                {
-                    nms <- nms[-grep(setdiff(names(old), names(new)), nms)]
-                    x@spaCoordsNms <- nms
-                }
-            }
-            
-            # check if any of 'nms' are being renamed
-            if (ncol(new) == ncol(old)
-                && !setequal(names(old), names(new))
-                && any(nms %in% setdiff(names(old), names(new)))) {
-                    warning(
-                        "cannot rename 'colData' fields ",
-                        paste(sQuote(nms), collapse = ", "))
-                    return(x)
-            }
-    
-            # check that 'nms' still exist
-            # (this is not handled by the check above)
-            if (!all(nms %in% names(new))) {
-                warning(
-                    "cannot drop 'colData' fields ",
-                    paste(sQuote(nms), collapse = ", "))
-                return(x)
-            }
-    
-            # check that 'sample_id's remain valid & update 'imgData' accordingly
-            ns_old <- length(sids_old <- unique(old$sample_id))
-            ns_new <- length(sids_new <- unique(new$sample_id))
-            if (ns_old != ns_new) {
-                warning(sprintf(
-                    "Number of unique 'sample_id's is %s, but %s %s provided.\nOverwriting",
-                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was"))) 
-                return(x) 
-            } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
-                warning("New 'sample_id's must map uniquely")
-                return(x)
-            } else if (!is.null(imgData(x))) {
-                m <- match(imgData(x)$sample_id, sids_old)
-                imgData(x)$sample_id <- sids_new[m]
-            }
-    
-            # check that 'inTissue' & 'xyzData' remain valid
-            msg <- .colData_inTissue_validity(new$in_tissue)
-            if (length(msg)) { warning(msg); return(x) }
-    
-            msg <- .colData_spatialCoords_validity(x)
-            if (length(msg)) { warning(msg); return(x) }
-            # overwrite 'colData' if all checks pasted
-           
-        }
-        BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
-        
-        
-    })
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom S4Vectors DataFrame
-#' @importFrom SummarizedExperiment colData colData<-
-#' @export
-setReplaceMethod("colData",
-    c("SpatialExperiment", "NULL"),
-    function(x, value) {
-        # keep required fields only
-        cd <- colData(x)[, c("sample_id", x@spaCoordsNms)] 
-        BiocGenerics:::replaceSlots(x, colData=cd, check=FALSE)
-    })
-
-# similar to the above, we overwrite the default subsetting method
-# to assure that the 'imgData' is subsetted if samples are dropped
-#' @rdname SpatialExperiment-methods
-#' @param i when subsetting, the row index(es) to keep
-#' @param j when subsetting, the column index(es) to keep
-#' @importFrom methods callNextMethod
-#' @export
-setMethod("[", 
-    c("SpatialExperiment", "ANY", "ANY"), 
-    function(x, i, j) 
-{
-    if (missing(i)) i <- TRUE
-    if (missing(j)) j <- TRUE
-    x <- callNextMethod()
-    keep <- imgData(x)$sample_id %in% unique(x$sample_id)
-    imgData(x) <- imgData(x)[keep, ]
-    return(x)
-})
-
-
-
-#' @rdname SpatialExperiment-methods
+#' @title SpatialExperiment Methods
 #' @description 
-#' a setter method which sets/replaces the spatial data in a
-#' SpatialExperiment class object.
-#' They are always stored as \code{x_coord}, \code{y_coord} and when found 
-#' \code{in_tissue}, \code{array_row} and \code{array_col} (see details).
+#' The SpatialExperiment class provides a family of getter/setter methods 
+#' to get/replace the spatial data attributes.
+#' It is always suggested to use these accessors to facilitate future maintenance
+#' of the code.
+#' We distinguish the spatial data from the spatial coordinates as described in 
+#' this paragraph.
+#' With spatial data we refer to the general data structure containing the 
+#' spatial coordinates, while we refer for spatial coordinates only to the 
+#' specific spatial coordinates columns (as x, y, z, ...).
+#' 
+#' @section spatialData Methods:
+#' All the methods described in this section takes as input the \code{sample_id}
+#' argument.
+#' See the parameter description for additional information.
+#'  \describe{
+#'  \itemize{
+#' \item{\code{spatialData(x) <- value}:}{The spatialData setter expects a 
+#' data.frame/DataFrame object named with the
+#' previously defined colnames for the spatial coordinates.
+#' It is possible to get/set the spatial coordinates names with the 
+#' spatialCoordsNames getter/setter, by default they are set by the 
+#' SpatialExperiment constructor to c("x", "y").
+#' If the input spatial data structure doesn't contain an in_tissue column, 
+#' a default in_tissue column is set to 1.
+#' If NULL is passed as value the all the related data structures are set 
+#' accordingly.}
+#' \item{\code{spatialData(x)}:}{The spatialData getter gives the possibility 
+#' to retrieve also additional columns from the
+#' colData structure by the aid of the cd_keep argument.
+#' It returns be default a DataFrame, but it is possible to retrieve a 
+#' data.frame by setting \code{as_df=TRUE}.}
+#' \item{\code{spatialCoords(x)}:}{The \code{spatialCoords} getter returns the 
+#' spatial coordinates in a matrix-like form, but it is possible to retrieve 
+#' them in a data.frame form by setting \code{as_df=TRUE}.}
+#'}
+#'}
+#'
+#' @section spatialNames Methods:
+#' \describe{
+#' \itemize{
+#' \item{\code{spatialDataNames(x)}:}{Returns the names of the spatialData 
+#' structure.}
+#' \item{\code{spatialCoordsNames(x)<-value}:}{Sets the names of the spatial 
+#' coordinates accordingly with the assigned value.}
+#' \item{\code{spatialCoordsNames(x)}:}{Returns the stored names of the spatial 
+#' coordinates.}
+#' }
+#' }
+#' 
+#' @section imgData Methods:
+#' \describe{
+#' \itemize{
+#' \item{\code{imgData(x)<-value}:}{This setter allows to set a DataFrame 
+#' object as imgData of the SpatialExperiment object class.}
+#' \item{\code{imgData(x)}:}{This getter returns the imgData DataFrame.}
+#' }
+#' }
+#' 
+#' 
+#' @section Other Methods:
+#' \describe{
+#' \itemize{
+#' \item{\code{scaleFactors(x, sample_id, image_id)}:}{This getter returns 
+#' the scale factors associated to the \code{sample_id}(s) 
+#' and \code{image_id}(s) passed as input.
+#' This is related to the stored image(s) into the SpatialExperiment.
+#' \code{imgData} structure.
+#' See the \code{sample_id} and \code{image_id} section description for further 
+#' details.}
+#' \item{\code{inTissue(x, sample_id)}:}{This getter return a TRUE/FALSE mask
+#' associated to the samples that are on a tissue.
+#' This is typical related to 10x Visium experiments.
+#' See the \code{sample_id} section description for further details.}
+#' }
+#' }
+#' 
 #' @param x a SpatialExperiment class object
-#' @param value a DataFrame with the new spatial data to set (see details).
-#' @param sample_id 
-#' character string, \code{TRUE} or \code{NULL} specifying sample 
-#' identifier(s); here, \code{TRUE} is equivalent to all samples 
-#' and \code{NULL} specifies the first available entry (see details)
-#' @return none
-#' @details The method automatically recognizes any kind of colnames with
-#' \code{x}, \code{y}, \code{z}, \code{x_coord}, \code{y_coord}, \code{z_coord} and, 
-#' additionally, for the 10x Visium, it recognizes the 
-#' \code{pxl_row_in_fullres} and \code{pxl_col_in_fullres} storing them respectively as 
-#' \code{y_coord} and \code{x_coord}.
-#' While \code{in_tissue} \code{array_row} \code{array_col} are stored as they are.
-#' NB \code{in_tissue} has to be in logical form.
+#' @param value it varies depending on the invoked method see methods details.
+#' @param sample_id character string specifying sample 
+#' identifier(s); \code{TRUE} is equivalent to all samples.
+#' @param image_id character string indicating the image identifiers(s), 
+#' \code{TRUE} is equivalent to all images.
+#' @param cd_bind a character vector indicating additional columns to return 
+#' that can be retrieved from the \code{colData} structure.
+#' @param as_df logical indicating if the returned structure has to be a 
+#' data.frame (default is FALSE).
+#' 
+#' @return see methods details.
+#' 
+#' @aliases spatialData spatialData<- spatialCoords spatialCoordsNames 
+#' spatialCoordsNames<- scaleFactors inTissue spatialDataNames imgData imgData<-
+#' 
+#' 
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty
 #' @importFrom methods is
-#' @export
 #' @examples
 #' example(SpatialExperiment)
-#' fakeCoords <- cbind(spatialData(se)$x_coord, spatialData(se)$x_coord)
-#' colnames(fakeCoords) <- c("x", "y")
-#' spatialData(se) <- fakeCoords
-#' spatialData(se)
-#' oneCoord <- cbind(spatialData(se)$y_coord)
-#' colnames(oneCoord) <- c("pxl_row_in_fullres") # assigns it to the y_coord
-#' spatialData(se) <- oneCoord
-#' spatialData(se)
-setReplaceMethod(f="spatialData", signature="SpatialExperiment", 
-    function(x, value=NULL, sample_id=TRUE)
- {
-
-    stopifnot(dim(value)[1]==dim(colData(x))[1])
-    if(!is(value, "DataFrame")){ value <- DataFrame(value) }
-    if(!is.null(value))
-    {
-        samplesIdx <- 1:nrow(colData(x))
-        # if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-        i=1
-        dfexprs <- rbind(EXPRSNAMES, SPATDATANAMES)
-        spaCoords <- character()
-        for(i in 1:dim(dfexprs)[2]) 
-        {
-            idx <- grep(dfexprs[1,i], colnames(value))
-            if( !isEmpty(idx) )
-            {
-                colData(x) <- .setCoord(colData(x)[samplesIdx,], dfexprs[2,i], value[[idx]])
-                if(isEmpty(x@spaCoordsNms)) spaCoords <- c(spaCoords, dfexprs[2,i])
-            }
-        }
-        
-        if(isEmpty(x@spaCoordsNms)) 
-        {
-            names(spaCoords) <- NULL
-            x@spaCoordsNms <- spaCoords
-            # names(x@spaCoordsNms) <- NULL
-        }
-    }
-    # msg <- .colData_spatialCoords_validity(x)
-    # if (length(msg)) { warning(msg); return(x) }
-    return(x) 
-})
-
+#' ## The spatialData methods
+#' fakeSpData <- spatialData(se)
+#' fakeSpData$array_col <- fakeSpData$array_row
+#' spatialData(se) <- as.data.frame(fakeSpData)
 #' 
-#' #' @rdname SpatialExperiment-methods
-#' #' @export
-#' setReplaceMethod("scaleFactors", "SpatialExperiment",
-#'           function(x, value, sample_id=TRUE, image_id=TRUE)
-#'           {
-#'               stopifnot(exists("int_metadata(se)$imgData"))
-#'               idx <- .get_img_idx(x, sample_id, image_id)
-#'               imgData(x)$scaleFactor[idx] <- value
-#'           }
-#' )
+#' # spatialData returns a DataFrame
+#' head(spatialData(se))
+#' 
+#' # for combining spatialData with colData use cd_bind 
+#' # use as_df for spatialData to return a data.frame 
+#' head(spatialData(se, cd_bind="sample_id", as_df=TRUE))
+#'  
+#' # spatialCoords returns a matrix of coordinates
+#' head(spatialCoords(se))
+#' 
+#' # changing spatial coordinates Names
+#' spatialCoordsNames(se)
+#' spatialCoordsNames(se) <- c("x","y")
+#' spatialCoordsNames(se)
+#' head(spatialData(se))
+#' 
+#' # imgData
+#' imgData(se)
+#' 
+#' scaleFactors(se)
+#' 
+#' inTissue(se)
+#' sum(inTissue(se))
+#' se[inTissue(se),]
+NULL
 
 
-# getters ----------------------------------------------------------------------
+### spatialData-methods --------------------------------------------------------
+#' @rdname SpatialExperiment-methods
+#' @export
+setReplaceMethod(f="spatialData", 
+    c("SpatialExperiment", "ANY"),
+    function(x, value)
+    {
+        stopifnot( is.data.frame(value) || is(value, "DataFrame") || 
+                  is(value,"DFrame") )
+        if ( is.data.frame(value) ) value <- DataFrame(value)
+        stopifnot(dim(value)[1]==dim(colData(x))[1])
+        spd <- value
+        if ( !("in_tissue" %in% colnames(value)) )
+        {
+            spd <- cbind(value, 1)
+            colnames(spd) <- c(colnames(value), "in_tissue")
+        }
+        msg <- .spatialData_validity(spd, x@spaCoordsNms)
+        if (!is.null(msg)) stop(msg)
+        x@spatialData <- spd
+        return(x) 
+        
+    }
+)
 
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setReplaceMethod(f="spatialData", 
+    c("SpatialExperiment", "NULL"),
+    function(x, value)
+    {
+        x@spatialData <- DataFrame()
+        x@spaCoordsNms <- character()
+        return(x)
+    }
+)
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setMethod(f="spatialData", 
+    signature="SpatialExperiment",
+    function(x, cd_bind=NULL, sample_id=TRUE, as_df=FALSE)
+    {
+        if ( isEmpty(x@spatialData) ) return(x@spatialData)
+        
+        samplesIdx <- seq_len(nrow(x@spatialData))
+        if ( !isTRUE( sample_id ) ) samplesIdx <- which(x$sample_id %in% sample_id)
+        if ( !isEmpty( samplesIdx ) )
+        {
+            coords <- x@spatialData[samplesIdx, ]
+        } else {
+            stop("Not valid sample_id.")
+        }
+        if ( !is.null(cd_bind) )
+        {
+            stopifnot( all( cd_bind %in% colnames(colData(x)) ) )
+            nms <- colnames(coords)
+            coords <- cbind(coords, colData(x)[[cd_bind]])
+            colnames(coords) <- c(nms, cd_bind)
+        }
+        if ( as_df ) return(as.data.frame(coords))
+        return(coords)
+    }
+)
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setMethod(f="spatialCoords", signature="SpatialExperiment",
+    function(x, sample_id=TRUE, as_df=FALSE)
+    {
+        samplesIdx <- seq_len(nrow(x@spatialData))
+        if ( !isTRUE(sample_id) ) samplesIdx <- which(x$sample_id %in% sample_id)
+      
+        if ( !isEmpty( samplesIdx ) )
+        {
+            coords <- spatialData(x)[samplesIdx, x@spaCoordsNms]
+        } else {
+            stop("Not valid sample_id.")
+        }
+      
+        if (as_df) return(as.data.frame(coords))
+        else return(as.matrix(coords))
+    }
+)
+
+### spatialNames-methods -------------------------------------------------------
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setMethod(f="spatialCoordsNames", 
+    signature="SpatialExperiment", 
+    function(x)
+    {
+        return(x@spaCoordsNms)
+    }
+)
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setReplaceMethod(f="spatialCoordsNames", 
+    signature=c("SpatialExperiment", "character"), 
+    function(x, value)
+    {
+        if ( !isEmpty(x@spaCoordsNms) ) 
+        {
+            idx <- which(spatialDataNames(x) %in% x@spaCoordsNms)
+            colnames(x@spatialData)[idx] <- value
+        }
+        x@spaCoordsNms  <- value
+        return(x)
+    }
+)
+
+#' @rdname SpatialExperiment-methods
+#' @export
+setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
+    {
+        if(!isEmpty(spatialData(x))) return(colnames(spatialData(x)))
+        else return(character())
+    }
+)
+
+
+### scaleFactors-methods -------------------------------------------------------
 #' @rdname SpatialExperiment-methods
 #' @export
 setMethod("scaleFactors", "SpatialExperiment",
@@ -228,140 +268,17 @@ setMethod("scaleFactors", "SpatialExperiment",
     }
 )
 
-
 #' @rdname SpatialExperiment-methods
-#' @description a getter method which returns the spatial coordinates 
-#' data structure previously stored in a SpatialExperiment class object.
-#' @param se A SpatialExperiment class object.
-#' @param colDataCols a character vector indicating additional columns to return 
-#' that can be retrieved from the \code{colData} structure.
-#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
-#' identifier(s); here, \code{TRUE} is equivalent to all samples.
-#' @param as.df logical indicating if the returned structure has to be a 
-#' data.frame (default is FALSE).
-#' and \code{NULL} specifies the first available entry (see details)
-#' @return a DataFrame within the spatial coordinates.
-#'
 #' @export
-#' @examples
-#' example(SpatialExperiment)
-#' spatialData(se)
-setMethod(f="spatialData", signature="SpatialExperiment",
-    function(se, colDataCols=NULL, sample_id=TRUE, as.df=FALSE)
-{
-    samplesIdx <- 1:nrow(colData(se))
-    if ( !isTRUE( sample_id ) ) samplesIdx <- which(se$sample_id %in% sample_id)
-    if ( !isEmpty(samplesIdx) )
+setMethod(f="inTissue", 
+    signature="SpatialExperiment", 
+    function(x, sample_id=TRUE)
     {
-        coords <- colData(se)[samplesIdx, se@spaCoordsNms]
-    } else {
-        stop("Provided sample_id is not valid.")
+        if ( !("in_tissue" %in% colnames(spatialData(x))) ) 
+            stop("No tissue mask loaded!")
+        samplesIdx <- seq_len(nrow(x@spatialData))
+        if ( !isTRUE(sample_id) ) samplesIdx <- which(x$sample_id %in% sample_id)
+        return( spatialData(x)$in_tissue[samplesIdx] == 1 )
     }
-    if(!is.null(colDataCols)) 
-    {
-        stopifnot( all( colDataCols %in% colnames(colData(se)) ) )
-        nms <- colnames(coords)
-        coords <- cbind(coords, colData(se)[[colDataCols]])
-        colnames(coords) <- c(nms, colDataCols)
-    }
-    if ( as.df ) return(as.data.frame(coords))
-    return(coords)
-})
+)
 
-
-#' @rdname SpatialExperiment-methods
-#' @description a getter method which returns the spatial coordinates previously
-#' stored in a SpatialExperiment class object.
-#' @param se A SpatialExperiment class object.
-#' @param colDataCols a character vector indicating additional columns to return 
-#' that can be retrieved from the \code{colData} structure.
-#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
-#' identifier(s); here, \code{TRUE} is equivalent to all samples.
-#' @param as.df logical indicating if the returned structure has to be a 
-#' data.frame (default is FALSE).
-#' and \code{NULL} specifies the first available entry (see details)
-#' @return by default returns a matrix object within the spatial coordinates.
-#'
-#' @export
-#' @examples
-#' example(SpatialExperiment)
-#' spatialCoords(se)
-setMethod(f="spatialCoords", signature="SpatialExperiment",
-    function(se, colDataCols=NULL, sample_id=TRUE, as.df=FALSE)
-{
-    samplesIdx <- 1:nrow(colData(se))
-    if(!isTRUE(sample_id)) samplesIdx <- which(se$sample_id %in% sample_id)
-    z_idx <- grep("z_coord", colnames(colData(se)))
-    if(length(z_idx) != 0)
-    {
-        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"y_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"z_coord", drop=FALSE])
-    } else {
-        coords <- cbind(colData(se)[samplesIdx,"x_coord", drop=FALSE],
-                        colData(se)[samplesIdx,"y_coord", drop=FALSE])
-    }
-    if(!is.null(colDataCols)) 
-    {
-        stopifnot( all( colDataCols %in% colnames(colData(se)) ) )
-        nms <- colnames(coords)
-        coords <- cbind(coords, colData(se)[[colDataCols]])
-        colnames(coords) <- c(nms, colDataCols)
-    }
-    if (as.df) return(as.data.frame(coords))
-    else return(as.matrix(coords))
-})
-
-
-#' @rdname SpatialExperiment-methods
-#' @name spatialDataNames
-#' @description getter method for the spatial coordinates names in a
-#' SpatialExperiment class object.
-#' @param x a SpatialExperiment class object.
-#'
-#' @return SpatialDataNames: a vector with the colnames of the spatial coordinates.
-#' @export
-#' @examples
-#' example(SpatialExperiment)
-#' spatialDataNames(se)
-setMethod(f="spatialDataNames", signature="SpatialExperiment", function(x)
-{
-    return(x@spaCoordsNms)
-})
-
-
-#' @rdname SpatialExperiment-methods
-#' @title isInTissue
-#' @description isInTissue: returns a mask of TRUE/FALSE Barcodes spots, 
-#' indicating which ones are in tissue and which ones are not.
-#' @param x  a VisiumExperiment class object.
-#' @param sample_id character string, \code{TRUE} or \code{NULL} specifying sample 
-#' identifier(s); here, \code{TRUE} is equivalent to all samples 
-#' and \code{NULL} specifies the first available entry (see details)
-#' @return isInTissue: a TRUE/FALSE mask.
-#' @export
-#' @examples
-#' data(ve)
-#' isInTissue(ve)
-#' sum(isInTissue(ve))
-#' ve[isInTissue(ve),]
-setMethod(f="isInTissue", signature="SpatialExperiment", function(x, sample_id=TRUE)
-{
-    if(!("in_tissue" %in% x@spaCoordsNms)) stop("No tissue mask loaded!")
-    samplesIdx <- 1:nrow(colData(x))
-    if(!isTRUE(sample_id)) samplesIdx <- which(x$sample_id %in% sample_id)
-    return( x$in_tissue[samplesIdx] == 1 ) 
-})
-
-
-#' #' @rdname SpatialExperiment-methods
-#' #' @export
-#' setReplaceMethod("scaleFactors", 
-#'                  c("SpatialExperiment", "list"),
-#'                  function(x, sample_id=TRUE, image_id=TRUE, 
-#'                           scaleFactors=as.list(rep(1,1)))
-#'                  {
-#'                      idx <- .get_img_idx(x, sample_id, image_id)
-#'                      imgData(x)$scaleFactor[idx] <- scaleFactors
-#'                  }
-#' )
