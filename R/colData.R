@@ -10,7 +10,14 @@
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
 #' @param value a \code{\link[S4Vectors]{DataFrame}}
+#' @return a SpatialExperiment object
+#' @examples
+#' example(SpatialExperiment)
+#' colData(se) 
+#' colData(se) <- NULL
+#' colData(se) 
 NULL
+
 # the following overwrites 'SummarizedExperiment's 'colData' 
 # replacement method to assure the 'SpatialExperiment' remains valid
 # - in case of an invalid replacement, we throw a warning 
@@ -61,6 +68,7 @@ setReplaceMethod("colData",
     function(x, value) 
     {
         warning("Dropping colData could break imgData and spatialData functionality.")
+        value <- DataFrame()
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
     }
 )

@@ -170,12 +170,12 @@ SpatialExperiment <- function(...,
                             sub(pattern="(.*)\\..*$", 
                                 replacement="\\1", 
                                 basename(imageSources)), 
-                            1:length(imageSources))
+                            seq_along(imageSources))
         } else {
             stopifnot(length(image_id) != length(imageSources))
         }
         
-        for ( i in 1:length(imageSources) )
+        for ( i in seq_along(imageSources) )
         {
             spe <- addImg(spe, imageSource=imageSources[i], 
                         scaleFactor=.loadScaleFacts(scaleFactors, 
@@ -194,9 +194,3 @@ setAs(
     to="SpatialExperiment", 
     function(from) .sce_to_spe(from, sample_id=NULL))
 
-
-################ global definitions to move into another file
-EXPRSNAMES <- c("^([x|X]|pxl_col)", "^([y|Y]|pxl_row)", "^([z|Z])", 
-                "in_tissue", "array_row", "array_col")
-SPATDATANAMES <- c("x_coord", "y_coord", "z_coord", 
-                  "in_tissue", "array_row", "array_col")

@@ -47,7 +47,6 @@ We stored the provided seqFish and scRNA-seq data inside the SpatialExperiment
 external data seqFISH folder.
 
 ```{r message = FALSE}
-library(ggplot2)
 library(SpatialExperiment)
 ```
 
@@ -82,6 +81,11 @@ fse <- SpatialExperiment(rowData=rownames(counts),
                         spatialData=coords)
 spatialData(fse)
 spatialDataNames(fse)
+```
+
+Here we provide a ggplot example usage, without running it.
+
+```{r fig.width=6, fig.height=3, eval=FALSE}
 ggplot(spatialData(fse, cd_bind="class", as_df=TRUE), aes(x, y, col = class)) + 
     geom_point() + coord_equal()
 ```

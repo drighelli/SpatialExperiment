@@ -139,7 +139,7 @@ read10xVisium <- function(samples="",
         .read_xyz(xxx)
     })
     
-    spelist <- lapply(c(1:length(spelist)) , function(i)
+    spelist <- lapply( seq_along(spelist) , function(i)
     {
         spatialCoordsNames(spelist[[i]]) <- c("array_col", "array_row")
         spatialData(spelist[[i]]) <- coords[[i]][colnames(spelist[[i]]),]

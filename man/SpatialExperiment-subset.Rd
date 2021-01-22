@@ -4,15 +4,15 @@
 \alias{SpatialExperiment-subset}
 \alias{[,SpatialExperiment,ANY,ANY,ANY-method}
 \title{SpatialExperiment subset}
-\usage{
-\S4method{[}{SpatialExperiment,ANY,ANY,ANY}(x, i, j)
-}
 \arguments{
 \item{x}{a SpatialExperiment object}
 
 \item{i}{the row indexes to subset}
 
 \item{j}{the col indexes to subset}
+}
+\value{
+a SpatialExperiment class object
 }
 \description{
 The subset method ensures that all the subsetted rows/cols 

@@ -15,13 +15,17 @@
 #' @param x a SpatialExperiment object
 #' @param i the row indexes to subset
 #' @param j the col indexes to subset
-#' @importFrom methods callNextMethod
-#' @export
+#' 
+#' @return a SpatialExperiment class object
 #' @examples 
 #' example(SpatialExperiment)
 #' se1 <- se[,1:10]
 #' colData(se1)
 #' spatialData(se1)
+NULL
+
+#' @importFrom methods callNextMethod
+#' @export
 setMethod("[",
     c("SpatialExperiment", "ANY", "ANY"),
     function(x, i, j) 

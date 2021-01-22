@@ -25,11 +25,11 @@ LazyData: true
 biocViews: 
     DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
     Infrastructure, SingleCell
-Depends: R (>= 4.0.0), methods, SingleCellExperiment
+Depends: R (>= 4.1.0), methods, SingleCellExperiment
 Imports: 
     BiocFileCache, DropletUtils, rjson, magick, grid,
     S4Vectors, SummarizedExperiment, BiocGenerics, utils,
     BumpyMatrix
-Suggests: knitr, Matrix, testthat, ggplot2
+Suggests: knitr, Matrix, testthat
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

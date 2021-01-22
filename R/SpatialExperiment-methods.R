@@ -139,8 +139,8 @@ setReplaceMethod(f="spatialData",
     c("SpatialExperiment", "ANY"),
     function(x, value)
     {
-        stopifnot( is.data.frame(value) || class(value) == "DataFrame" || 
-                  class(value) == "DFrame")
+        stopifnot( is.data.frame(value) || is(value, "DataFrame") || 
+                  is(value,"DFrame") )
         if ( is.data.frame(value) ) value <- DataFrame(value)
         stopifnot(dim(value)[1]==dim(colData(x))[1])
         spd <- value
@@ -178,7 +178,7 @@ setMethod(f="spatialData",
     {
         if ( isEmpty(x@spatialData) ) return(x@spatialData)
         
-        samplesIdx <- 1:nrow(x@spatialData)
+        samplesIdx <- seq_len(nrow(x@spatialData))
         if ( !isTRUE( sample_id ) ) samplesIdx <- which(x$sample_id %in% sample_id)
         if ( !isEmpty( samplesIdx ) )
         {
@@ -203,7 +203,7 @@ setMethod(f="spatialData",
 setMethod(f="spatialCoords", signature="SpatialExperiment",
     function(x, sample_id=TRUE, as_df=FALSE)
     {
-        samplesIdx <- 1:nrow(colData(x))
+        samplesIdx <- seq_len(nrow(x@spatialData))
         if ( !isTRUE(sample_id) ) samplesIdx <- which(x$sample_id %in% sample_id)
       
         if ( !isEmpty( samplesIdx ) )
@@ -276,7 +276,7 @@ setMethod(f="inTissue",
     {
         if ( !("in_tissue" %in% colnames(spatialData(x))) ) 
             stop("No tissue mask loaded!")
-        samplesIdx <- 1:nrow(colData(x))
+        samplesIdx <- seq_len(nrow(x@spatialData))
         if ( !isTRUE(sample_id) ) samplesIdx <- which(x$sample_id %in% sample_id)
         return( spatialData(x)$in_tissue[samplesIdx] == 1 )
     }
