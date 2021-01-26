@@ -28,6 +28,7 @@
 #' Refer to \code{?\link[base]{cbind}} for the interpretation of \code{deparse.level}.
 #' }
 #' }
+#' @return a combined SpatialExperiment object
 #'
 #' @author
 #' Dario Righelli

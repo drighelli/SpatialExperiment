@@ -9,6 +9,9 @@
 \usage{
 \S4method{cbind}{SpatialExperiment}(..., deparse.level = 1)
 }
+\value{
+a combined SpatialExperiment object
+}
 \description{
 An overview of methods to combine multiple \linkS4class{SpatialExperiment} 
 objects by column.
