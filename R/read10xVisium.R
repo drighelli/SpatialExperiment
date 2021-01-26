@@ -1,4 +1,5 @@
 #' @rdname read10xVisium
+#' 
 #' @title Load data from a 10X Visium experiment
 #' 
 #' @description 
