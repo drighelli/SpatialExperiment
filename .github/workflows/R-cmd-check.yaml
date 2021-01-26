@@ -50,6 +50,7 @@ jobs:
       - name: Install remotes
         run: |
           install.packages('remotes')
+          install.packages('RCurl')
         shell: Rscript {0}
         
       - name: Install rmarkdown
