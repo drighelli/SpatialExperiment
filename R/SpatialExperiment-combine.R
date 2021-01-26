@@ -44,10 +44,11 @@
 #' @aliases
 #' cbind,SingleCellExperiment-method
 #'
-#' @name SPE-combine
-#' @rdname combine
+#' @name SpatialExperiment-combine
+#' @rdname SpatialExperiment-combine
 NULL
 
+#' @rdname SpatialExperiment-combine
 #' @importFrom BiocGenerics rbind cbind
 setMethod("cbind", "SpatialExperiment", 
     function(..., deparse.level=1) 

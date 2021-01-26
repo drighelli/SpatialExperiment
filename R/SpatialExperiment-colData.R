@@ -9,7 +9,12 @@
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
 #' @param value a \code{\link[S4Vectors]{DataFrame}}
+#' @return a SpatialExperiment object with updated colData 
+#' @examples 
+#' example(SpatialExperiment)
+#' colData(se) <- NULL
 NULL
+
 # the following overwrites 'SummarizedExperiment's 'colData' 
 # replacement method to assure the 'SpatialExperiment' remains valid
 # - in case of an invalid replacement, we throw a warning 
