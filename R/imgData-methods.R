@@ -1,22 +1,26 @@
 #' @name imgData-methods
 #' @title Methods for handling image-related data
-#' @aliases loadImg unloadImg addImg removeImg imgGrob imgPath imgUrl 
-#' imgGrob<- imgPath<- imgUrl<- 
+#' @aliases loadImg unloadImg addImg removeImg imgGrob 
+#' imgPath,SpatialExperiment  imgUrl 
+#' imgGrob<- imgPath<-,SpatialExperiment imgUrl<- 
 #' 
 #' @description 
 #' The set of functions described below is designed to handle 
 #' the image-related data stored inside a \code{SpatialExperiment}'s 
 #' \code{imgData} \code{int_metadata} field. These include 
 #' \itemize{
-#' \item{\code{imgGrob/Path/Url()}
+#' \item{\code{imgGrob}}
+#' \item{\code{imgPath}}
+#' \item{\code{imgUrl}
 #'   to access the \code{grob}, path and URL 
 #'   associated with an image or set of images}
-#' \item{\code{loadImg()} 
+#' \item{\code{loadImg} 
 #'   to load an image from a path or URL as a \code{grob}}
-#' \item{\code{unloadImg()} 
+#' \item{\code{unloadImg} 
 #'   to unload an image, i.e. to drop the \code{grob}
 #'   while retaining the image's source path and/or URL}
-#' \item{\code{add/removeImg()} 
+#' \item{\code{addImg}}
+#' \item{\code{removeImg}
 #'   to add/remove an image entry to/from 
 #'   the \code{imgData} \code{DataFrame}}
 #' }
@@ -267,3 +271,70 @@ setMethod("removeImg", "SpatialExperiment",
         imgData(x) <- imgData(x)[-idx, , drop=FALSE]
         return(x)
     })
+
+
+
+# SpatialImage------------------------------------------------------------------
+# getters ----------------------------------------------------------------------
+
+
+#' @rdname imgData-methods
+#' @export
+setMethod("imgPath", "SpatialImage", function(x) x@path)
+
+#' @rdname imgData-methods
+#' @export
+setMethod("imgGrob", "SpatialImage", function(x) x@grob)
+
+
+#' @rdname imgData-methods
+#' @export
+setMethod("imgUrl", "SpatialImage", function(x) x@url)
+
+# setters ----------------------------------------------------------------------
+
+
+#' @rdname imgData-methods
+#' @export
+setReplaceMethod("imgPath", c("SpatialImage", "character"), 
+                 function(x, value) 
+                 { 
+                     .path_validity(value)
+                     x@path <- value
+                     return(x) 
+                 })
+
+#' @rdname imgData-methods
+#' @importFrom grid grob
+#' @export
+setReplaceMethod("imgGrob", c("SpatialImage", "rastergrob"), 
+                 function(x, value) { x@grob <- value; return(x) })
+
+
+#' @rdname imgData-methods
+#' @export
+setReplaceMethod("imgUrl", c("SpatialImage", "character"), 
+                 function(x, value) 
+                 { 
+                     .url_validity(value)
+                     x@url <- value
+                     return(x) 
+                 })
+
+# loadImage --------------------------------------------------------------------
+
+#' @rdname imgData-methods
+#' @export
+setMethod("loadImg", "SpatialImage",
+          function(x) { .load_img(x)$data[[1]] })
+
+# unloadImg --------------------------------------------------------------------
+
+# TODO: How to handle cached images?
+# add a flag cached=TRUE/FALSE in the class,
+# and drop path if cached=TRUE?
+
+#' @rdname imgData-methods
+#' @export
+setMethod("unloadImg", "SpatialImage",
+          function(x) { x@grob <- NULL; return(x) })

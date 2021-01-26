@@ -51,7 +51,7 @@
 #' list.files(file.path(samples[1], "spatial"))
 #' file.path(samples[1], "raw_feature_bc_matrix")
 #' 
-#' (ve <- read10xVisium(samples, sample_ids, type="HDF5",
+#' (ve <- read10xVisium(samples, sample_ids, type="sparse",
 #'   images = c("lowres"), load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue

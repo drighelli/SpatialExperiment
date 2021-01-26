@@ -17,18 +17,9 @@
 
 \item{value}{a \code{\link[S4Vectors]{DataFrame}}}
 }
-\value{
-a SpatialExperiment object
-}
 \description{
 The colData setter expects a DataFrame with a \code{sample_id} column reflecting the
 already existing \code{sample_id}(s) present in the object.
 An additional check is made on the \code{imgData} data structure.
 In case a \code{NULL} value is passed, the \code{colData} are dropped.
-}
-\examples{
-example(SpatialExperiment)
-colData(se) 
-colData(se) <- NULL
-colData(se) 
 }

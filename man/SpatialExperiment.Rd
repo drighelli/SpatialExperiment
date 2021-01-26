@@ -68,7 +68,7 @@ dir <- system.file(
   package = "SpatialExperiment")
 
 # read in counts
-fnm <- file.path(dir, "raw_feature_bc_matrix.h5")
+fnm <- file.path(dir, "raw_feature_bc_matrix")
 sce <- DropletUtils::read10xCounts(fnm)
 
 # read in image data
@@ -78,7 +78,7 @@ img <- readImgData(
 
 # read in spatial coordinates
 fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
-xyz <- read.csv(fnm, header = FALSE, row.names = 1,
+xyz <- read.csv(fnm, header = FALSE,
   col.names = c(
     "barcode", "in_tissue", "array_row", "array_col",
     "pxl_row_in_fullres", "pxl_col_in_fullres"))

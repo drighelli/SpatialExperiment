@@ -77,23 +77,3 @@ setMethod("show", "SpatialExperiment", .spe_show)
 
 #' @rdname SpatialImage-misc
 setMethod("show", "SpatialImage", .spi_show)
-
-#' #' @importFrom S4Vectors coolcat
-#' #' @importFrom methods callNextMethod
-#' .ve_show <- function(object) {
-#'     callNextMethod()
-#'     coolcat("inTissue(%d): %s\n", sum(isInTissue(object)))
-#'     coolcat("imagePaths(%d): %s\n", imagePaths(object))
-#' }
-#' 
-#' #' VisiumExperiment show method
-#' #' @description a method for showing the VisiumExperiment
-#' #' @param object a VisiumExperiment object instance
-#' #' @importFrom S4Vectors coolcat
-#' #' @importFrom methods callNextMethod
-#' #' @return none
-#' #' @aliases .ve_show
-#' #' @examples 
-#' #' example(VisiumExperiment, echo=FALSE) #using class example
-#' #' show(ve)
-#' setMethod("show", "VisiumExperiment", .ve_show)

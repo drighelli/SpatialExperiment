@@ -1,5 +1,5 @@
-
 #' @title SpatialExperiment colData
+#' @name SpatialExperiment-colData
 #' @aliases colData colData<-  
 #' @description 
 #' The colData setter expects a DataFrame with a \code{sample_id} column reflecting the
