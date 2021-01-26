@@ -39,3 +39,4 @@ testData
 ^config\.status
 ^config\.log
 tests/testthat/pipeline\.R
+inst/extdata/molecular_seqFISH/*

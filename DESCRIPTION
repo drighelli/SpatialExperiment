@@ -1,13 +1,18 @@
 Package: SpatialExperiment
 Type: Package
-Title: S4 Class for Spatial Experiments handling 
-Version: 0.99.4
-Date: 2020-07-24
+Title: S4 Class for handling spatial transcriptomics data
+Version: 0.99.42
+Date: 2021-01-21
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
         person("Davide", "Risso", role=c("aut"), 
-        email="risso.davide@gmail.com"))
+        email="risso.davide@gmail.com"),
+        person("Helena L.", "Crowell", role=c("ctb"), 
+        email="helena.crowell@uzh.ch"),
+        person("Lukas M.", "Weber", role=c("ctb"), 
+        email="lukas.weber.edu@gmail.com")
+        )
 Description: Defines S4 classes for storing data for spatial experiments.
     Main examples are reported by using seqFISH and 10x-Visium Spatial Gene 
     Expression data. 
@@ -17,10 +22,14 @@ License: GPL-3
 BugReports: https://github.com/drighelli/SpatialExperiment/issues
 Encoding: UTF-8
 LazyData: true
-biocViews: DataRepresentation, DataImport, Infrastructure, SingleCell, 
-    ImmunoOncology
-Depends: R (>= 4.0.0), methods, SingleCellExperiment
-Imports: S4Vectors
-Suggests: testthat, knitr, rjson, Matrix
+biocViews: 
+    DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
+    Infrastructure, SingleCell
+Depends: R (>= 4.1.0), methods, SingleCellExperiment
+Imports: 
+    BiocFileCache, DropletUtils, rjson, magick, grid,
+    S4Vectors, SummarizedExperiment, BiocGenerics, utils,
+    BumpyMatrix
+Suggests: knitr, Matrix, testthat
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

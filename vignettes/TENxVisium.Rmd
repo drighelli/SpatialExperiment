@@ -1,0 +1,308 @@
+---
+title: "Demo"
+author: "Helena L. Crowell"
+date: "`r format(Sys.Date(), '%b %m, %Y')`"
+output: 
+    BiocStyle::html_document:
+        toc: true
+vignette: >
+    %\VignetteIndexEntry{Visium Spatial Data Workflow}
+    %\VignetteEncoding{UTF-8}
+    %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+    chunk_output_type: console
+---
+
+<style type="text/css"> .smaller { font-size: 10px } </style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
+```
+
+```{r message = FALSE, warning = FALSE}
+library(SpatialExperiment)
+```
+
+# Summary
+
+A brief summary of the package's current structure is outlined below. To give some examples, we load an example `SpatialExperiment` containing 10X Visium spatial gene expression data of two serial mouse brain sections (Sagittal-Posterior) available [here](https://support.10xgenomics.com/spatial-gene-expression/datasets).
+
+```{r}
+data(ve)
+```
+
+## The `SpatialExperiment` class {- .tabset}
+
+### Spatial data {-}
+
+<!-- Spatial data are stored in the `colData` and must contain: -->
+
+<!-- * a character `sample_id` column giving unique sample identifiers -->
+<!-- * a logical `in_tissue` column indicating whether or not an observation was mapped to tissue -->
+<!-- * a two- or three-column numeric `xy_coords` matrix storing spatial coordinates -->
+
+TBW 
+
+
+```{r}
+head(spatialData(ve))
+```
+  
+### Image data {-} 
+  
+Image-related data are stored in the `int_metadata()$imgData` field as a `DataFrame` with the following columns:
+
+* `sample_id` and `image_id` specifying the image's sample and image identifier
+* `data`: a list of `SpatialImage`s containing the image's `grob`, path and/or URL
+* `width` and `height` giving the image's dimension in pixel
+* `scaleFactor` used to re-scale spatial coordinates according to the image's resolution 
+
+```{r}
+(df <- imgData(ve))
+```
+
+### Getters, setters & methods {-}
+
+* `scaleFactors()` retrieves scale factors
+* `imgData(), imgData() <- value` to get/set the `imgData` `DataFrame`
+* `add/removeImg()` can be used to create/eliminate images in the `imgData` 
+* `load/unloadImg()` can be used to load/unload images, i.e. add/remove the `grob` 
+* the `read10xVisium()` constructor can be used to create a `SpatialExperiment` from 10x Visium spatial gene expression data in one line
+
+## The `SpatialImage` class
+
+Contains three slots that store any available information associated with an image: 
+
+* `@grob`: NULL or an object class `rastergrob` from the `grid` package 
+* `@path`: NULL or a character strings specifying an image file name (.png, .jpg or .tif)
+* `@url`: NULL or a character string specifying an URL from which to retrieve the image
+
+```{r}
+df$data[[1]]
+```
+
+* `imgGrob/path/Url(), ... <- value` access/set data in the respective slots
+* `load/unloadImg()` are used to add/drop the `grob` slot
+* `loadImg()` supports caching when loading from a URL; in general, paths are given precedence over URLs
+
+# The `SpatialExperiment` class
+
+The `SpatialExperiment` class extends the `SingleCellExperiment` class by requiring specific fields to be present in the object's `colData` and `int_metadata`. These aim to accommodate spatially and image related data", "respectively. 
+
+# Reading 10X Visium data
+
+The 10X Genomics' *CellRanger* pipeline will process the data using standard output file formats that are saved, for each sample, in a single directory `/<sample>/outs/` of the following structure: 
+
+```{bash eval = FALSE}
+sample 
+|—outs 
+··|—raw/filtered_feature_bc_matrix.h5 
+··|—raw/filtered_feature_bc_matrix 
+····|—barcodes.tsv 
+····|—features.tsv 
+····|—matrix.mtx 
+··|—spatial 
+····|—scalefactors_json.json 
+····|—tissue_lowres_image.png 
+····|—tissue_positions_list.csv 
+```
+
+We can load these data into a `SpatialExperiment` using the `read10xVisium` function, which will read in all relevant information, including the count data, spatial coordinates, scale factors, and images:
+
+```{r}
+dir <- system.file(
+  file.path("extdata", "10xVisium"), 
+  package = "SpatialExperiment")
+
+sample_ids <- c("section1", "section2")
+samples <- file.path(dir, sample_ids)
+
+list.files(samples[1])
+list.files(file.path(samples[1], "spatial"))
+
+(ve <- read10xVisium(samples, sample_ids,
+  type="sparse",
+  images = "lowres", # specify which image(s) to include
+  load = TRUE))      # specify whether or not to load image(s)
+```
+
+# Spatial data
+
+Sample identifiers, indication of whether or not an observation was mapped to the tissue, as well as spatial coordinates are stored inside the `colData`.
+
+```{r}
+# tabulate number of spots mapped to tissue
+table(
+  in_tissue = inTissue(ve),
+  sample_id = ve$sample_id)
+```
+
+```{r}
+# view spatial coordinates
+head(spatialData(ve))
+```
+
+
+```{r}
+head(spatialCoords(ve))
+```
+
+# Image data
+
+All image related data are stored inside the `int_metadata`'s `imgData` field as `DataFrame` of the following structure: 
+
+* each row corresponds to one image for a given sample and with a given unique image identifier (e.g. its resolutions)
+* for each image, columns specify:
+  * which `sample_id` the image belongs to
+  * a unique `image_id` in order to accommodate multiple images for a given sample (e.g. of different resolutions)
+  * the image's `data` (a `SpatialImage` object)
+  * `width` and `height` of the image in pixel 
+  * the `scaleFactor` that adjusts pixel positions of the original, full-resolution image to pixel positions in the image
+
+The `imgData()` accessor can be used to retrieve the image data stored within the object:
+
+```{r}
+imgData(ve)
+```
+
+## The `SpatialImage` class
+
+Images are stored inside the `data` field of the `imgData` as a list of `SpatialImage`s, which enables storing three types of information that may be associated with an image:
+
+* `grob`: a `grob` object of the image 
+* `path`: a file path from which to load the image
+* `url`: a URL from which to retrieve the image
+
+Data available in an object of class `SpatialImage` may be accessed via the `imgGrob()`, `imgPath()` and `imgUrl()` accessors.
+
+```{r}
+imgData(ve)$data
+```
+
+While `grob`s can be used directly for plotting (e.g. using `grid.draw` or `ggplot2`), when multiple images are to be stored (say, for many samples and of different resolutions), or when a `SpatialExperiment` is to be exported, the `path` and `url` provide the option to store an image's source at minimal storage cost. 
+
+```{r fig.small = TRUE, eval=TRUE}
+# retrieve 'SpatialImage' for 1st image entry & visualize it
+si <- imgData(ve)$data[[1]]
+# grid::grid.draw(imgGrob(si))
+```
+
+## Methods for image handling
+
+The `SpatialExperiment` package provides various functions to handle which and how image data is stored in the object. These include:
+
+* `loadImg` to actively load the image (from a path or URL) and store it as a `grob`
+* `unloadImg` to drop the `grob`, while retaining the source path and/or URL
+* `addImg` to add an image entry (as a path, URL, or `grob`)
+* `removeImg` to drop an image entry entirely
+
+Besides a path or URL to source the image from and a numeric scale factor, `addImg()` requires specification of the `sample_id` the new image belongs to, and an `image_id` that is not yet in use for that sample:
+
+```{r fig.small=TRUE, eval=TRUE}
+url <- "https://i.redd.it/3pw5uah7xo041.jpg"
+ve <- addImg(ve, 
+  sample_id = "section1", image_id = "pomeranian",
+  imageSource = url, scaleFactor = NA_real_, load = TRUE)
+
+grb <- imgGrob(ve, 
+  sample_id = "section1", 
+  image_id = "pomeranian")
+# grid::grid.draw(grb)
+```
+
+`loadImg()` and `add/removeImg()` are more flexible in the specification of the `sample/image_id` arguments. Specifically, 
+
+- `TRUE` is equivalent to *all*, e.g. `sample_id = "<sample>", image_id = TRUE` will drop all images for a given sample.
+- `NULL` defaults to the first entry available, e.g., `sample_id = "<sample>", image_id = NULL` will drop the first image for a given sample.
+
+For example, `sample_id,image_id = TRUE,TRUE` will specify all images; `NULL,NULL` corresponds to the first image entry in the `imgData`; `TRUE,NULL` equals the first image for all samples; and `NULL,TRUE` matches all images for the first sample.
+
+**Example 1:** Unload all images, i.e., drop all `grob`s. As a result, `grob` slots will be set to `NULL`, and all `SpatialImage`s now say `> not loaded`.
+
+```{r}
+imgData(ve <- unloadImg(ve, sample_id = TRUE, image_id = TRUE))$data
+```
+
+**Example 2:** Reload the first image for sample `section2`; the corresponding image now says `grob: Av` (for available) and `> loaded`.
+
+```{r}
+imgData(ve <- loadImg(ve, "section2"))$data[[2]]
+```
+
+**Example 3:** Remove `lowres` image for `section1` sample; the image is now completely gone from the `imgData`.
+
+```{r}
+imgData(ve <- removeImg(ve, "section1", "pomeranian"))
+```
+
+## Image caching
+
+In general, paths take precedence over URLs, i.e. an image will only be loaded from the `imgUrl` if there is no `imgPath` available.
+
+Images loaded from URLs will be cached, i.e. they are downloaded once and the file path where they were stored in will be stored under the `SpatialImage`'s `imgPath`:
+
+```{r results="show"}
+imgData(loadImg(ve, TRUE, TRUE))$data[[2]]
+```
+
+For example, if we unload `section1`'s `fullres` image now and reload it, there won't be another progress bar (the chunk somehow above doesn't display one anyways... but it does in the console):
+
+```{r}
+ve <- unloadImg(ve, TRUE, TRUE)
+ve <- loadImg(ve, TRUE, TRUE)
+```
+
+# `colData` replacement
+
+<!-- While storing of `sample_id`s, the `in_tissue` indicator, and spatial `xy_coords` inside the `SpatialExperiment`'s `colData` enables directly accessibility via the `colData` and `$` accessors, these fields are protected against arbitrary modification. This affects replacement operations to the following effects: -->
+
+<!-- Renaming is generally not permitted: -->
+
+<!-- ```{r error = TRUE} -->
+<!-- names(colData(ve))[1] <- "a" -->
+<!-- ``` -->
+
+Replacement of `sample_id`s is permitted provided that 
+
+i. the number of unique sample identifiers is retained
+ii. newly provided sample identifiers are a one-to-one mapping
+
+```{r error = TRUE}
+ve$sample_id <- sample(c("a", "b", "c"), ncol(ve), TRUE)
+ve$sample_id <- sample(c("a", "b"), ncol(ve), TRUE)
+```
+
+Valid replacement will be propagated to the `imgData`:
+  
+```{r}
+tmp <- ve
+i <- as.numeric(factor(ve$sample_id))
+tmp$sample_id <- c("sample1", "sample2")[i]
+imgData(tmp)
+```
+
+The `in_tissue` field may be modified provided that the former is a logical vector
+
+```{r error = TRUE}
+ve$in_tissue <- "x"
+```
+
+`colData(.) <- NULL` will retain only the `sample_id`, `in_tissue` and `xy_coords` fields:
+
+```{r}
+names(colData(ve))
+colData(ve) <- NULL
+names(colData(ve))
+```
+
+# Visualization
+
+For visualization examples (previous plots too) please see the [10xVisiumDemo](https://github.com/drighelli/SpatialAnalysisWorkflows/blob/master/10xVisiumDemo.Rmd)
+
+
+# Session information {- .smaller}
+
+```{r session-info}
+sessionInfo()
+```
+

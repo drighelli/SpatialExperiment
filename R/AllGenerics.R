@@ -1,24 +1,78 @@
-#### Getters/Setters
+# imgData methods --------------------------------------------------------------
+
 #' @export
-setGeneric("scaleFactors", function(x, value) standardGeneric("scaleFactors"))
+setGeneric("imgData", function(x) standardGeneric("imgData"))
 #' @export
-setGeneric("scaleFactors<-", function(x, value)
-    standardGeneric("scaleFactors<-"))
+setGeneric("imgData<-", function(x, value) standardGeneric("imgData<-"))
+
 #' @export
-setGeneric(name="spatialCoords", def=function(x) 
+setGeneric("imgGrob", function(x, ...) standardGeneric("imgGrob"))
+#' @export
+setGeneric("imgGrob<-", function(x, value) standardGeneric("imgGrob<-"))
+
+#' @export
+setGeneric("imgPath", function(x, ...) standardGeneric("imgPath"))
+#' @export
+setGeneric("imgPath<-", function(x, value) standardGeneric("imgPath<-"))
+
+#' @export
+setGeneric("imgUrl", function(x, ...) standardGeneric("imgUrl"))
+#' @export
+setGeneric("imgUrl<-", function(x, value) standardGeneric("imgUrl<-"))
+
+#' @export
+setGeneric("loadImg", function(x, ...) standardGeneric("loadImg"))
+
+#' @export
+setGeneric("unloadImg", function(x, ...) standardGeneric("unloadImg"))
+
+#' @export
+setGeneric("addImg", function(x, ...) standardGeneric("addImg"))
+
+#' @export
+setGeneric("removeImg", function(x, ...) standardGeneric("removeImg"))
+
+
+# SpatialExperiment defaults methods getters -----------------------------------
+
+#' @export
+setGeneric("scaleFactors", function(x, ...) standardGeneric("scaleFactors"))
+
+# #' @export
+# setGeneric("scaleFactors<-", function(x, value)
+#     standardGeneric("scaleFactors<-"))
+#
+
+#' @export
+setGeneric(name="spatialCoords", def=function(x, ...)
     standardGeneric("spatialCoords"))
+
 #' @export
-setGeneric("spatialCoords<-", function(x, value)
-    standardGeneric("spatialCoords<-"))
+setGeneric(name="spatialData", def=function(x, ...)
+    standardGeneric("spatialData"))
+
 #' @export
-setGeneric("isInTissue", function(x) standardGeneric("isInTissue"))
+setGeneric("spatialData<-", function(x, value)
+    standardGeneric("spatialData<-"))
+
 #' @export
-setGeneric("spatialCoordsNames", function(x) 
+setGeneric("spatialCoordsNames<-", function(x, value)
+    standardGeneric("spatialCoordsNames<-"))
+
+#' @export
+setGeneric("spatialCoordsNames", function(x)
     standardGeneric("spatialCoordsNames"))
+
 #' @export
-setGeneric(name="imagePaths", def=function(x) standardGeneric("imagePaths"))
+setGeneric("inTissue", function(x, ...) standardGeneric("inTissue"))
+
 #' @export
-setGeneric("imagePaths", function(x, value) standardGeneric("imagePaths"))
+setGeneric("spatialDataNames", function(x) standardGeneric("spatialDataNames"))
+
+
+# SpatialExperiment assays methods ---------------------------------------------
 #' @export
-setGeneric("imagePaths<-", function(x, value)
-    standardGeneric("imagePaths<-"))
+setGeneric("molecules", function(x, ...) standardGeneric("molecules"))
+
+#' @export
+setGeneric("molecules<-", function(x, ..., value) standardGeneric("molecules<-"))
