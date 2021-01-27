@@ -1,8 +1,8 @@
 Package: SpatialExperiment
 Type: Package
-Title: S4 Class for handling spatial transcriptomics data
-Version: 0.99.42
-Date: 2021-01-21
+Title: S4 Class for Spatial Experiments handling 
+Version: 1.1.42
+Date: 2020-07-21
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
