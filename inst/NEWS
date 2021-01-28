@@ -1,3 +1,5 @@
+changes in version 1.1.421 (2021-28-01)
++ fixing ve data local image problem
 changes in version 1.1.42 (2021-21-01)
 + implementing new SpatialExperiment class
 + spatialData slot 
