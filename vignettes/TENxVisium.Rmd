@@ -1,5 +1,5 @@
 ---
-title: "Demo"
+title: "10x Visium data exploration"
 author: "Helena L. Crowell"
 date: "`r format(Sys.Date(), '%b %m, %Y')`"
 output: 
@@ -28,7 +28,14 @@ library(SpatialExperiment)
 A brief summary of the package's current structure is outlined below. To give some examples, we load an example `SpatialExperiment` containing 10X Visium spatial gene expression data of two serial mouse brain sections (Sagittal-Posterior) available [here](https://support.10xgenomics.com/spatial-gene-expression/datasets).
 
 ```{r}
-data(ve)
+dir <- system.file(file.path("extdata", "10xVisium"), 
+                    package = "SpatialExperiment")
+   
+sample_ids <- c("section1", "section2")
+samples <- file.path(dir, sample_ids)
+
+(ve <- read10xVisium(samples, sample_ids, type="sparse",
+                    images = c("lowres"), load = FALSE))
 ```
 
 ## The `SpatialExperiment` class {- .tabset}
@@ -111,8 +118,8 @@ We can load these data into a `SpatialExperiment` using the `read10xVisium` func
 
 ```{r}
 dir <- system.file(
-  file.path("extdata", "10xVisium"), 
-  package = "SpatialExperiment")
+    file.path("extdata", "10xVisium"), 
+    package = "SpatialExperiment")
 
 sample_ids <- c("section1", "section2")
 samples <- file.path(dir, sample_ids)
@@ -121,9 +128,9 @@ list.files(samples[1])
 list.files(file.path(samples[1], "spatial"))
 
 (ve <- read10xVisium(samples, sample_ids,
-  type="sparse",
-  images = "lowres", # specify which image(s) to include
-  load = TRUE))      # specify whether or not to load image(s)
+    type="sparse",
+    images = "lowres", # specify which image(s) to include
+    load = TRUE))      # specify whether or not to load image(s)
 ```
 
 # Spatial data
@@ -133,8 +140,8 @@ Sample identifiers, indication of whether or not an observation was mapped to th
 ```{r}
 # tabulate number of spots mapped to tissue
 table(
-  in_tissue = inTissue(ve),
-  sample_id = ve$sample_id)
+    in_tissue = inTissue(ve),
+    sample_id = ve$sample_id)
 ```
 
 ```{r}
@@ -201,12 +208,12 @@ Besides a path or URL to source the image from and a numeric scale factor, `addI
 ```{r fig.small=TRUE, eval=TRUE}
 url <- "https://i.redd.it/3pw5uah7xo041.jpg"
 ve <- addImg(ve, 
-  sample_id = "section1", image_id = "pomeranian",
-  imageSource = url, scaleFactor = NA_real_, load = TRUE)
+    sample_id = "section1", image_id = "pomeranian",
+    imageSource = url, scaleFactor = NA_real_, load = TRUE)
 
 grb <- imgGrob(ve, 
-  sample_id = "section1", 
-  image_id = "pomeranian")
+    sample_id = "section1", 
+    image_id = "pomeranian")
 # grid::grid.draw(grb)
 ```
 
