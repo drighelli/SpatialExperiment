@@ -28,6 +28,9 @@
 #' Refer to \code{?\link[base]{cbind}} for the interpretation of \code{deparse.level}.
 #' }
 #' }
+#' 
+#' @param ... a list of SpatialExperiment objects
+#' @param deparse.level Refer to \code{?\link[base]{rbind}} 
 #' @return a combined SpatialExperiment object
 #'
 #' @author

@@ -9,6 +9,11 @@
 \usage{
 \S4method{cbind}{SpatialExperiment}(..., deparse.level = 1)
 }
+\arguments{
+\item{...}{a list of SpatialExperiment objects}
+
+\item{deparse.level}{Refer to \code{?\link[base]{rbind}}}
+}
 \value{
 a combined SpatialExperiment object
 }
