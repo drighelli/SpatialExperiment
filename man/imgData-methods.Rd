@@ -129,7 +129,7 @@ for the \code{\link{SpatialImage}} class.
 }
 }
 \examples{
-data(ve)
+example(read10xVisium)
 (df <- imgData(ve))
 
 # 'SpatialImage' accessors
