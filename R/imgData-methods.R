@@ -70,7 +70,7 @@
 #' and a single or list of \code{grob}(s) is returned by \code{imgGrob()}.
 #'   
 #' @examples
-#' data(ve)
+#' example(read10xVisium)
 #' (df <- imgData(ve))
 #' 
 #' # 'SpatialImage' accessors
