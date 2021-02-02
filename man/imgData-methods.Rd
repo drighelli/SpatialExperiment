@@ -2,30 +2,34 @@
 % Please edit documentation in R/imgData-methods.R
 \name{imgData-methods}
 \alias{imgData-methods}
+\alias{imgGrob}
+\alias{imgPath}
+\alias{imgUrl}
+\alias{imgGrob<-}
+\alias{imgPath<-}
+\alias{imgUrl<-}
 \alias{loadImg}
 \alias{unloadImg}
 \alias{addImg}
 \alias{removeImg}
-\alias{imgGrob}
-\alias{imgPath,SpatialExperiment}
-\alias{imgUrl}
-\alias{imgGrob<-}
-\alias{imgPath<-,SpatialExperiment}
-\alias{imgUrl<-}
-\alias{imgGrob,SpatialExperiment-method}
-\alias{imgUrl,SpatialExperiment-method}
 \alias{loadImg,SpatialExperiment-method}
 \alias{unloadImg,SpatialExperiment-method}
 \alias{addImg,SpatialExperiment-method}
 \alias{removeImg,SpatialExperiment-method}
+\alias{imgGrob,SpatialExperiment-method}
+\alias{imgPath,SpatialExperiment-method}
+\alias{imgUrl,SpatialExperiment-method}
 \alias{imgPath,SpatialImage-method}
-\alias{imgGrob,SpatialImage-method}
 \alias{imgUrl,SpatialImage-method}
+\alias{imgGrob,SpatialImage-method}
+\alias{imgPath<-,SpatialImage-method}
+\alias{imgUrl<-,SpatialImage-method}
+\alias{imgGrob<-,SpatialImage-method}
+\alias{loadImg,SpatialImage-method}
+\alias{unloadImg,SpatialImage-method}
 \alias{imgPath<-,SpatialImage,character-method}
 \alias{imgGrob<-,SpatialImage,rastergrob-method}
 \alias{imgUrl<-,SpatialImage,character-method}
-\alias{loadImg,SpatialImage-method}
-\alias{unloadImg,SpatialImage-method}
 \title{Methods for handling image-related data}
 \usage{
 \S4method{imgPath}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
@@ -95,39 +99,38 @@ The set of functions described below is designed to handle
 the image-related data stored inside a \code{SpatialExperiment}'s 
 \code{imgData} \code{int_metadata} field. These include 
 \itemize{
-\item{\code{imgGrob}}
-\item{\code{imgPath}}
-\item{\code{imgUrl}
-  to access the \code{grob}, path and URL 
+\item{\code{imgGrob}, \code{imgPath}, \code{imgUrl}
+  to access the \code{grob}, path, URL 
   associated with an image or set of images}
 \item{\code{loadImg} 
   to load an image from a path or URL as a \code{grob}}
 \item{\code{unloadImg} 
   to unload an image, i.e. to drop the \code{grob}
   while retaining the image's source path and/or URL}
-\item{\code{addImg}}
-\item{\code{removeImg}
+\item{\code{addImg} and \code{removeImg}
   to add/remove an image entry to/from 
   the \code{imgData} \code{DataFrame}}
 }
-\describe{
+}
+\section{SpatialImage methods}{
+
 Getters, setters and additional methods 
 for the \code{\link{SpatialImage}} class.
-\item{getters & setters:}{
+\describe{
 \itemize{
 \item{\code{imgGrob(x), imgGrob(x) <- value} \cr gets/sets the image's \code{grob}}
 \item{\code{imgPath(x), imgPath(x) <- value} \cr gets/sets the image's file path}
 \item{\code{imgUrl(x), imgUrl(x) <- value} \cr gets/sets the image's source URL}
 }  
-}
-\item{image methods:}{
+
+Dedicated methods for images
 \itemize{
 \item{\code{loadImg(x)} loads an image as a \code{grob} from its path or URL}
 \item{\code{unloadImg(x)} unloads an image by dropping the \code{grob}}
-} 
 }
 }
 }
+
 \examples{
 example(read10xVisium)
 (df <- imgData(ve))

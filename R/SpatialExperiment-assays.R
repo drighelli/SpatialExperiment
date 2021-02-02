@@ -37,8 +37,8 @@
 #' @aliases
 #' molecules
 #' molecules<-
-#' molecules,SingleCellExperiment-method
-#' molecules<-,SingleCellExperiment-method
+#' molecules,SpatialExperiment-method
+#' molecules<-,SpatialExperiment-method
 NULL
 
 

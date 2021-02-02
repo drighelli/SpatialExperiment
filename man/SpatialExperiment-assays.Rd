@@ -5,8 +5,8 @@
 \alias{SparialExperiment-assays}
 \alias{molecules}
 \alias{molecules<-}
-\alias{molecules,SingleCellExperiment-method}
-\alias{molecules<-,SingleCellExperiment-method}
+\alias{molecules,SpatialExperiment-method}
+\alias{molecules<-,SpatialExperiment-method}
 \title{Named assay getters and setters}
 \description{
 These are methods for getting or setting \code{assay(se, i=X, ...)} 
