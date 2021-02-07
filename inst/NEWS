@@ -1,3 +1,6 @@
+changes in version 1.1.424 (2021-07-02)
++ cleaning documentation
++ removing spatialImage-methods.R file
 changes in version 1.1.423 (2021-02-02)
 + fixing documentation issues on imgData
 changes in version 1.1.422 (2021-29-01)

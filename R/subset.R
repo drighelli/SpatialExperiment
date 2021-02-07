@@ -8,7 +8,7 @@
 #' @section subset:
 #' \describe{
 #' \itemize{
-#' \item{\code{[}:} subsetting method
+#' \item{\code{[}:}{ subsetting method}
 #' }
 #' }
 #' @aliases [,SpatialExperiment,ANY,ANY,ANY-method

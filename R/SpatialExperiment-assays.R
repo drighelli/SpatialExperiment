@@ -29,7 +29,7 @@
 #' 
 #' @examples
 #' 
-#' 
+#' ## TBD
 #' 
 #' @name SparialExperiment-assays
 #' @rdname SpatialExperiment-assays

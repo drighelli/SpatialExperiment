@@ -22,7 +22,7 @@ are updated across the colData and spatialData objects
 
 \describe{
 \itemize{
-\item{\code{[}:} subsetting method
+\item{\code{[}:}{ subsetting method}
 }
 }
 }

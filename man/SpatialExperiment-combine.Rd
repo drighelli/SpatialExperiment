@@ -29,7 +29,7 @@ such as in case of multiple samples.
 The \code{...} argument is thought to contain one or more 
 \linkS4class{SpatialExperiment} objects.
 \describe{
-\item{\code{cbind(..., deparse.level=1)}:}{
+\item{\code{cbind(..., deparse.level=1)}:}{ 
 Returns a SpatialExperiment where
 all objects in \code{...} are combined column-wise,
 i.e., columns in successive objects are appended to the first object.

@@ -99,15 +99,15 @@ The set of functions described below is designed to handle
 the image-related data stored inside a \code{SpatialExperiment}'s 
 \code{imgData} \code{int_metadata} field. These include 
 \itemize{
-\item{\code{imgGrob}, \code{imgPath}, \code{imgUrl}
-  to access the \code{grob}, path, URL 
+\item{\code{imgGrob}, \code{imgPath}, \code{imgUrl}:}{ 
+   to access the \code{grob}, path, URL 
   associated with an image or set of images}
-\item{\code{loadImg} 
+\item{\code{loadImg}:}{ 
   to load an image from a path or URL as a \code{grob}}
-\item{\code{unloadImg} 
+\item{\code{unloadImg}:}{ 
   to unload an image, i.e. to drop the \code{grob}
   while retaining the image's source path and/or URL}
-\item{\code{addImg} and \code{removeImg}
+\item{\code{addImg} and \code{removeImg}:}{ 
   to add/remove an image entry to/from 
   the \code{imgData} \code{DataFrame}}
 }
@@ -118,15 +118,15 @@ Getters, setters and additional methods
 for the \code{\link{SpatialImage}} class.
 \describe{
 \itemize{
-\item{\code{imgGrob(x), imgGrob(x) <- value} \cr gets/sets the image's \code{grob}}
-\item{\code{imgPath(x), imgPath(x) <- value} \cr gets/sets the image's file path}
-\item{\code{imgUrl(x), imgUrl(x) <- value} \cr gets/sets the image's source URL}
+\item{\code{imgGrob(x)}, \code{imgGrob(x) <- value}:}{ \cr gets/sets the image's \code{grob}}
+\item{\code{imgPath(x)}, \code{imgPath(x) <- value}:}{ \cr gets/sets the image's file path}
+\item{\code{imgUrl(x)}, \code{imgUrl(x) <- value}:}{ \cr gets/sets the image's source URL}
 }  
 
-Dedicated methods for images
+Dedicated methods for images:
 \itemize{
-\item{\code{loadImg(x)} loads an image as a \code{grob} from its path or URL}
-\item{\code{unloadImg(x)} unloads an image by dropping the \code{grob}}
+\item{\code{loadImg(x)}:}{ loads an image as a \code{grob} from its path or URL}
+\item{\code{unloadImg(x)}:}{ unloads an image by dropping the \code{grob}}
 }
 }
 }

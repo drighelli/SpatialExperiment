@@ -32,7 +32,7 @@ Get or set a BumpyMatrix of raw count data, e.g., number of reads or transcripts
 
 \examples{
 
-
+## TBD
 
 }
 \seealso{
