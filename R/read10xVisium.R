@@ -15,6 +15,8 @@
 #' @param type character string specifying 
 #'   the type of format to read count data from
 #'   (see \code{\link{read10xCounts}})
+#' @param data character string specifying whether to read in
+#'   filtered (spots mapped to tissue) or raw data (all spots).
 #' @param images character vector specifying which images to include.
 #' @param load logical; should the image(s) be loaded into memory
 #'   as a \code{grob}? If FALSE, will store the path/URL instead.
@@ -72,10 +74,12 @@
 read10xVisium <- function(samples="",
     sample_id=paste0("sample", seq_along(samples)),
     type=c("HDF5", "sparse"),
+    data=c("filtered", "raw"),
     images=c("fullres", "lowres", "hires", "detected", "aligned"),
     load=TRUE)
 {
     type <- match.arg(type)
+    data <- match.arg(data)
     imgs <- match.arg(images, several.ok=TRUE)
 
     # check sample identifiers
@@ -91,7 +95,7 @@ read10xVisium <- function(samples="",
     
     # setup file paths
     fn <- paste0(
-        "raw_feature_bc_matrix", 
+        data, "_feature_bc_matrix", 
         switch(type, HDF5=".h5", ""))
     counts <- file.path(samples, fn)
     

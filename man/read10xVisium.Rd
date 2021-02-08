@@ -8,6 +8,7 @@ read10xVisium(
   samples = "",
   sample_id = paste0("sample", seq_along(samples)),
   type = c("HDF5", "sparse"),
+  data = c("filtered", "raw"),
   images = c("fullres", "lowres", "hires", "detected", "aligned"),
   load = TRUE
 )
@@ -24,6 +25,9 @@ ignored if \code{!is.null(names(samples))}}
 \item{type}{character string specifying 
 the type of format to read count data from
 (see \code{\link{read10xCounts}})}
+
+\item{data}{character string specifying whether to read in
+filtered (spots mapped to tissue) or raw data (all spots).}
 
 \item{images}{character vector specifying which images to include.}
 
