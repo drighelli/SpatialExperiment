@@ -1,3 +1,5 @@
+changes in version 1.1.426 (2021-09-02)
++ fixing read10xVisium example with data parameter
 changes in version 1.1.425 (2021-08-02)
 + restoring data parameter in read10xVisium
 + missing itemize in combine documentation
