@@ -142,6 +142,7 @@ list.files(file.path(samples[1], "spatial"))
 
 (ve <- read10xVisium(samples, sample_ids,
     type="sparse",
+    data="raw",
     images = "lowres", # specify which image(s) to include
     load = TRUE))      # specify whether or not to load image(s)
 ```
