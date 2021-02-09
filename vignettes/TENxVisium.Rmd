@@ -47,7 +47,7 @@ dir <- system.file(file.path("extdata", "10xVisium"),
 sample_ids <- c("section1", "section2")
 samples <- file.path(dir, sample_ids)
 
-(ve <- read10xVisium(samples, sample_ids, type="sparse",
+(ve <- read10xVisium(samples, sample_ids, type="sparse", data="raw", 
                     images = c("lowres"), load = FALSE))
 ```
 
