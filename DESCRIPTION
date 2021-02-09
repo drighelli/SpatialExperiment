@@ -30,6 +30,6 @@ Imports:
     BiocFileCache, DropletUtils, rjson, magick, grid,
     S4Vectors, SummarizedExperiment, BiocGenerics, utils,
     BumpyMatrix
-Suggests: knitr, Matrix, testthat
+Suggests: knitr, Matrix, testthat, BiocStyle
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
