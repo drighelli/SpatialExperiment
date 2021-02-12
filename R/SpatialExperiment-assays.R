@@ -64,5 +64,4 @@ setMethod("molecules", "SpatialExperiment", GET_FUN("molecules"))
 
 
 #' @export
-#' @importFrom BumpyMatrix BumpyMatrix
-setReplaceMethod("molecules", c("SingleCellExperiment", "BumpyMatrix"), SET_FUN("molecules"))
+setReplaceMethod("molecules", c("SingleCellExperiment", "ANY"), SET_FUN("molecules"))
