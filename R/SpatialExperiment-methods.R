@@ -85,7 +85,8 @@
 #' @param image_id character string indicating the image identifiers(s), 
 #' \code{TRUE} is equivalent to all images.
 #' @param cd_bind a character vector indicating additional columns to return 
-#' that can be retrieved from the \code{colData} structure.
+#' that can be retrieved from the \code{colData} structure. If this is TRUE all
+#' the colData are binded to the spatialData.
 #' @param as_df logical indicating if the returned structure has to be a 
 #' data.frame (default is FALSE).
 #' 
@@ -188,9 +189,13 @@ setMethod(f="spatialData",
         }
         if ( !is.null(cd_bind) )
         {
+            if(isTRUE(cd_bind))
+            {
+                cd_bind=colnames(colData(x))
+            }
             stopifnot( all( cd_bind %in% colnames(colData(x)) ) )
             nms <- colnames(coords)
-            coords <- cbind(coords, colData(x)[[cd_bind]])
+            coords <- cbind(coords, colData(x)[, cd_bind, drop=FALSE])
             colnames(coords) <- c(nms, cd_bind)
         }
         if ( as_df ) return(as.data.frame(coords))
