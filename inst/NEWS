@@ -1,3 +1,6 @@
+changes in version 1.1.43 (2021-12-02)
++ adding BumpyMatrix as suggests
++ update documentation
 changes in version 1.1.429 (2021-12-02)
 + adding cd_keep = TRUE binds all the colData to the spatialData 
 + fixing bug for cd_keep with multiple elements

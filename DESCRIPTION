@@ -1,7 +1,7 @@
 Package: SpatialExperiment
 Type: Package
 Title: S4 Class for Spatial Experiments handling 
-Version: 1.1.429
+Version: 1.1.43
 Date: 2021-02-12
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
@@ -25,11 +25,10 @@ LazyData: true
 biocViews: 
     DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
     Infrastructure, SingleCell
-Depends: R (>= 4.1.0), methods, SingleCellExperiment
+Depends: methods, SingleCellExperiment
 Imports: 
     BiocFileCache, DropletUtils, rjson, magick, grid,
-    S4Vectors, SummarizedExperiment, BiocGenerics, utils,
-    BumpyMatrix
-Suggests: knitr, Matrix, testthat, BiocStyle
+    S4Vectors, SummarizedExperiment, BiocGenerics, utils
+Suggests: knitr, Matrix, testthat, BiocStyle, BumpyMatrix
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
