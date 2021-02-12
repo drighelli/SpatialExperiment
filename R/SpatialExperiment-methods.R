@@ -16,8 +16,8 @@
 #' All the methods described in this section takes as input the \code{sample_id}
 #' argument.
 #' See the parameter description for additional information.
-#'  \describe{
-#'  \itemize{
+#' \describe{
+#' \itemize{
 #' \item{\code{spatialData(x) <- value}:}{ The spatialData setter expects a 
 #' data.frame/DataFrame object named with the
 #' previously defined colnames for the spatial coordinates.
@@ -30,14 +30,14 @@
 #' accordingly.}
 #' \item{\code{spatialData(x)}:}{ The spatialData getter gives the possibility 
 #' to retrieve also additional columns from the
-#' colData structure by the aid of the cd_keep argument.
+#' colData structure by the aid of the \code{cd_bind} argument.
 #' It returns be default a DataFrame, but it is possible to retrieve a 
 #' data.frame by setting \code{as_df=TRUE}.}
 #' \item{\code{spatialCoords(x)}:}{ The \code{spatialCoords} getter returns the 
 #' spatial coordinates in a matrix-like form, but it is possible to retrieve 
 #' them in a data.frame form by setting \code{as_df=TRUE}.}
-#'}
-#'}
+#' }
+#' }
 #'
 #' @section spatialNames Methods:
 #' \describe{
