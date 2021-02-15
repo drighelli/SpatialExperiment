@@ -1,3 +1,5 @@
+changes in version 1.1.432 (2021-15-02)
++ fixing documentation on latex errors
 changes in version 1.1.430-1.1.431 (2021-12-02)
 + adding BumpyMatrix as suggests
 + update documentation

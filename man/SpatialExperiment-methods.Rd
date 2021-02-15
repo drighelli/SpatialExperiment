@@ -88,7 +88,6 @@ All the methods described in this section takes as input the \code{sample_id}
 argument.
 See the parameter description for additional information.
 \describe{
-\itemize{
 \item{\code{spatialData(x) <- value}:}{ The spatialData setter expects a 
 data.frame/DataFrame object named with the
 previously defined colnames for the spatial coordinates.
@@ -109,12 +108,10 @@ spatial coordinates in a matrix-like form, but it is possible to retrieve
 them in a data.frame form by setting \code{as_df=TRUE}.}
 }
 }
-}
 
 \section{spatialNames Methods}{
 
 \describe{
-\itemize{
 \item{\code{spatialDataNames(x)}:}{ Returns the names of the spatialData 
 structure.}
 \item{\code{spatialCoordsNames(x)<-value}:}{ Sets the names of the spatial 
@@ -123,23 +120,19 @@ coordinates accordingly with the assigned value.}
 coordinates.}
 }
 }
-}
 
 \section{imgData Methods}{
 
 \describe{
-\itemize{
 \item{\code{imgData(x)<-value}:}{ This setter allows to set a DataFrame 
 object as imgData of the SpatialExperiment object class.}
 \item{\code{imgData(x)}:}{ This getter returns the imgData DataFrame.}
-}
 }
 }
 
 \section{Other Methods}{
 
 \describe{
-\itemize{
 \item{\code{scaleFactors(x, sample_id, image_id)}:}{ This getter returns 
 the scale factors associated to the \code{sample_id}(s) 
 and \code{image_id}(s) passed as input.
@@ -151,7 +144,6 @@ details.}
 associated to the samples that are on a tissue.
 This is typical related to 10x Visium experiments.
 See the \code{sample_id} section description for further details.}
-}
 }
 }
 

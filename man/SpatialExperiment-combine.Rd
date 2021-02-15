@@ -29,7 +29,6 @@ such as in case of multiple samples.
 The \code{...} argument is thought to contain one or more 
 \linkS4class{SpatialExperiment} objects.
 \describe{
-\itemize{
 \item{\code{cbind(..., deparse.level=1)}:}{ 
 Returns a SpatialExperiment where
 all objects in \code{...} are combined column-wise,
@@ -45,7 +44,6 @@ Refer to \code{?"\link{cbind,SingleCellExperiment-method}"} for details on
 how metadata and others inherited attributes are combined in the output 
 object.
 Refer to \code{?\link[base]{cbind}} for the interpretation of \code{deparse.level}.
-}
 }
 }
 }

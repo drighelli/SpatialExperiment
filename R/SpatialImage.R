@@ -10,12 +10,11 @@
 #' @author Helena L. Crowell
 #' 
 #' @seealso 
-#' \itemize{
+#' \describe{
 #' \item{accessors:}{ \code{\link{imgGrob}}, \code{\link{imgPath}}, \code{\link{imgUrl}}}
 #' \item{setters:}{ \code{\link{imgGrob<-}}, \code{\link{imgPath<-}}, \code{\link{imgUrl<-}}}
 #' \item{methods:}{ \code{\link{loadImg}}, \code{\link{unloadImg}}}
 #' }
-#' 
 #' @examples
 #' dir <- file.path("extdata", "10xVisium", "section1", "spatial")
 #' fnm <- file.path(dir, "tissue_lowres_image.png")

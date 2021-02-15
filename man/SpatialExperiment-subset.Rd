@@ -21,9 +21,7 @@ are updated across the colData and spatialData objects
 \section{subset}{
 
 \describe{
-\itemize{
 \item{\code{[}:}{ subsetting method}
-}
 }
 }
 

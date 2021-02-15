@@ -28,7 +28,7 @@ SpatialImage(path = imgPath)
 
 }
 \seealso{
-\itemize{
+\describe{
 \item{accessors:}{ \code{\link{imgGrob}}, \code{\link{imgPath}}, \code{\link{imgUrl}}}
 \item{setters:}{ \code{\link{imgGrob<-}}, \code{\link{imgPath<-}}, \code{\link{imgUrl<-}}}
 \item{methods:}{ \code{\link{loadImg}}, \code{\link{unloadImg}}}

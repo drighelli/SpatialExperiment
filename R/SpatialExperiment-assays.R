@@ -16,10 +16,8 @@
 #' \code{\link{assay}} (for the getter) or \code{\link{assay<-}} (for the setter).
 #' 
 #' \describe{
-#' \itemize{
 #' \item{\code{molecules(x, ...)}, \code{molecules(x, ...) <- value}:}{
 #' Get or set a BumpyMatrix of raw count data, e.g., number of reads or transcripts.
-#' }
 #' }
 #' }
 #' 

@@ -7,9 +7,7 @@
 #' are updated across the colData and spatialData objects
 #' @section subset:
 #' \describe{
-#' \itemize{
 #' \item{\code{[}:}{ subsetting method}
-#' }
 #' }
 #' @aliases [,SpatialExperiment,ANY,ANY,ANY-method
 #' @param x a SpatialExperiment object
