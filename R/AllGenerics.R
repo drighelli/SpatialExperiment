@@ -1,3 +1,14 @@
+# SpatialImage methods --------------------------------------------------------------
+
+#' @export
+setGeneric("imgRaster", function(x, ...) standardGeneric("imgRaster"))
+
+#' @export
+setGeneric("imgHeight", function(x) standardGeneric("imgHeight"))
+
+#' @export
+setGeneric("imgWidth", function(x) standardGeneric("imgWidth"))
+
 # imgData methods --------------------------------------------------------------
 
 #' @export
