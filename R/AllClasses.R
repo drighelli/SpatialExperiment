@@ -33,4 +33,4 @@ setClass("LoadedSpatialImage", contains="SpatialImage", slots=c(image="ANY"))
 setClass("FileSpatialImage", contains="SpatialImage", slots=c(path="character"))
 
 #' @export
-setClass("RemoteSpatialImage", contains="SpatialImage", slots=c(path="character"))
+setClass("RemoteSpatialImage", contains="SpatialImage", slots=c(url="character"))

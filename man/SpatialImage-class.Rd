@@ -3,6 +3,8 @@
 \name{SpatialImage-class}
 \alias{SpatialImage-class}
 \alias{SpatialImage}
+\alias{FileSpatialImage-class}
+\alias{RemoteSpatialImage-class}
 \alias{imgRaster}
 \alias{imgRaster,LoadedSpatialImage-method}
 \alias{imgRaster,FileSpatialImage-method}
@@ -80,9 +82,9 @@ nrow(fspi)
 ncol(fspi)
 plot(as.raster(fspi)) 
 
+# Coercing to an explicitly in-memory raster:
 lspi <- as(fspi, "LoadedSpatialImage")
-plot(imgRaster(lspi))
-
+plot(as.raster(lspi))
 
 }
 \author{

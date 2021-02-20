@@ -68,6 +68,9 @@
 #' 
 #' @aliases
 #' SpatialImage
+#' SpatialImage-class
+#' FileSpatialImage-class
+#' RemoteSpatialImage-class
 #' imgRaster
 #' imgRaster,LoadedSpatialImage-method
 #' imgRaster,FileSpatialImage-method
@@ -178,6 +181,12 @@ image.cache$cached <- list()
     }
 
     img
+}
+
+.flush_cache <- function() {
+    # Currently for use in tests only,
+    # but may possibly want to export.
+    image.cache$cached <- list()
 }
 
 ######################################################################################
