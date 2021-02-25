@@ -1,7 +1,7 @@
 Package: SpatialExperiment
 Type: Package
 Title: S4 Class for Spatial Experiments handling 
-Version: 1.1.432
+Version: 1.1.433
 Date: 2021-02-15
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
@@ -27,7 +27,7 @@ biocViews:
     Infrastructure, SingleCell
 Depends: methods, SingleCellExperiment
 Imports: 
-    BiocFileCache, DropletUtils, rjson, magick, grid,
+    BiocFileCache, DropletUtils, rjson, magick, grDevices,
     S4Vectors, SummarizedExperiment, BiocGenerics, utils
 Suggests: knitr, Matrix, testthat, BiocStyle, BumpyMatrix
 VignetteBuilder: knitr
