@@ -42,37 +42,19 @@ setMethod("show", "SpatialExperiment", .spe_show)
 #' @author Helena L. Crowell
 
 .spi_show <- function(object) {
-    grob <- imgGrob(object)
-    path <- imgPath(object)
-    url <- imgUrl(object)
-    
-    n <- sum(!c(is.null(grob), is.null(path), is.null(url)))
-    cat(sprintf("A SpatialImage with %s source(s):\n", n))
-    cat(sprintf("      >%s loaded\n", ifelse(is.null(grob), " not", "")))
-
-    # TODO: better show method for path/URL?
-    if (!is.null(path)) {
-        if (nchar(path) > 60) {
-            ss <- strsplit(path, "")[[1]]
-            ss <- split(ss, ceiling(seq_along(ss)/50))
-            pstr <- paste(
+    dim <- paste(dim(object), collapse=" x ")
+    cat("A", dim, class(object), "\n")
+    str <- imgSource(object)
+    if (!is.na(str)) {
+        if (nchar(str) > 50) {
+            ss <- strsplit(str, "")[[1]]
+            ss <- split(ss, ceiling(seq_along(ss)/40))
+            str <- paste(
                 lapply(ss, paste, collapse=""),
-                collapse="\n      ")
-        } else pstr <- path
+                collapse="\n  ")
+        }
+        cat("imgSource(): \n ", str)
     }
-    if (!is.null(url)) {
-        if (nchar(url) > 60) {
-            ss <- strsplit(url, "")[[1]]
-            ss <- split(ss, ceiling(seq_along(ss)/50))
-            ustr <- paste(
-                lapply(ss, paste, collapse=""),
-                collapse="\n      ")
-        } else ustr <- url
-    }
-    
-    cat(sprintf("grob: %s\n", ifelse(is.null(grob), "NA", "Av")))
-    cat(sprintf("path: %s\n", ifelse(is.null(path), "NA", pstr)))
-    cat(sprintf(" url: %s\n", ifelse(is.null(url), "NA", ustr)))
 }
 
 #' @rdname SpatialImage-misc
