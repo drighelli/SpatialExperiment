@@ -27,7 +27,6 @@
 #' readImgData(dir, sample_id = "foo")
 #' 
 #' @importFrom rjson fromJSON
-#' @importFrom grid rasterGrob unit
 #' @importFrom magick image_read image_info
 #' @export
 
@@ -48,7 +47,8 @@ readImgData <- function(path=".", sample_id=names(path),
     names(path) <- names(scaleFactors) <- sample_id
     
     # put images into list with one element per sample
-    images <- lapply(path, function(.) grep(., imageSources, value=TRUE))
+    images <- lapply(path, function(.) 
+        grep(., imageSources, value=TRUE))
     
     dfs <- lapply(sample_id, function(sid) 
     {
