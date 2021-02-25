@@ -1,36 +1,3 @@
-# helper to load an image from a 'SpatialImage',
-# giving precedence to path over URL &
-# caching when loading from the latter
-#' @importFrom BiocFileCache BiocFileCache bfcadd
-#' @importFrom magick image_read image_info
-#' @importFrom S4Vectors DataFrame
-.load_img <- function(x) 
-{
-    # pass if image is already loaded
-    if (!is.null(imgGrob(x))) { return(x) }
-    
-    # otherwise, path overrules URL
-    if (is.null(path <- imgPath(x)))
-        if (!is.null(url <- imgUrl(x))) {
-            bfc <- BiocFileCache(ask = FALSE)
-            path <- bfcadd(bfc, url)
-        } else stop(
-            "'SpatialImage' does not contain",
-            " a path or URL to load from")
-    
-    img <- image_read(path)
-    ii <- image_info(img)
-    grb <- rasterGrob(img,
-        width=unit(1, "npc"),
-        height=unit(1, "npc"))
-    imgPath(x) <- path
-    imgGrob(x) <- grb
-    DataFrame(
-        data=I(list(x)),
-        width=ii$width,
-        height=ii$height)
-}
-
 # helper to get the row index/indices of image(s) with matching
 # 'sample_id' & 'image_id' from the 'imgData' field in 'int_metadata'
 # - TRUE returns all available entries
@@ -68,43 +35,31 @@
         iid <- !logical(nrow(img))
     }
     if (!any(idx <- sid & iid)) 
-        stop("No 'imgData' entry(ies) matched the specified", sprintf(
-            " 'image_id' and 'sample_id'", dQuote(c(image_id, sample_id))))
+        stop("No 'imgData' entry(ies) matched the specified", 
+            sprintf(" 'image_id = %s' and 'sample_id = %s'", 
+                dQuote(image_id), dQuote(sample_id)))
     return(which(idx))
 }
 
-#' @importFrom grid rasterGrob unit
-#' @importFrom magick image_read image_info
+#' @importFrom grDevices as.raster
+#' @importFrom magick image_read
 #' @importFrom S4Vectors DataFrame
-.get_imgData <- function(imageSource, scaleFactor, sample_id, image_id, load=TRUE)
+.get_imgData <- function(img, scaleFactor, sample_id, image_id, load=TRUE)
 {
-    is_path <- tryCatch(error = function(e) e, .path_validity(imageSource))
-    is_url <- tryCatch(error = function(e) e, .url_validity(imageSource))
-    if (isTRUE(is_path)) {
-        path <- imageSource; url <- NULL
-    } else if (isTRUE(is_url)) {
-        path <- NULL; url <- imageSource
-    } else {
+    is_path <- tryCatch(error = function(e) e, .path_validity(img))
+    is_url <- tryCatch(error = function(e) e, .url_validity(img))
+    if (!(isTRUE(is_path) || isTRUE(is_url)))
         stop("Image should be supplied as a length-one character",
             " string specifiying an image file (.png or .jpg),",
             " or a valid URL to source from")
-    }
     if (load) {
-        img <- image_read(imageSource)
-        grob <- rasterGrob(img,
-            width=unit(1, "npc"),
-            height=unit(1, "npc"))
-        si <- SpatialImage(grob, path, url)
-        ii <- image_info(img)
-    } else {
-        si <- SpatialImage(NULL, path, url)
-        ii <- list(width=NA_integer_, height=NA_integer_)
-    }
+        img <- image_read(img)
+        img <- as.raster(img)
+    } 
+    spi <- SpatialImage(img)
     DataFrame(
         sample_id, 
         image_id,
-        data=I(list(si)),
-        width=ii$width,
-        height=ii$height,
+        data=I(list(spi)),
         scaleFactor=scaleFactor)
 }

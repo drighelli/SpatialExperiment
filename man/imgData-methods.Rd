@@ -2,68 +2,28 @@
 % Please edit documentation in R/imgData-methods.R
 \name{imgData-methods}
 \alias{imgData-methods}
-\alias{imgGrob}
-\alias{imgPath}
-\alias{imgUrl}
-\alias{imgGrob<-}
-\alias{imgPath<-}
-\alias{imgUrl<-}
-\alias{loadImg}
-\alias{unloadImg}
+\alias{getImg}
 \alias{addImg}
-\alias{removeImg}
-\alias{loadImg,SpatialExperiment-method}
-\alias{unloadImg,SpatialExperiment-method}
+\alias{rmvImg}
+\alias{getImg,SpatialExperiment-method}
 \alias{addImg,SpatialExperiment-method}
-\alias{removeImg,SpatialExperiment-method}
-\alias{imgGrob,SpatialExperiment-method}
-\alias{imgPath,SpatialExperiment-method}
-\alias{imgUrl,SpatialExperiment-method}
-\alias{imgPath,SpatialImage-method}
-\alias{imgUrl,SpatialImage-method}
-\alias{imgGrob,SpatialImage-method}
-\alias{imgPath<-,SpatialImage-method}
-\alias{imgUrl<-,SpatialImage-method}
-\alias{imgGrob<-,SpatialImage-method}
-\alias{loadImg,SpatialImage-method}
-\alias{unloadImg,SpatialImage-method}
-\alias{imgPath<-,SpatialImage,character-method}
-\alias{imgGrob<-,SpatialImage,rastergrob-method}
-\alias{imgUrl<-,SpatialImage,character-method}
+\alias{rmvImg,SpatialExperiment-method}
+\alias{imgRaster,SpatialExperiment-method}
+\alias{imgSource,SpatialExperiment-method}
 \title{Methods for handling image-related data}
 \usage{
-\S4method{imgPath}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
-
-\S4method{imgGrob}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
-
-\S4method{imgUrl}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
-
-\S4method{loadImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
-
-\S4method{unloadImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
+\S4method{getImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
 \S4method{addImg}{SpatialExperiment}(x, imageSource, scaleFactor, sample_id, image_id, load = TRUE)
 
-\S4method{removeImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
+\S4method{rmvImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{imgPath}{SpatialImage}(x)
+\S4method{imgSource}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{imgGrob}{SpatialImage}(x)
-
-\S4method{imgUrl}{SpatialImage}(x)
-
-\S4method{imgPath}{SpatialImage,character}(x) <- value
-
-\S4method{imgGrob}{SpatialImage,rastergrob}(x) <- value
-
-\S4method{imgUrl}{SpatialImage,character}(x) <- value
-
-\S4method{loadImg}{SpatialImage}(x)
-
-\S4method{unloadImg}{SpatialImage}(x)
+\S4method{imgRaster}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 }
 \arguments{
-\item{x}{a \code{\link{SpatialExperiment}} or a \code{\link{SpatialImage}}}
+\item{x}{a \code{\link{SpatialExperiment}}}
 
 \item{sample_id}{character string, \code{TRUE} or \code{NULL} specifying 
 sample/image identifier(s); here, \code{TRUE} is equivalent to all 
@@ -77,83 +37,47 @@ samples/images and \code{NULL} specifies the first available entry (see details)
 \item{scaleFactor}{single numeric scale factor used to rescale spatial 
 coordinates according to the image's resolution}
 
-\item{load}{logical; should the image(s) be loaded as a \code{grob}?
+\item{load}{logical; should the image(s) be 
+loaded into memory as a \code{raster} object?
 if FALSE, will store the path/URL instead}
-
-\item{value}{a \code{grob} for \code{imgGrob}, 
-a character string for \code{imgPath/Url}}
 }
 \value{
-\code{add/removeImg()} return a \code{\link{SpatialExperiment}} 
+\code{getImg()} returns a single or list of \code{SpatialImage}(s).
+
+\code{add/rmvImg()} return a \code{\link{SpatialExperiment}} 
 with modified \code{imgData}; specifically, they create/remove 
 an image entry (row) in the \code{imgData} \code{DataFrame}.
 
-\code{imgGrob/Path/Url()} access relevant data in the \code{SpatialImage}(s)
+\code{imgRaster/Source()} access relevant data in the \code{SpatialImage}(s)
 stored inside the \code{imgData}'s \code{data} field. 
-Depending on whether or not multiple entries are excesses,
-a character string or vector is returned by \code{imgPath/Url()},
-and a single or list of \code{grob}(s) is returned by \code{imgGrob()}.
+Depending on whether or not multiple entries are accesses,
+a character string or vector is returned by \code{imgSource()}, and a 
+single or list of \code{raster} object(s) is returned by \code{imgRaster()}.
 }
 \description{
 The set of functions described below is designed to handle 
 the image-related data stored inside a \code{SpatialExperiment}'s 
-\code{imgData} \code{int_metadata} field.
-}
-\section{Available Methods}{
+\code{imgData} \code{int_metadata} field. These include:
 
-In the following a list of methods defined for the \code{imgData} structure.
-\describe{
-\item{\code{imgGrob}, \code{imgPath}, \code{imgUrl}:}{ 
-   to access the \code{grob}, path, URL 
-  associated with an image or set of images}
-\item{\code{loadImg}:}{ 
-  to load an image from a path or URL as a \code{grob}}
-\item{\code{unloadImg}:}{ 
-  to unload an image, i.e. to drop the \code{grob}
-  while retaining the image's source path and/or URL}
-\item{\code{addImg} and \code{removeImg}:}{ 
-  to add/remove an image entry to/from 
-  the \code{imgData} \code{DataFrame}}
+\itemize{
+\item \code{getImg}, \code{addImg}, \code{rmvImg}
+  to retrieve/add/remove an image entry to/from 
+  the \code{imgData} \code{DataFrame}
+\item \code{imgSource}, \code{imgRaster}
+  to retrieve the path/URL and \code{raster} object,
+  respectively, associated with an image or set of images
 }
 }
-
-\section{SpatialImage methods}{
-
-Getters, setters and additional methods 
-for the \code{\link{SpatialImage}} class.
-\describe{
-\item{\code{imgGrob(x)}, \code{imgGrob(x) <- value}:}{ gets/sets the image's \code{grob}}
-\item{\code{imgPath(x)}, \code{imgPath(x) <- value}:}{ gets/sets the image's file path}
-\item{\code{imgUrl(x)}, \code{imgUrl(x) <- value}:}{ gets/sets the image's source URL}
-\item{\code{loadImg(x)}:}{ loads an image as a \code{grob} from its path or URL}
-\item{\code{unloadImg(x)}:}{ unloads an image by dropping the \code{grob}}
-}
-}
-
 \examples{
 example(read10xVisium)
-(df <- imgData(ve))
 
-# 'SpatialImage' accessors
-(si <- df$data[[1]])
-imgGrob(si)
-imgPath(si)
-imgUrl(si)
-
-# unload all images
-ve <- unloadImg(ve,
-  sample_id = TRUE,
-  image_id = TRUE)
-imgData(ve)$data
-
-# reload all images
-ve <- loadImg(ve,
-  sample_id = TRUE,
-  image_id = TRUE)
-imgData(ve)$data
+# 'SpatialImage' accession
+(spi <- getImg(ve))
+plot(imgRaster(spi))
 
 # remove an image
-ve <- removeImg(ve,
+imgData(ve)
+ve <- rmvImg(ve,
   sample_id = "section1",
   image_id = "lowres")
 imgData(ve)
@@ -165,36 +89,13 @@ ve <- addImg(ve,
   image_id = "pomeranian",
   imageSource = url,
   scaleFactor = NA_real_,
-  load = TRUE)
+  load = FALSE)
 
-grb <- imgGrob(ve,
+# extract image
+img <- imgRaster(ve,
   sample_id = "section1",
   image_id = "pomeranian")
-grid::grid.draw(grb)
-
-
-##### construct 'SpatialImage'
-
-dir <- file.path("extdata", "10xVisium", "section1", "spatial")
-fnm <- file.path(dir, "tissue_lowres_image.png")
-imgPath <- system.file(fnm, package = "SpatialExperiment")
-(img <- SpatialImage(path = imgPath))
-
-# load image as a 'grob'
-img <- loadImg(img)
-
-# accessors
-imgGrob(img)
-imgPath(img)
-imgUrl(img)
-
-# draw the image
-grb <- imgGrob(img)
-grid::grid.draw(grb)
-
-# unload it, i.e. the 'grob'
-img <- unloadImg(img)
-imgGrob(img)
+plot(img)
   
 }
 \author{

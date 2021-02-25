@@ -3,19 +3,30 @@
 \name{SpatialImage-class}
 \alias{SpatialImage-class}
 \alias{SpatialImage}
-\alias{FileSpatialImage-class}
+\alias{LoadedSpatialImage-class}
+\alias{StoredSpatialImage-class}
 \alias{RemoteSpatialImage-class}
+\alias{dim,SpatialImage-method}
 \alias{imgRaster}
 \alias{imgRaster,LoadedSpatialImage-method}
-\alias{imgRaster,FileSpatialImage-method}
+\alias{imgRaster,StoredSpatialImage-method}
 \alias{imgRaster,RemoteSpatialImage-method}
-\alias{dim,SpatialImage-method}
+\alias{imgRaster<-}
+\alias{imgRaster<-,LoadedSpatialImage-method}
+\alias{imgSource}
+\alias{imgSource,LoadedSpatialImage-method}
+\alias{imgSource,StoredSpatialImage-method}
+\alias{imgSource,RemoteSpatialImage-method}
+\alias{imgSource<-}
+\alias{imgSource<-,StoredSpatialImage,character-method}
+\alias{imgSource<-,RemoteSpatialImage,character-method}
 \alias{coerce,SpatialImage,LoadedSpatialImage-method}
-\alias{coerce,RemoteSpatialImage,FileSpatialImage-method}
-\title{SpatialImage methods}
+\alias{coerce,RemoteSpatialImage,StoredSpatialImage-method}
+\title{The SpatialImage class}
 \description{
-The SpatialImage class hierarchy provides representations of images from a variety of sources.
-This is used by the \linkS4class{SpatialExperiment} to manage the loading of images across multiple studies.
+The \code{SpatialImage} class hierarchy provides representations of images 
+from a variety of sources. It is used by the \linkS4class{SpatialExperiment} 
+to manage the loading of images across multiple studies.
 }
 \section{Constructor}{
 
@@ -23,25 +34,35 @@ This is used by the \linkS4class{SpatialExperiment} to manage the loading of ima
 The class of the object depends on the type of \code{x}:
 \itemize{
 \item If \code{x} is a raster object, a LoadedSpatialImage is returned.
-This represents an image that is fully realized into memory, where the raster representation is stored inside the output object.
-\item If \code{x} is a string and \code{is.url=TRUE} or it starts with \code{"http://"}, \code{"http://"} or \code{"ftp://"}, a RemoteSpatialImage is returned.
-This represents an image that is remotely hosted and retrieved only on request.
-\item If \code{x} is a string and \code{is.url=TRUE} or it does not start with a URL-like prefix, a FileSpatialImage is returned.
-This represents an image that is stored in a local file and is loaded into memory only on request.
+  This represents an image that is fully realized into memory, 
+  where the raster representation is stored inside the output object.
+\item If \code{x} is a string and \code{is.url=TRUE} or it starts with 
+  \code{"http://"}, \code{"http://"} or \code{"ftp://"}, 
+  a RemoteSpatialImage is returned. This represents an image 
+  that is remotely hosted and retrieved only on request.
+\item If \code{x} is a string and \code{is.url=TRUE} or it does not 
+  start with a URL-like prefix, a StoredSpatialImage is returned.
+  This represents an image that is stored in a local file 
+  and is loaded into memory only on request.
 }
 }
 
 \section{Getting the raster image}{
 
-For a SpatialImage object \code{x}, \code{imgRaster(x, ...)} will return a raster object (see \code{?\link{as.raster}}).
+For a SpatialImage object \code{x}, \code{imgRaster(x, ...)} 
+will return a raster object (see \code{?\link{as.raster}}).
 This is effectively a matrix of RGB colors for each pixel in the image.
 
-For a FileSpatialImage object \code{x}, additional arguments in \code{...} are passed to \code{\link{image_read}}.
+For a StoredSpatialImage object \code{x}, additional arguments 
+in \code{...} are passed to \code{\link{image_read}}.
 This controls how the image is read into memory.
 
-For a RemoteSpatialIamge object \code{x}, the image file is first downloaded before the raster is returned.
-Here, \code{...} may contain an extra \code{cache} argument, which should be a BiocFileCache object (from the \pkg{BiocFileCache} package) specifying the file cache location. 
-The default location is determined by \code{options("SpatialExperiment.remote.cache.path")},
+For a RemoteSpatialIamge object \code{x}, the image file is first
+downloaded before the raster is returned. Here, \code{...} may contain
+an extra \code{cache} argument, which should be a BiocFileCache object 
+(from the \pkg{BiocFileCache} package) specifying the file cache location. 
+The default location is determined by 
+\code{options("SpatialExperiment.remote.cache.path")},
 otherwise it defaults to a subdirectory in the R temporary directory.
 Any further named arguments in \code{...} are passed to \code{image_read}.
 
@@ -50,42 +71,53 @@ Any further named arguments in \code{...} are passed to \code{image_read}.
 
 \section{In-memory caching}{
 
-For FileSpatialImage and RemoteSpatialImage objects, loading the image with \code{imgRaster} will automatically store the loaded raster object in an in-memory cache.
-Any subsequent \code{imgRaster} call will retrieve the raster from the cache, avoiding costly retrieval from the file system.
+For StoredSpatialImage and RemoteSpatialImage objects, 
+loading the image with \code{imgRaster} will automatically 
+store the loaded raster object in an in-memory cache.
+Any subsequent \code{imgRaster} call will retrieve the raster 
+from the cache, avoiding costly retrieval from the file system.
 
-The cache policy is to evict the least recently used images when a new image would be added that exceeds the maximum cache size.
-If the new image by itself exceeds the maximum cache size, all images are evicted from the cache to trigger garbage collection and free up memory.
+The cache policy is to evict the least recently used images when 
+a new image would be added that exceeds the maximum cache size.
+If the new image by itself exceeds the maximum cache size, all images are 
+evicted from the cache to trigger garbage collection and free up memory.
 
-By default, the maximum size of the cache is 4 GB.
-This can be modified by setting \code{options("SpatialExperiment.cache.size")} to some number of bytes, e.g., \code{2^32}.
+By default, the maximum size of the cache is 4 GB. This can be 
+modified by setting \code{options("SpatialExperiment.cache.size")} 
+to some number of bytes, e.g., \code{2^32}.
 }
 
 \section{Other methods}{
 
-\code{dim(x)} will return an integer vector of length 2, containing the width and height of the image in pixels.
-Note that this calls \code{imgRaster} under the hood and thus may interact with the file and memory caches as described above.
+\code{dim(x)} will return an integer vector of length 2, 
+containing the width and height of the image in pixels.
+Note that this calls \code{imgRaster} under the hood and thus 
+may interact with the file and memory caches as described above.
 
-For any SpatialImage \code{x}, \code{as(x, "LoadedSpatialImage")} will create a LoadedSpatialImage containing an in-memory raster object.
+For any SpatialImage \code{x}, \code{as(x, "LoadedSpatialImage")} 
+will create a LoadedSpatialImage containing an in-memory raster object.
 
-For a RemoteSpatialImage \code{x}, \code{as(x, "FileSpatialImage")} will create a FileSpatialImage pointing to the file cache location.
+For a RemoteSpatialImage \code{x}, \code{as(x, "StoredSpatialImage")} 
+will create a StoredSpatialImage pointing to the file cache location.
 }
 
 \examples{
-path <- system.file("extdata", "10xVisium", "section1", "spatial", 
-     "tissue_lowres_image.png", package="SpatialExperiment")
+path <- system.file(
+  "extdata", "10xVisium", "section1", "spatial", 
+  "tissue_lowres_image.png", package="SpatialExperiment")
 
-fspi <- SpatialImage(path)
-plot(imgRaster(fspi))
+spi <- SpatialImage(path)
+plot(imgRaster(spi))
 
-# Following operations all use the cache so there is no need to reload.
-nrow(fspi)
-ncol(fspi)
-plot(as.raster(fspi)) 
+# the following operations all use the cache 
+# so there is no need to reload the image
+nrow(spi)
+ncol(spi)
+plot(as.raster(spi)) 
 
-# Coercing to an explicitly in-memory raster:
-lspi <- as(fspi, "LoadedSpatialImage")
-plot(as.raster(lspi))
-
+# coercing to an explicitly in-memory raster
+spi <- as(spi, "LoadedSpatialImage")
+plot(as.raster(spi))
 }
 \author{
 Aaron Lun
