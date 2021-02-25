@@ -41,14 +41,15 @@ library(SpatialExperiment)
 A brief summary of the package's current structure is outlined below. To give some examples, we load an example `SpatialExperiment` containing 10X Visium spatial gene expression data of two serial mouse brain sections (Sagittal-Posterior) available [here](https://support.10xgenomics.com/spatial-gene-expression/datasets).
 
 ```{r}
-dir <- system.file(file.path("extdata", "10xVisium"), 
-                    package = "SpatialExperiment")
+dir <- system.file(
+    file.path("extdata", "10xVisium"), 
+    package = "SpatialExperiment")
    
 sample_ids <- c("section1", "section2")
 samples <- file.path(dir, sample_ids)
 
-(ve <- read10xVisium(samples, sample_ids, type="sparse", data="raw", 
-                    images = c("lowres"), load = FALSE))
+(ve <- read10xVisium(samples, sample_ids, type="sparse", 
+    data="raw", images = c("lowres"), load = FALSE))
 ```
 
 ## The `SpatialExperiment` class {- .tabset}
@@ -63,7 +64,6 @@ samples <- file.path(dir, sample_ids)
 
 TBW 
 
-
 ```{r}
 head(spatialData(ve))
 ```
@@ -73,7 +73,7 @@ head(spatialData(ve))
 Image-related data are stored in the `int_metadata()$imgData` field as a `DataFrame` with the following columns:
 
 * `sample_id` and `image_id` specifying the image's sample and image identifier
-* `data`: a list of `SpatialImage`s containing the image's `grob`, path and/or URL
+* `data`: a list of `SpatialImage`s containing the image's `raster`, path or URL
 * `width` and `height` giving the image's dimension in pixel
 * `scaleFactor` used to re-scale spatial coordinates according to the image's resolution 
 
@@ -85,25 +85,20 @@ Image-related data are stored in the `int_metadata()$imgData` field as a `DataFr
 
 * `scaleFactors()` retrieves scale factors
 * `imgData(), imgData() <- value` to get/set the `imgData` `DataFrame`
-* `add/removeImg()` can be used to create/eliminate images in the `imgData` 
-* `load/unloadImg()` can be used to load/unload images, i.e. add/remove the `grob` 
+* `getImg()` retrieves a single or list of `SpatialImage`(s) from the `imgData`
+* `add/rmvImg()` can be used to create/eliminate images in the `imgData` 
 * the `read10xVisium()` constructor can be used to create a `SpatialExperiment` from 10x Visium spatial gene expression data in one line
 
 ## The `SpatialImage` class
 
-Contains three slots that store any available information associated with an image: 
-
-* `@grob`: NULL or an object class `rastergrob` from the `grid` package 
-* `@path`: NULL or a character strings specifying an image file name (.png, .jpg or .tif)
-* `@url`: NULL or a character string specifying an URL from which to retrieve the image
+The `SpatialImage` class hierarchy provides representations of images from a variety of sources, and is used by the `SpatialExperiment` class to manage the loading of images across multiple studies. The class is divided into the `Loaded/Stored/RemoteSpatialImage` class, allowing to realized images into memory fully, or on request from a locally saved file or remotely hosted URL.
 
 ```{r}
-df$data[[1]]
+getImg(ve)
 ```
 
-* `imgGrob/path/Url(), ... <- value` access/set data in the respective slots
-* `load/unloadImg()` are used to add/drop the `grob` slot
-* `loadImg()` supports caching when loading from a URL; in general, paths are given precedence over URLs
+* `imgRaster` accesses the `raster` object associated with the input SPI
+* `imgSource` accesses the path/URL associated with a `Stored/RemoteSpatialImage`
 
 # The `SpatialExperiment` class
 
@@ -177,7 +172,6 @@ All image related data are stored inside the `int_metadata`'s `imgData` field as
   * which `sample_id` the image belongs to
   * a unique `image_id` in order to accommodate multiple images for a given sample (e.g. of different resolutions)
   * the image's `data` (a `SpatialImage` object)
-  * `width` and `height` of the image in pixel 
   * the `scaleFactor` that adjusts pixel positions of the original, full-resolution image to pixel positions in the image
 
 The `imgData()` accessor can be used to retrieve the image data stored within the object:
@@ -188,34 +182,34 @@ imgData(ve)
 
 ## The `SpatialImage` class
 
-Images are stored inside the `data` field of the `imgData` as a list of `SpatialImage`s, which enables storing three types of information that may be associated with an image:
+Images are stored inside the `data` field of the `imgData` as a list of `SpatialImage`s. Each image may be of one of the following sub-classes:
 
-* `grob`: a `grob` object of the image 
-* `path`: a file path from which to load the image
-* `url`: a URL from which to retrieve the image
+* `LoadedSpatialImage`
+  * represents an image that is fully realized into memory as a `raster` object
+  * `@image` contains a `raster` object: a matrix of RGB colors for each pixel in the image
+* `StoredSpatialImage`: 
+  * represents an image that is stored in a local file (e.g., as a .png, .jpg or .tif), and loaded into memory only on request
+  * `@path` specifies a local file from which to retrieve the image
+* `RemoteSpatialImage`
+  * represents an image that is remotely hosted (under some URL), and retrieved only on request
+  * `@url` specifies where to retrieve the image from
 
-Data available in an object of class `SpatialImage` may be accessed via the `imgGrob()`, `imgPath()` and `imgUrl()` accessors.
+A `SpatialImage` can be accessed using `getImg()`, or retrieved directly from the `imgData()`:
 
 ```{r}
-imgData(ve)$data
+(spi <- getImg(ve))
+identical(spi, imgData(ve)$data[[1]])
 ```
 
-While `grob`s can be used directly for plotting (e.g. using `grid.draw` or `ggplot2`), when multiple images are to be stored (say, for many samples and of different resolutions), or when a `SpatialExperiment` is to be exported, the `path` and `url` provide the option to store an image's source at minimal storage cost. 
+Data available in an object of class `SpatialImage` may be accessed via the `imgRaster()` and `imgSource()` accessors:
 
-```{r fig.small = TRUE, eval=TRUE}
-# retrieve 'SpatialImage' for 1st image entry & visualize it
-si <- imgData(ve)$data[[1]]
-# grid::grid.draw(imgGrob(si))
+```{r fig.small = TRUE}
+plot(imgRaster(spi))
 ```
 
-## Methods for image handling
+## Adding/removing images
 
-The `SpatialExperiment` package provides various functions to handle which and how image data is stored in the object. These include:
-
-* `loadImg` to actively load the image (from a path or URL) and store it as a `grob`
-* `unloadImg` to drop the `grob`, while retaining the source path and/or URL
-* `addImg` to add an image entry (as a path, URL, or `grob`)
-* `removeImg` to drop an image entry entirely
+Images entries may be added or removed from a `SpatialExperiment`'s `imgData` `DataFrame` using `addImg()` and `rmvImg()`, respectively.
 
 Besides a path or URL to source the image from and a numeric scale factor, `addImg()` requires specification of the `sample_id` the new image belongs to, and an `image_id` that is not yet in use for that sample:
 
@@ -225,52 +219,23 @@ ve <- addImg(ve,
     sample_id = "section1", image_id = "pomeranian",
     imageSource = url, scaleFactor = NA_real_, load = TRUE)
 
-grb <- imgGrob(ve, 
+img <- imgRaster(ve, 
     sample_id = "section1", 
     image_id = "pomeranian")
-# grid::grid.draw(grb)
+plot(img)
 ```
 
-`loadImg()` and `add/removeImg()` are more flexible in the specification of the `sample/image_id` arguments. Specifically, 
+The `rmvImg()` function is more flexible in the specification of the `sample/image_id` arguments. Specifically, 
 
 - `TRUE` is equivalent to *all*, e.g. `sample_id = "<sample>", image_id = TRUE` will drop all images for a given sample.
 - `NULL` defaults to the first entry available, e.g., `sample_id = "<sample>", image_id = NULL` will drop the first image for a given sample.
 
 For example, `sample_id,image_id = TRUE,TRUE` will specify all images; `NULL,NULL` corresponds to the first image entry in the `imgData`; `TRUE,NULL` equals the first image for all samples; and `NULL,TRUE` matches all images for the first sample.
 
-**Example 1:** Unload all images, i.e., drop all `grob`s. As a result, `grob` slots will be set to `NULL`, and all `SpatialImage`s now say `> not loaded`.
+Here, we remove `section1`'s `pomeranian` image added in the previous code chunk; the image is now completely gone from the `imgData`:
 
 ```{r}
-imgData(ve <- unloadImg(ve, sample_id = TRUE, image_id = TRUE))$data
-```
-
-**Example 2:** Reload the first image for sample `section2`; the corresponding image now says `grob: Av` (for available) and `> loaded`.
-
-```{r}
-imgData(ve <- loadImg(ve, "section2"))$data[[2]]
-```
-
-**Example 3:** Remove `lowres` image for `section1` sample; the image is now completely gone from the `imgData`.
-
-```{r}
-imgData(ve <- removeImg(ve, "section1", "pomeranian"))
-```
-
-## Image caching
-
-In general, paths take precedence over URLs, i.e. an image will only be loaded from the `imgUrl` if there is no `imgPath` available.
-
-Images loaded from URLs will be cached, i.e. they are downloaded once and the file path where they were stored in will be stored under the `SpatialImage`'s `imgPath`:
-
-```{r results="show"}
-imgData(loadImg(ve, TRUE, TRUE))$data[[2]]
-```
-
-For example, if we unload `section1`'s `fullres` image now and reload it, there won't be another progress bar (the chunk somehow above doesn't display one anyways... but it does in the console):
-
-```{r}
-ve <- unloadImg(ve, TRUE, TRUE)
-ve <- loadImg(ve, TRUE, TRUE)
+imgData(ve <- rmvImg(ve, "section1", "pomeranian"))
 ```
 
 # `colData` replacement
@@ -320,10 +285,8 @@ names(colData(ve))
 
 For visualization examples (previous plots too) please see the [10xVisiumDemo](https://github.com/drighelli/SpatialAnalysisWorkflows/blob/master/10xVisiumDemo.Rmd)
 
-
 # Session information {- .smaller}
 
 ```{r session-info}
 sessionInfo()
 ```
-
