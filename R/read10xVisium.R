@@ -96,10 +96,10 @@ read10xVisium <- function(samples="",
     names(samples) <- sids
     
     # setup file paths
-    fn <- paste0(
+    fns <- paste0(
         data, "_feature_bc_matrix", 
         switch(type, HDF5=".h5", ""))
-    counts <- file.path(samples, fn)
+    counts <- file.path(samples, fns)
     
     # TODO: check that these files exist & are of valid format
     # otherwise things will fail & give unhelpful error messages
@@ -109,60 +109,52 @@ read10xVisium <- function(samples="",
     sfs <- file.path(dir, "scalefactors_json.json")
     names(xyz) <- names(sfs) <- sids
     
+    # read image data
     img_fns <- list(
         lowres="tissue_lowres_image.png",
         hires="tissue_hires_image.png",
         detected="detected_tissue_image.jpg",
         aligned="aligned_fiducials.jpg")
-    img <- unlist(lapply(dir, function(.) 
-        file.path(., img_fns[imgs])))
     
-    # read count data
-    scelist <- lapply(seq_along(counts), function(i) 
-    {
-        read10xCounts(
+    img_fns <- img_fns[imgs]
+    img_fns <- lapply(dir, file.path, img_fns)
+    img_fns <- unlist(img_fns)
+    
+    nan <- !file.exists(img_fns)
+    if (all(nan)) {
+        stop(sprintf(
+            "No matching files found for 'images = c(%s)", 
+            paste(dQuote(imgs), collapse=", ")))
+    } else if (any(nan)) {
+        message("Skipping missing images\n  ", 
+            paste(img_fns[nan], collapse="\n  "))
+        img_fns <- img_fns[!nan]
+    }
+    img <- readImgData(samples, sids, img_fns, sfs, load)
+    
+    # read spatial coordinates
+    coords <- lapply(xyz, .read_xyz)
+    
+    spel <- lapply(seq_along(counts), function(i) {
+        # read count data as 'SingleCellExperiment'
+        sce <- read10xCounts(
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)
-    }) 
-
-    # TODO: 
-    # read10xCounts() gives a 'DelayedMatrix',
-    # which doesn't work with 'scater'...
-    # any way to better fix that?
-    #assay(sce) <- as(as.matrix(assay(sce)), "dgCMatrix")
-
-    
-    # construct 'SpatialExperiment'
-    spelist <- lapply(scelist, function(sce)
-    {
+        metadata(sce)$Samples <- NULL
         rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
-        metadata(sce)$Sample <- NULL
-        return(as(sce, "SpatialExperiment"))
-    })
-    
-    coords <- lapply(xyz, function(xxx) 
-    {
-        .read_xyz(xxx)
-    })
-    
-    spelist <- lapply( seq_along(spelist) , function(i)
-    {
-        spatialCoordsNames(spelist[[i]]) <- c("array_col", "array_row")
-        spatialData(spelist[[i]]) <- coords[[i]][colnames(spelist[[i]]),]
-        spelist[[i]]$sample_id <- sids[[i]]
-        return(spelist[[i]])
-    })
-    
-    spe <- do.call(cbind, spelist)
-    
-    # read image data
-    id <- readImgData(samples, sids, img, sfs, load)
-    
-    imgData(spe) <- id
+        
+        # construct 'SpatialExperiment'
+        spe <- as(sce, "SpatialExperiment")
+        spatialCoordsNames(spe) <- c("array_col", "array_row")
+        spatialData(spe) <- coords[[i]][colnames(spe), ]
+        spe$sample_id <- sids[i]
+        return(spe)
+    }) 
+    spe <- do.call(cbind, spel)
+    imgData(spe) <- img
     return(spe)
 }
-
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom utils read.csv
