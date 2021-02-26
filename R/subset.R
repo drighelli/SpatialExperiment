@@ -26,7 +26,7 @@ NULL
 #' @export
 setMethod("[",
     c("SpatialExperiment", "ANY", "ANY"),
-    function(x, i, j) 
+    function(x, i, j, ..., drop=FALSE) 
     {
         if (missing(i)) i <- TRUE
         if (missing(j)) j <- TRUE
