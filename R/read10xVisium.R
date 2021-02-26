@@ -143,7 +143,7 @@ read10xVisium <- function(samples="",
             col.names=TRUE)
         metadata(sce)$Samples <- NULL
         rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
-        
+
         # construct 'SpatialExperiment'
         spe <- as(sce, "SpatialExperiment")
         spatialCoordsNames(spe) <- c("array_col", "array_row")
@@ -166,7 +166,7 @@ read10xVisium <- function(samples="",
     {
         df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep = "_")
-        if(!is.null(names(x))) cbind(sample_id=names(x)[i], df)
+        if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
         df
     })
     df <- do.call(rbind, df)
