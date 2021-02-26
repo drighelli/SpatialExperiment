@@ -82,7 +82,9 @@ read10xVisium <- function(samples="",
 {
     type <- match.arg(type)
     data <- match.arg(data)
-    imgs <- match.arg(images, several.ok=TRUE)
+    
+    imgs <- c("lowres", "hires", "detected", "aligned")
+    imgs <- match.arg(images, imgs, several.ok=TRUE)
 
     # check sample identifiers
     if (is.null(sids <- names(samples))) {
