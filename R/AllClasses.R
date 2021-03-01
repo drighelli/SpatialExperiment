@@ -4,7 +4,7 @@ setClass("SpatialExperiment",
         contains="SingleCellExperiment",
         slots=c(
             spatialData="DataFrame",
-            spaCoordsNms="character"))
+            spatialCoordsNames="character"))
 
 #' @export
 setClass("SpatialImage", 
