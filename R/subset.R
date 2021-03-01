@@ -31,7 +31,7 @@ setMethod("[",
         if (missing(i)) i <- TRUE
         if (missing(j)) j <- TRUE
         x <- callNextMethod()
-        x@spatialData <- x@spatialData[j,,drop=FALSE]
+        x@spatialData <- x@spatialData[j, , drop=FALSE]
         keep <- imgData(x)$sample_id %in% unique(x$sample_id)
         imgData(x) <- imgData(x)[keep, ]
         return(x)
