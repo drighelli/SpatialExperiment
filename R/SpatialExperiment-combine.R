@@ -74,9 +74,11 @@ setMethod("cbind", "SpatialExperiment",
     
     if ( length(samplenms) != length(args) ) 
         warning("sample_id are duplicated across SpatialExperiment objetcs to cbind")
-    
+
+    # BUGFIX: spatialData defaults to returning a matrix;
+    # but SpatialExperiment@spatialData needs to be a DFrame
     outspd <- do.call(rbind, lapply(args, spatialData))
-    out@spatialData <- outspd
+    spatialData(out) <- outspd
     
     ############################## creating new imgData
     if(!is.null(imgData(args[[1]]))) ## handle imgData across multiple samples
