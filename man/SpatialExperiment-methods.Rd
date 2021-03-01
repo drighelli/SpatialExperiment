@@ -12,13 +12,13 @@
 \alias{spatialDataNames}
 \alias{imgData}
 \alias{imgData<-}
+\alias{spatialData,SpatialExperiment-method}
 \alias{spatialData<-,SpatialExperiment,ANY-method}
 \alias{spatialData<-,SpatialExperiment,NULL-method}
-\alias{spatialData,SpatialExperiment-method}
+\alias{spatialDataNames,SpatialExperiment-method}
 \alias{spatialCoords,SpatialExperiment-method}
 \alias{spatialCoordsNames,SpatialExperiment-method}
 \alias{spatialCoordsNames<-,SpatialExperiment,character-method}
-\alias{spatialDataNames,SpatialExperiment-method}
 \alias{scaleFactors,SpatialExperiment-method}
 \alias{inTissue,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
@@ -26,19 +26,19 @@
 \alias{imgData<-,SpatialExperiment,NULL-method}
 \title{SpatialExperiment Methods}
 \usage{
+\S4method{spatialData}{SpatialExperiment}(x, cd_bind = NULL, sample_id = TRUE, as_df = TRUE)
+
 \S4method{spatialData}{SpatialExperiment,ANY}(x) <- value
 
 \S4method{spatialData}{SpatialExperiment,`NULL`}(x) <- value
 
-\S4method{spatialData}{SpatialExperiment}(x, cd_bind = NULL, sample_id = TRUE, as_df = FALSE)
+\S4method{spatialDataNames}{SpatialExperiment}(x)
 
 \S4method{spatialCoords}{SpatialExperiment}(x, sample_id = TRUE, as_df = FALSE)
 
 \S4method{spatialCoordsNames}{SpatialExperiment}(x)
 
 \S4method{spatialCoordsNames}{SpatialExperiment,character}(x) <- value
-
-\S4method{spatialDataNames}{SpatialExperiment}(x)
 
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
 
@@ -53,8 +53,6 @@
 \arguments{
 \item{x}{a SpatialExperiment class object}
 
-\item{value}{it varies depending on the invoked method see methods details.}
-
 \item{cd_bind}{a character vector indicating additional columns to return 
 that can be retrieved from the \code{colData} structure. If this is TRUE all
 the colData are binded to the spatialData.}
@@ -64,6 +62,8 @@ identifier(s); \code{TRUE} is equivalent to all samples.}
 
 \item{as_df}{logical indicating if the returned structure has to be a 
 data.frame (default is FALSE).}
+
+\item{value}{it varies depending on the invoked method see methods details.}
 
 \item{image_id}{character string indicating the image identifiers(s), 
 \code{TRUE} is equivalent to all images.}
