@@ -35,19 +35,16 @@ setGeneric("spatialCoords", function(x, ...) standardGeneric("spatialCoords"))
 setGeneric("spatialData", function(x, ...) standardGeneric("spatialData"))
 
 #' @export
-setGeneric("spatialData<-", function(x, value)
-    standardGeneric("spatialData<-"))
-
-#' @export
-setGeneric("spatialCoordsNames", function(x)
-    standardGeneric("spatialCoordsNames"))
-
-#' @export
-setGeneric("spatialCoordsNames<-", function(x, value)
-    standardGeneric("spatialCoordsNames<-"))
+setGeneric("spatialData<-", function(x, value) standardGeneric("spatialData<-"))
 
 #' @export
 setGeneric("spatialDataNames", function(x) standardGeneric("spatialDataNames"))
+
+#' @export
+setGeneric("spatialCoordsNames", function(x) standardGeneric("spatialCoordsNames"))
+
+#' @export
+setGeneric("spatialCoordsNames<-", function(x, value) standardGeneric("spatialCoordsNames<-"))
 
 #' @export
 setGeneric("inTissue", function(x, ...) standardGeneric("inTissue"))
