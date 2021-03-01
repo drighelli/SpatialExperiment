@@ -1,3 +1,3 @@
 library("testthat")
 library("SpatialExperiment")
-# test_check("SpatialExperiment")
+test_check("SpatialExperiment")
