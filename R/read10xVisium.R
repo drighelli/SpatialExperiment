@@ -57,7 +57,7 @@
 #' 
 #' (ve <- read10xVisium(samples, sample_ids, 
 #'   type="sparse", data="raw", 
-#'   images = c("lowres"), load = FALSE))
+#'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
 #' table(
@@ -135,22 +135,22 @@ read10xVisium <- function(samples="",
     img <- readImgData(samples, sids, img_fns, sfs, load)
     
     # read spatial coordinates
-    coords <- lapply(xyz, .read_xyz)
-    
     spel <- lapply(seq_along(counts), function(i) {
         # read count data as 'SingleCellExperiment'
         sce <- read10xCounts(
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)
+        sce$sample_id <- sids[i]
         metadata(sce)$Samples <- NULL
         rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
 
         # construct 'SpatialExperiment'
         spe <- as(sce, "SpatialExperiment")
         spatialCoordsNames(spe) <- c("array_col", "array_row")
-        spatialData(spe) <- coords[[i]][colnames(spe), ]
-        spe$sample_id <- sids[i]
+        spd <- .read_xyz(xyz[i])
+        spd <- spd[colnames(spe), ]
+        spatialData(spe) <- spd
         return(spe)
     }) 
     spe <- do.call(cbind, spel)
