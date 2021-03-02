@@ -35,10 +35,13 @@
         {
             sids <- unique(df$sample_id)
             isids <- unique(imgData(obj)$sample_id)
-            if ( any( !(sids %in% isids), !(isids %in% sids) ) )
+            # bugfix: it should be allowed 
+            # to have samples with missing images
+            #if ( any( !(sids %in% isids), !(isids %in% sids) ) )
+            if (!all(isids %in% sids))
             {
                 msg <- c(msg, "sample_id(s) don't match between ",
-                         "imgData and colData")
+                         "colData and imgData")
             }
         }
     }
@@ -53,7 +56,7 @@
     
     if (!is(df, "DFrame")) 
         msg <- c(msg, "'imgData' field in 'int_metadata' should be a 'DFrame'")
-    nms <- c("sample_id", "image_id", "data", "width", "height", "scaleFactor")
+    nms <- c("sample_id", "image_id", "data", "scaleFactor")
     if (!identical(nms, names(df)))
         msg <- c(msg, paste(
             "'imgData' field in 'int_metadata' should have columns:",
@@ -65,11 +68,6 @@
         msg <- c(msg, paste(
             "'data' field in 'int_metadata' field 'imgData'",
             "should be a list of 'SpatialImage' objects"))
-    
-    if (!all(vapply(list(df$width, df$height), is.integer, logical(1))))
-        msg <- c(msg, paste(
-            "'width' and 'height' columns in 'int_metadata'",
-            "field 'imgData' should be 'integer'"))
     
     if (!is.numeric(df$scaleFactor))
         msg <- c(msg, paste(
@@ -83,7 +81,7 @@
 {
     msg <- NULL
     msg <- .colData_validity(object, msg)
-    msg <- .spatialData_validity(object@spatialData, object@spaCoordsNms, msg)
+    msg <- .spatialData_validity(object@spatialData, object@spatialCoordsNames, msg)
     msg <- .imgData_validity(imgData(object), msg)
     if (length(msg)) return(msg)
     return(TRUE)

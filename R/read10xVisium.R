@@ -17,7 +17,8 @@
 #'   (see \code{\link{read10xCounts}})
 #' @param data character string specifying whether to read in
 #'   filtered (spots mapped to tissue) or raw data (all spots).
-#' @param images character vector specifying which images to include.
+#' @param images character vector specifying which images to include. 
+#'   Valid values are \code{"lowres", "hires", "fullres", "detected", "aligned"}
 #' @param load logical; should the image(s) be loaded into memory
 #'   as a \code{grob}? If FALSE, will store the path/URL instead.
 #'   
@@ -54,8 +55,9 @@
 #' list.files(file.path(samples[1], "spatial"))
 #' file.path(samples[1], "raw_feature_bc_matrix")
 #' 
-#' (ve <- read10xVisium(samples, sample_ids, type="sparse", data="raw", 
-#'   images = c("lowres"), load = FALSE))
+#' (ve <- read10xVisium(samples, sample_ids, 
+#'   type="sparse", data="raw", 
+#'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
 #' table(
@@ -75,12 +77,14 @@ read10xVisium <- function(samples="",
     sample_id=paste0("sample", seq_along(samples)),
     type=c("HDF5", "sparse"),
     data=c("filtered", "raw"),
-    images=c("fullres", "lowres", "hires", "detected", "aligned"),
+    images="lowres",
     load=TRUE)
 {
     type <- match.arg(type)
     data <- match.arg(data)
-    imgs <- match.arg(images, several.ok=TRUE)
+    
+    imgs <- c("lowres", "hires", "detected", "aligned")
+    imgs <- match.arg(images, imgs, several.ok=TRUE)
 
     # check sample identifiers
     if (is.null(sids <- names(samples))) {
@@ -94,10 +98,10 @@ read10xVisium <- function(samples="",
     names(samples) <- sids
     
     # setup file paths
-    fn <- paste0(
+    fns <- paste0(
         data, "_feature_bc_matrix", 
         switch(type, HDF5=".h5", ""))
-    counts <- file.path(samples, fn)
+    counts <- file.path(samples, fns)
     
     # TODO: check that these files exist & are of valid format
     # otherwise things will fail & give unhelpful error messages
@@ -107,60 +111,52 @@ read10xVisium <- function(samples="",
     sfs <- file.path(dir, "scalefactors_json.json")
     names(xyz) <- names(sfs) <- sids
     
+    # read image data
     img_fns <- list(
         lowres="tissue_lowres_image.png",
         hires="tissue_hires_image.png",
         detected="detected_tissue_image.jpg",
         aligned="aligned_fiducials.jpg")
-    img <- unlist(lapply(dir, function(.) 
-        file.path(., img_fns[imgs])))
     
-    # read count data
-    scelist <- lapply(seq_along(counts), function(i) 
-    {
-        read10xCounts(
+    img_fns <- img_fns[imgs]
+    img_fns <- lapply(dir, file.path, img_fns)
+    img_fns <- unlist(img_fns)
+    
+    nan <- !file.exists(img_fns)
+    if (all(nan)) {
+        stop(sprintf(
+            "No matching files found for 'images = c(%s)", 
+            paste(dQuote(imgs), collapse=", ")))
+    } else if (any(nan)) {
+        message("Skipping missing images\n  ", 
+            paste(img_fns[nan], collapse="\n  "))
+        img_fns <- img_fns[!nan]
+    }
+    img <- readImgData(samples, sids, img_fns, sfs, load)
+    
+    # read spatial coordinates
+    spel <- lapply(seq_along(counts), function(i) {
+        # read count data as 'SingleCellExperiment'
+        sce <- read10xCounts(
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)
-    }) 
-
-    # TODO: 
-    # read10xCounts() gives a 'DelayedMatrix',
-    # which doesn't work with 'scater'...
-    # any way to better fix that?
-    #assay(sce) <- as(as.matrix(assay(sce)), "dgCMatrix")
-
-    
-    # construct 'SpatialExperiment'
-    spelist <- lapply(scelist, function(sce)
-    {
+        sce$sample_id <- sids[i]
+        metadata(sce)$Samples <- NULL
         rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
-        metadata(sce)$Sample <- NULL
-        return(as(sce, "SpatialExperiment"))
-    })
-    
-    coords <- lapply(xyz, function(xxx) 
-    {
-        .read_xyz(xxx)
-    })
-    
-    spelist <- lapply( seq_along(spelist) , function(i)
-    {
-        spatialCoordsNames(spelist[[i]]) <- c("array_col", "array_row")
-        spatialData(spelist[[i]]) <- coords[[i]][colnames(spelist[[i]]),]
-        spelist[[i]]$sample_id <- sids[[i]]
-        return(spelist[[i]])
-    })
-    
-    spe <- do.call(cbind, spelist)
-    
-    # read image data
-    id <- readImgData(samples, sids, img, sfs, load)
-    
-    imgData(spe) <- id
+
+        # construct 'SpatialExperiment'
+        spe <- as(sce, "SpatialExperiment")
+        spatialCoordsNames(spe) <- c("array_col", "array_row")
+        spd <- .read_xyz(xyz[i])
+        spd <- spd[colnames(spe), ]
+        spatialData(spe) <- spd
+        return(spe)
+    }) 
+    spe <- do.call(cbind, spel)
+    imgData(spe) <- img
     return(spe)
 }
-
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom utils read.csv
@@ -172,7 +168,7 @@ read10xVisium <- function(samples="",
     {
         df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep = "_")
-        if(!is.null(names(x))) cbind(sample_id=names(x)[i], df)
+        if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
         df
     })
     df <- do.call(rbind, df)

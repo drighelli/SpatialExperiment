@@ -27,7 +27,7 @@ biocViews:
     Infrastructure, SingleCell
 Depends: methods, SingleCellExperiment
 Imports: 
-    BiocFileCache, DropletUtils, rjson, magick, grid,
+    BiocFileCache, DropletUtils, rjson, magick, grDevices,
     S4Vectors, SummarizedExperiment, BiocGenerics, utils
 Suggests: knitr, Matrix, testthat, BiocStyle, BumpyMatrix
 VignetteBuilder: knitr

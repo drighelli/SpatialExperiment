@@ -9,7 +9,7 @@ read10xVisium(
   sample_id = paste0("sample", seq_along(samples)),
   type = c("HDF5", "sparse"),
   data = c("filtered", "raw"),
-  images = c("fullres", "lowres", "hires", "detected", "aligned"),
+  images = "lowres",
   load = TRUE
 )
 }
@@ -29,7 +29,8 @@ the type of format to read count data from
 \item{data}{character string specifying whether to read in
 filtered (spots mapped to tissue) or raw data (all spots).}
 
-\item{images}{character vector specifying which images to include.}
+\item{images}{character vector specifying which images to include. 
+Valid values are \code{"lowres", "hires", "fullres", "detected", "aligned"}}
 
 \item{load}{logical; should the image(s) be loaded into memory
 as a \code{grob}? If FALSE, will store the path/URL instead.}
@@ -70,8 +71,9 @@ list.files(samples[1])
 list.files(file.path(samples[1], "spatial"))
 file.path(samples[1], "raw_feature_bc_matrix")
 
-(ve <- read10xVisium(samples, sample_ids, type="sparse", data="raw", 
-  images = c("lowres"), load = FALSE))
+(ve <- read10xVisium(samples, sample_ids, 
+  type="sparse", data="raw", 
+  images = "lowres", load = FALSE))
 
 # tabulate number of spots mapped to tissue
 table(

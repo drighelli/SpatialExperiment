@@ -94,7 +94,8 @@ NULL
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-                              sample_id="sample_01",
+    # changed from sample_01 to be consistent with read10xVisium()
+                              sample_id="sample1",
                               spatialData=NULL,
                               spatialCoordsNames=c("x", "y"),
                               scaleFactors=1,
@@ -119,7 +120,8 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
-                        sample_id="sample_01",
+    # changed from sample_01 to be consistent with read10xVisium()
+                        sample_id="sample1", 
                         spatialData=NULL,
                         spatialCoordsNames=c("x", "y"),
                         scaleFactors=1,
@@ -134,34 +136,31 @@ SpatialExperiment <- function(...,
         on.exit(S4Vectors:::disableValidity(old))
     }
     
-    if ( "Sample" %in% colnames(colData(sce)) )
-    {
-        if( is.null(sample_id) )
-        {
-            sce$sample_id <- sce$Sample
-        } else {
-            ## check how to handle multiple sample_id(s)
-            sce$sample_id <- sample_id 
-        }
-        colData(sce) <- colData(sce)[,-which(colnames(colData(sce)) == "Sample")]
+    if (is.null(sce$sample_id)) {
+        stopifnot(
+            is.character(sample_id),
+            any(length(sample_id) == c(1, ncol(sce))))
+        sce$sample_id <- sample_id
     } else {
-        ## check how to handle multiple sample_id(s)
-        if ( !isEmpty(colData(sce)) ) sce$sample_id <- sample_id 
+        if (!is.character(sce$sample_id))
+            sce$sample_id <- as.character(sce$sample_id)
+        sample_id <- unique(sce$sample_id)
     }
+    
     spe <- new("SpatialExperiment", sce)
 
-    
-    if ( !is.null(spatialData) )
+    if (!is.null(spatialData))
     {
-        stopifnot( all(spatialCoordsNames %in% colnames(spatialData)) )
+        stopifnot( 
+            is.character(spatialCoordsNames),
+            spatialCoordsNames %in% colnames(spatialData))
     }
-    spe@spaCoordsNms <- spatialCoordsNames
+    spe@spatialCoordsNames <- spatialCoordsNames
     spatialData(spe) <- spatialData
-        
     
     if ( !is.null(imgData) )
     {
-        stopifnot( all(imgData$sample_id == spe$sample_id) )
+        stopifnot(imgData$sample_id %in% spe$sample_id)
         imgData(spe) <- imgData
     } else if ( !is.null(imageSources) ) {
         if ( is.null(image_id) )
@@ -178,10 +177,8 @@ SpatialExperiment <- function(...,
         for ( i in seq_along(imageSources) )
         {
             spe <- addImg(spe, imageSource=imageSources[i], 
-                        scaleFactor=.loadScaleFacts(scaleFactors, 
-                                            basename(imageSources[i])), 
-                        sample_id=sample_id, image_id=image_id[i], 
-                        load=loadImage)
+                scaleFactor=.get_scaleFactor(scaleFactors, imageSources[i]),
+                sample_id=sample_id[i], image_id=image_id[i], load=loadImage)
         }
     }
 
@@ -194,3 +191,27 @@ setAs(
     to="SpatialExperiment", 
     function(from) .sce_to_spe(from, sample_id=NULL))
 
+#' @importFrom rjson fromJSON
+.get_scaleFactor <- function(scaleFactors, imageSource=NULL)
+{
+    scf <- scaleFactors
+    if (is.numeric(scf))
+        return(scf)
+    if (!is.list(scf)) {
+        if (!(is.character(scaleFactors) && grepl("\\.json$", scaleFactors)))
+            stop("scaleFactors should be numeric, a list or JSON file.")
+        scf <- fromJSON(file=scaleFactors)
+    }
+    if (!is.null(imageSource)) {
+        img_fnm <- basename(imageSource)
+        if (grepl("lowres", img_fnm)) {
+            scf <- scf$tissue_lowres_scalef
+        } else if (grepl("hires", img_fnm)) {
+            scf <- scf$tissue_lowres_scalef
+        } else {
+            stop("Couldn't match input imageSources and scaleFactors; please",
+                " provide a numeric value or a list of scaleFactors instead.")
+        }
+    }
+    return(scf)
+}
