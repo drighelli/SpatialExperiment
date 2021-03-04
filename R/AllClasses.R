@@ -1,4 +1,5 @@
 #' @rdname SpatialExperiment
+#' @exportClass SpatialExperiment SpatialExperiment
 #' @importFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
         contains="SingleCellExperiment",
