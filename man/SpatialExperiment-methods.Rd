@@ -61,7 +61,7 @@ the colData are binded to the spatialData.}
 identifier(s); \code{TRUE} is equivalent to all samples.}
 
 \item{as_df}{logical indicating if the returned structure has to be a 
-data.frame (default is FALSE).}
+DataFrame (default is FALSE).}
 
 \item{value}{it varies depending on the invoked method see methods details.}
 
@@ -101,11 +101,11 @@ accordingly.}
 \item{\code{spatialData(x)}:}{ The spatialData getter gives the possibility 
 to retrieve also additional columns from the
 colData structure by the aid of the \code{cd_bind} argument.
-It returns be default a DataFrame, but it is possible to retrieve a 
-data.frame by setting \code{as_df=TRUE}.}
+It returns by default a DataFrame, but it is possible to retrieve a 
+matrix by setting \code{as_df=FALSE}.}
 \item{\code{spatialCoords(x)}:}{ The \code{spatialCoords} getter returns the 
 spatial coordinates in a matrix-like form, but it is possible to retrieve 
-them in a data.frame form by setting \code{as_df=TRUE}.}
+them in a DataFrame form by setting \code{as_df=TRUE}.}
 }
 }
 
@@ -158,7 +158,7 @@ spatialData(se) <- as.data.frame(fakeSpData)
 head(spatialData(se))
 
 # for combining spatialData with colData use cd_bind 
-# use as_df for spatialData to return a data.frame 
+# use as_df for spatialData to return a DataFrame 
 head(spatialData(se, cd_bind="sample_id", as_df=TRUE))
  
 # spatialCoords returns a matrix of coordinates

@@ -30,11 +30,11 @@
 #' \item{\code{spatialData(x)}:}{ The spatialData getter gives the possibility 
 #' to retrieve also additional columns from the
 #' colData structure by the aid of the \code{cd_bind} argument.
-#' It returns be default a DataFrame, but it is possible to retrieve a 
-#' data.frame by setting \code{as_df=TRUE}.}
+#' It returns by default a DataFrame, but it is possible to retrieve a 
+#' matrix by setting \code{as_df=FALSE}.}
 #' \item{\code{spatialCoords(x)}:}{ The \code{spatialCoords} getter returns the 
 #' spatial coordinates in a matrix-like form, but it is possible to retrieve 
-#' them in a data.frame form by setting \code{as_df=TRUE}.}
+#' them in a DataFrame form by setting \code{as_df=TRUE}.}
 #' }
 #'
 #' @section spatialNames Methods:
@@ -80,7 +80,7 @@
 #' that can be retrieved from the \code{colData} structure. If this is TRUE all
 #' the colData are binded to the spatialData.
 #' @param as_df logical indicating if the returned structure has to be a 
-#' data.frame (default is FALSE).
+#' DataFrame (default is FALSE).
 #' 
 #' @return see methods details.
 #' 
@@ -89,7 +89,7 @@
 #' 
 #' 
 #' @importFrom SingleCellExperiment int_colData int_colData<-
-#' @importFrom S4Vectors nrow SimpleList isEmpty
+#' @importFrom S4Vectors nrow SimpleList isEmpty DataFrame
 #' @importFrom methods is
 #' @examples
 #' example(SpatialExperiment)
@@ -102,7 +102,7 @@
 #' head(spatialData(se))
 #' 
 #' # for combining spatialData with colData use cd_bind 
-#' # use as_df for spatialData to return a data.frame 
+#' # use as_df for spatialData to return a DataFrame 
 #' head(spatialData(se, cd_bind="sample_id", as_df=TRUE))
 #'  
 #' # spatialCoords returns a matrix of coordinates
@@ -159,7 +159,7 @@ setMethod("spatialData", "SpatialExperiment",
             colnames(spd) <- c(nms, cd_bind)
         }
         if (as_df)
-            return(as.data.frame(spd))
+            return(DataFrame(spd))
         as.matrix(spd)
     }
 )
@@ -221,7 +221,7 @@ setMethod(f="spatialCoords",
         }
         coords <- spatialData(x)[idx, spatialCoordsNames(x)]
         if (as_df)
-            return(as.data.frame(coords))
+            return(DataFrame(coords))
         as.matrix(coords)
     }
 )
