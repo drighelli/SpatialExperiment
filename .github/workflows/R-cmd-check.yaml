@@ -24,8 +24,8 @@ jobs:
         - { os: macOS-latest, r: 'devel', bioc: 'devel'}
         #
         - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:devel'}
-        - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
-        - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
+        # - { os: ubuntu-latest, r: 'devel', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
+        # - { os: ubuntu-latest, r: 'release', image: 'bioconductor/bioconductor_docker:RELEASE_3_12'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -47,6 +47,10 @@ jobs:
         uses: r-lib/actions/setup-pandoc@master
         if: matrix.config.image == null
 
+      - name: Install windows dependencies
+        if: runner.os == 'Windows'
+        run: choco install curl
+          
       - name: Install remotes
         run: |
           install.packages('remotes')
