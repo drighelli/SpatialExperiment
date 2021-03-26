@@ -1,47 +1,41 @@
 # SpatialExperiment validity ---------------------------------------------------
 
-.colData_sample_id_validity <- function(x, msg=NULL) 
-{
-    if ( !is.character(x$sample_id) )
+.colData_sample_id_validity <- function(x, msg=NULL) {
+    if (!is.character(x$sample_id))
         msg <- c(msg, "'sample_id' field in 'colData' should be 'character'")
     
-    if ( !is.null(img <- imgData(x)) ) 
-    {
+    if (!is.null(img <- imgData(x))) {
         sids <- unique(x$sample_id)
-        if ( !all(img$sample_id %in% sids) )
+        if (!all(img$sample_id %in% sids))
             msg <- c(msg, "all 'sample_id's in 'imgData'",
                 " should be in the 'colData's 'sample_id' field")
     }
 }
 
-.spatialData_validity <- function(df, coordnames, msg=NULL) 
-{
-    is_valid <- all( apply(df[, coordnames], 2, is.numeric), 
-                    TRUE)
+.spatialData_validity <- function(df, coordnames, msg=NULL) {
+    is_valid <- all(apply(df[, coordnames], 2, is.numeric), TRUE)
     if (!is_valid)
         msg <- c(msg, paste("'spatialData' fields aren't valid"))
     return(msg)
 }
 
-.colData_validity <- function(obj, msg=NULL)
-{
+.colData_validity <- function(obj, msg=NULL) {
     df <- colData(obj)
-    if ( isEmpty(df) ) return(msg)
-    if ( is.null(df$sample_id) )  
-    {
+    if (isEmpty(df)) return(msg)
+    
+    if (is.null(df$sample_id)) { 
         msg <- c(msg, "no 'sample_id' field in 'colData'")
     } else {
-        if ( !is.null(imgData(obj)) ) 
-        {
+        if (!is.null(imgData(obj))) {
             sids <- unique(df$sample_id)
             isids <- unique(imgData(obj)$sample_id)
             # bugfix: it should be allowed 
             # to have samples with missing images
             #if ( any( !(sids %in% isids), !(isids %in% sids) ) )
-            if (!all(isids %in% sids))
-            {
-                msg <- c(msg, "sample_id(s) don't match between ",
-                         "colData and imgData")
+            if (!all(isids %in% sids)) {
+                msg <- c(msg, paste(
+                    "sample_id(s) don't match",
+                    "between colData and imgData"))
             }
         }
     }
@@ -49,13 +43,13 @@
 }
 
 #' @importFrom methods is
-.imgData_validity <- function(df, msg=NULL)
-{
+.imgData_validity <- function(df, msg=NULL) {
     if (is.null(df))
         return(msg)
     
     if (!is(df, "DFrame")) 
         msg <- c(msg, "'imgData' field in 'int_metadata' should be a 'DFrame'")
+    
     nms <- c("sample_id", "image_id", "data", "scaleFactor")
     if (!identical(nms, names(df)))
         msg <- c(msg, paste(
@@ -77,8 +71,7 @@
     return(msg)
 }
 
-.spe_validity <- function(object)
-{
+.spe_validity <- function(object) {
     msg <- NULL
     msg <- .colData_validity(object, msg)
     msg <- .spatialData_validity(object@spatialData, object@spatialCoordsNames, msg)

@@ -3,8 +3,7 @@
 # - TRUE returns all available entries
 # - NULL return first available entry
 # - character string returns matching entry(ies)
-.get_img_idx <- function(x, sample_id=NULL, image_id=NULL)
-{
+.get_img_idx <- function(x, sample_id=NULL, image_id=NULL) {
     img <- imgData(x)
     if (is.character(sample_id) && is.character(image_id)) {
         sid <- img$sample_id == sample_id
@@ -44,14 +43,20 @@
 #' @importFrom grDevices as.raster
 #' @importFrom magick image_read
 #' @importFrom S4Vectors DataFrame
-.get_imgData <- function(img, scaleFactor, sample_id, image_id, load=TRUE)
-{
-    is_path <- tryCatch(error = function(e) e, .path_validity(img))
-    is_url <- tryCatch(error = function(e) e, .url_validity(img))
+.get_imgData <- function(img, scaleFactor, sample_id, image_id, load=TRUE) {
+    is_path <- tryCatch(
+        error=function(e) e, 
+        .path_validity(img))
+    
+    is_url <- tryCatch(
+        error=function(e) e, 
+        .url_validity(img))
+    
     if (!(isTRUE(is_path) || isTRUE(is_url)))
         stop("Image should be supplied as a length-one character",
             " string specifiying an image file (.png or .jpg),",
             " or a valid URL to source from")
+    
     if (load) {
         img <- image_read(img)
         img <- as.raster(img)

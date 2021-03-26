@@ -78,11 +78,11 @@ read10xVisium <- function(samples="",
     type=c("HDF5", "sparse"),
     data=c("filtered", "raw"),
     images="lowres",
-    load=TRUE)
-{
+    load=TRUE) {
+    
+    # check validity of input arguments
     type <- match.arg(type)
     data <- match.arg(data)
-    
     imgs <- c("lowres", "hires", "detected", "aligned")
     imgs <- match.arg(images, imgs, several.ok=TRUE)
 

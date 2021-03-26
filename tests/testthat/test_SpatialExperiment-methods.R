@@ -2,20 +2,20 @@ example(read10xVisium)
 
 # spatialData ------------------------------------------------------------------
 
-test_that("spatalData(); cd_bind=NULL doesn't include colData", {
+test_that("spatialData(); cd_bind=NULL doesn't include colData", {
     cd_nms <- names(colData(ve))
     spd <- spatialData(ve, cd_bind=NULL)
     expect_identical(colnames(spd), spatialDataNames(ve))
 })
 
-test_that("spatalData(); cd_bind=TRUE includes all colData", {
+test_that("spatialData(); cd_bind=TRUE includes all colData", {
     cd_nms <- names(colData(ve))
     spd <- spatialData(ve, cd_bind=TRUE)
     expect_identical(spd, spatialData(ve, cd_bind=cd_nms))
     expect_identical(colnames(spd), c(spatialDataNames(ve), cd_nms))
 })
 
-test_that("spatalData(); cd_bind needs to be character in names(colData(x))", {
+test_that("spatialData(); cd_bind needs to be character in names(colData(x))", {
     expect_error(spatialData(ve, cd_bind=123))
     expect_error(spatialData(ve, cd_bind="x"))
     
@@ -27,18 +27,18 @@ test_that("spatalData(); cd_bind needs to be character in names(colData(x))", {
     expect_identical(colnames(spd), c(spatialDataNames(ve), cd_keep))
 })
 
-test_that("spatalData(); as_df=FALSE/TRUE returns matrix/data.frame", {
+test_that("spatialData(); as_df=FALSE/TRUE returns matrix/data.frame", {
     expect_is(spatialData(ve, as_df=FALSE), "matrix")
-    expect_is(spatialData(ve, as_df=TRUE), "data.frame")
+    expect_is(spatialData(ve, as_df=TRUE), "DFrame")
 })
 
-test_that("spatalData(); sample_id=TRUE retains all observations", {
+test_that("spatialData(); sample_id=TRUE retains all observations", {
     spd <- spatialData(ve, sample_id=TRUE)
     expect_identical(spd, spatialData(ve, sample_id=unique(ve$sample_id)))
     expect_equivalent(spd, as(ve@spatialData, class(spd)[1]))
 })
 
-test_that("spatalData(); sample_id should be character in x$sample_id", {
+test_that("spatialData(); sample_id should be character in x$sample_id", {
     expect_error(spatialData(ve, sample_id=123))    
     expect_error(spatialData(ve, sample_id="x"))    
     
@@ -85,9 +85,9 @@ test_that("spatialDataNames() returns colnames(spatialData(x))", {
 
 # spatialCoords ----------------------------------------------------------------
 
-test_that("spatialCoords(); as_df=FALSE/TRUE returns matrix/data.frame", {
+test_that("spatialCoords(); as_df=FALSE/TRUE returns matrix/DFrame", {
     expect_is(spatialCoords(ve, as_df=FALSE), "matrix")
-    expect_is(spatialCoords(ve, as_df=TRUE), "data.frame")
+    expect_is(spatialCoords(ve, as_df=TRUE), "DFrame")
 })
 
 test_that("spatialCoords(); sample_id=TRUE retains all observations", {
@@ -110,3 +110,4 @@ test_that("scaleFactors()", {
     expect_true(length(sfs) == nrow(imgData(ve)))
     expect_identical(sfs, imgData(ve)$scaleFactor)
 })
+

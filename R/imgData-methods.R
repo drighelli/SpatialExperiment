@@ -88,8 +88,7 @@ NULL
 #' @rdname imgData-methods
 #' @export
 setMethod("getImg", "SpatialExperiment",
-    function(x, sample_id=NULL, image_id=NULL) 
-    {
+    function(x, sample_id=NULL, image_id=NULL) {
         spi <- imgData(x)$data
         idx <- .get_img_idx(x, sample_id, image_id)
         if (length(idx) == 1) spi[[idx]] else spi[idx]
@@ -100,8 +99,7 @@ setMethod("getImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("addImg", "SpatialExperiment",
-    function(x, imageSource, scaleFactor, sample_id, image_id, load=TRUE) 
-    {
+    function(x, imageSource, scaleFactor, sample_id, image_id, load=TRUE) {
         # check validity of input arguments
         stopifnot(
             is.numeric(scaleFactor), 
@@ -134,6 +132,7 @@ setMethod("addImg", "SpatialExperiment",
         idx <- tryCatch(
             error=function(e) e,
             .get_img_idx(x, sample_id, image_id))
+        
         if (!inherits(idx, "error"))
             stop("'imgData' already contains an entry with", 
                 sprintf(
@@ -151,7 +150,7 @@ setMethod("addImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("rmvImg", "SpatialExperiment",
-    function(x, sample_id=NULL, image_id=NULL) { 
+    function(x, sample_id=NULL, image_id=NULL) {
         idx <- .get_img_idx(x, sample_id, image_id)
         imgData(x) <- imgData(x)[-idx, , drop=FALSE]
         return(x)
@@ -162,21 +161,23 @@ setMethod("rmvImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("imgSource", "SpatialExperiment", 
-    function(x, sample_id=NULL, image_id=NULL) 
-    {
+    function(x, sample_id=NULL, image_id=NULL) {
         spi <- getImg(x, sample_id, image_id)
         if (is.list(spi)) {
             vapply(spi, imgSource, character(1)) 
-        } else imgSource(spi)
+        } else {
+            imgSource(spi)
+        }
     })
 
 #' @rdname imgData-methods
 #' @export
 setMethod("imgRaster", "SpatialExperiment", 
-    function(x, sample_id=NULL, image_id=NULL) 
-    {
+    function(x, sample_id=NULL, image_id=NULL) {
         spi <- getImg(x, sample_id, image_id)
         if (is.list(spi)) {
             lapply(spi, imgRaster) 
-        } else imgRaster(spi)
+        } else {
+            imgRaster(spi)
+        }
     })

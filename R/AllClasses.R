@@ -2,10 +2,10 @@
 #' @exportClass SpatialExperiment SpatialExperiment
 #' @importFrom SingleCellExperiment SingleCellExperiment
 setClass("SpatialExperiment",
-        contains="SingleCellExperiment",
-        slots=c(
-            spatialData="DataFrame",
-            spatialCoordsNames="character"))
+    contains="SingleCellExperiment",
+    slots=c(
+        spatialData="DataFrame",
+        spatialCoordsNames="character"))
 
 #' @export
 setClass("SpatialImage", 

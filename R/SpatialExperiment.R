@@ -94,25 +94,24 @@ NULL
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-    # changed from sample_01 to be consistent with read10xVisium()
-                              sample_id="sample1",
-                              spatialData=NULL,
-                              spatialCoordsNames=c("x", "y"),
-                              scaleFactors=1,
-                              imageSources=NULL,
-                              image_id=NULL,
-                              loadImage=FALSE,
-                              imgData=NULL)
-{
+    sample_id="sample1",
+    spatialData=NULL,
+    spatialCoordsNames=c("x", "y"),
+    scaleFactors=1,
+    imageSources=NULL,
+    image_id=NULL,
+    loadImage=FALSE,
+    imgData=NULL) {
+    
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
-                       sample_id=sample_id,
-                       spatialData=spatialData,
-                       spatialCoordsNames=spatialCoordsNames,
-                       scaleFactors=scaleFactors,
-                       imageSources=imageSources,
-                       loadImage=loadImage,
-                       imgData=imgData)
+        sample_id=sample_id,
+        spatialData=spatialData,
+        spatialCoordsNames=spatialCoordsNames,
+        scaleFactors=scaleFactors,
+        imageSources=imageSources,
+        loadImage=loadImage,
+        imgData=imgData)
     return(spe)
 }
 
@@ -120,16 +119,15 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
-    # changed from sample_01 to be consistent with read10xVisium()
-                        sample_id="sample1", 
-                        spatialData=NULL,
-                        spatialCoordsNames=c("x", "y"),
-                        scaleFactors=1,
-                        imageSources=NULL,
-                        image_id=NULL,
-                        loadImage=TRUE,
-                        imgData=NULL)
-{
+    sample_id="sample1", 
+    spatialData=NULL,
+    spatialCoordsNames=c("x", "y"),
+    scaleFactors=1,
+    imageSources=NULL,
+    image_id=NULL,
+    loadImage=TRUE,
+    imgData=NULL) {
+    
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
         S4Vectors:::disableValidity(TRUE)
@@ -150,40 +148,31 @@ SpatialExperiment <- function(...,
     spe <- new("SpatialExperiment", sce)
 
     if (!is.null(spatialData))
-    {
         stopifnot( 
             is.character(spatialCoordsNames),
             spatialCoordsNames %in% colnames(spatialData))
-    }
-    spe@spatialCoordsNames <- spatialCoordsNames
+
+    spatialCoordsNames(spe) <- spatialCoordsNames
     spatialData(spe) <- spatialData
     
-    if ( !is.null(imgData) )
-    {
+    if (!is.null(imgData)) {
         stopifnot(imgData$sample_id %in% spe$sample_id)
         imgData(spe) <- imgData
-    } else if ( !is.null(imageSources) ) {
-        if ( is.null(image_id) )
-        {
-            image_id=paste0(sample_id, "_",
-                            sub(pattern="(.*)\\..*$", 
-                                replacement="\\1", 
-                                basename(imageSources)), 
-                            seq_along(imageSources))
+    } else if (!is.null(imageSources) ){
+        if (is.null(image_id)) {
+            image_id <- sub("(.*)\\..*$", "\\1", basename(imageSources))
+            image_id <- paste0(sample_id, "_", image_id, seq_along(imageSources))
         } else {
             stopifnot(length(image_id) != length(imageSources))
         }
-        
-        for ( i in seq_along(imageSources) )
-        {
-            spe <- addImg(spe, imageSource=imageSources[i], 
-                scaleFactor=.get_scaleFactor(scaleFactors, imageSources[i]),
+        for (i in seq_along(imageSources)) {
+            scaleFactor <- .get_scaleFactor(scaleFactors, imageSources[i])
+            spe <- addImg(spe, 
+                imageSource=imageSources[i], scaleFactor=scaleFactor, 
                 sample_id=sample_id[i], image_id=image_id[i], load=loadImage)
         }
     }
-
     return(spe)
-        
 }
 
 setAs(
@@ -192,8 +181,8 @@ setAs(
     function(from) .sce_to_spe(from, sample_id=NULL))
 
 #' @importFrom rjson fromJSON
-.get_scaleFactor <- function(scaleFactors, imageSource=NULL)
-{
+.get_scaleFactor <- function(scaleFactors, imageSource=NULL) {
+    
     scf <- scaleFactors
     if (is.numeric(scf))
         return(scf)

@@ -36,8 +36,8 @@
 readImgData <- function(path=".", sample_id=names(path), 
     imageSources=file.path(path, "tissue_lowres_image.png"), 
     scaleFactors=file.path(path, "scalefactors_json.json"),
-    load=TRUE)
-{
+    load=TRUE) {
+
     # get sample identifiers
     if (is.null(sample_id))
         stop("'sample_id' mustn't be NULL")

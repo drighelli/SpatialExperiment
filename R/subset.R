@@ -26,12 +26,12 @@ NULL
 #' @export
 setMethod("[",
     c("SpatialExperiment", "ANY", "ANY"),
-    function(x, i, j, ..., drop=FALSE) 
-    {
+    function(x, i, j, ..., drop=FALSE) {
         if (missing(i)) i <- TRUE
         if (missing(j)) j <- TRUE
         x <- callNextMethod()
-        x@spatialData <- x@spatialData[j, , drop=FALSE]
+
+        spatialData(x) <- spatialData(x)[j, , drop=FALSE]
         keep <- imgData(x)$sample_id %in% unique(x$sample_id)
         imgData(x) <- imgData(x)[keep, ]
         return(x)

@@ -20,7 +20,6 @@
     callNextMethod()
     coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
     coolcat("imgData names(%d): %s\n", names(imgData(object)))
-    
 }
 
 #' @rdname SpatialExperiment-misc

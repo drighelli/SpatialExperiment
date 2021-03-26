@@ -1,5 +1,9 @@
 #' @title Combining SpatialExperiment objects
-#'
+#' @name SpatialExperiment-combine
+#' @rdname SpatialExperiment-combine
+#' @docType methods
+#' @aliases cbind,SingleCellExperiment-method
+#' 
 #' @description
 #' An overview of methods to combine multiple \linkS4class{SpatialExperiment} 
 #' objects by column.
@@ -10,27 +14,31 @@
 #' @section Combining:
 #' The \code{...} argument is thought to contain one or more 
 #' \linkS4class{SpatialExperiment} objects.
+#' 
 #' \describe{
 #' \item{\code{cbind(..., deparse.level=1)}:}{ 
-#' Returns a SpatialExperiment where
-#' all objects in \code{...} are combined column-wise,
-#' i.e., columns in successive objects are appended to the first object.
+#' Returns a SpatialExperiment where all objects in \code{...}
+#' are combined column-wise, i.e., columns in successive objects 
+#' are appended to the first object.
 #' 
 #' Each \code{SpatialExperiment} object in \code{...} must have the same 
 #' \code{colData} (with same \code{spatialCoordinates}).
 #' In case of equal sample_id the method will proceed them providing new 
-#' unique ones.
+#' unique ones. 
 #' Additionally the \code{imgData} across all the object are \code{rbind}ed. 
 #'
-#' Refer to \code{?"\link{cbind,SingleCellExperiment-method}"} for details on 
-#' how metadata and others inherited attributes are combined in the output 
-#' object.
-#' Refer to \code{?\link[base]{cbind}} for the interpretation of \code{deparse.level}.
+#' Refer to \code{?"\link{cbind,SingleCellExperiment-method}"} 
+#' for details on how metadata and others inherited attributes 
+#' are combined in the output object.
+#' 
+#' Refer to \code{?\link[base]{cbind}} 
+#' for the interpretation of \code{deparse.level}.
 #' }
 #' }
 #' 
 #' @param ... a list of SpatialExperiment objects
 #' @param deparse.level Refer to \code{?\link[base]{rbind}} 
+#' 
 #' @return a combined SpatialExperiment object
 #'
 #' @author
@@ -43,20 +51,12 @@
 #' se1 <- se
 #' se1$sample_id <- "foo1"
 #' cbind(se, se1)
-#'
-#' @docType methods
-#' @aliases
-#' cbind,SingleCellExperiment-method
-#'
-#' @name SpatialExperiment-combine
-#' @rdname SpatialExperiment-combine
 NULL
 
 #' @rdname SpatialExperiment-combine
 #' @importFrom BiocGenerics rbind cbind
-setMethod("cbind", "SpatialExperiment", 
-    function(..., deparse.level=1) 
-{
+setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1) {
+
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
         S4Vectors:::disableValidity(TRUE)
@@ -72,17 +72,19 @@ setMethod("cbind", "SpatialExperiment",
 
     samplenms <- unique(names(.getIdsTable(args, colData)))
     
-    if ( length(samplenms) != length(args) ) 
-        warning("sample_id are duplicated across SpatialExperiment objetcs to cbind")
+    if (length(samplenms) != length(args)) 
+        warning("sample_id are duplicated across",
+            " SpatialExperiment objects to cbind")
 
     # BUGFIX: spatialData defaults to returning a matrix;
     # but SpatialExperiment@spatialData needs to be a DFrame
-    outspd <- do.call(rbind, lapply(args, spatialData))
+    outspd <- lapply(args, spatialData)
+    outspd <- do.call(rbind, outspd)
     spatialData(out) <- outspd
     
     ############################## creating new imgData
-    if(!is.null(imgData(args[[1]]))) ## handle imgData across multiple samples
-    { 
+    ## handle imgData across multiple samples
+    if (!is.null(imgData(args[[1]]))) { 
         newimgdata <- do.call(rbind, lapply(args, imgData))
         int_metadata(out)[names(int_metadata(out)) %in% "imgData"] <- NULL
         int_metadata(out)$imgData <- newimgdata
@@ -93,15 +95,13 @@ setMethod("cbind", "SpatialExperiment",
     return(out)
 })
 
-.getIdsTable <- function(args, speFUN)
-{
-    idsTab <- unlist(lapply(args, function(spE)
-    {
-        sids <- table(speFUN(spE)$sample_id)
-        sids <- sids[order(unique(speFUN(spE)$sample_id))]
-        return(sids)
-    }))
-    return(idsTab)
+.getIdsTable <- function(args, speFUN) {
+    idsTab <- lapply(args, function(spE) {
+        sids <- speFUN(spE)$sample_id
+        o <- order(unique(sids))
+        table(sids)[o]
+    })
+    return(unlist(idsTab))
 }
 
 # .createSampleIds <- function(args)

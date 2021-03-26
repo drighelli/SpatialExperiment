@@ -178,4 +178,5 @@ scaleFactors(se)
 inTissue(se)
 sum(inTissue(se))
 se[inTissue(se),]
+
 }

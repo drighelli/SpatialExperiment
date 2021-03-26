@@ -28,22 +28,25 @@ such as in case of multiple samples.
 
 The \code{...} argument is thought to contain one or more 
 \linkS4class{SpatialExperiment} objects.
+
 \describe{
 \item{\code{cbind(..., deparse.level=1)}:}{ 
-Returns a SpatialExperiment where
-all objects in \code{...} are combined column-wise,
-i.e., columns in successive objects are appended to the first object.
+Returns a SpatialExperiment where all objects in \code{...}
+are combined column-wise, i.e., columns in successive objects 
+are appended to the first object.
 
 Each \code{SpatialExperiment} object in \code{...} must have the same 
 \code{colData} (with same \code{spatialCoordinates}).
 In case of equal sample_id the method will proceed them providing new 
-unique ones.
+unique ones. 
 Additionally the \code{imgData} across all the object are \code{rbind}ed. 
 
-Refer to \code{?"\link{cbind,SingleCellExperiment-method}"} for details on 
-how metadata and others inherited attributes are combined in the output 
-object.
-Refer to \code{?\link[base]{cbind}} for the interpretation of \code{deparse.level}.
+Refer to \code{?"\link{cbind,SingleCellExperiment-method}"} 
+for details on how metadata and others inherited attributes 
+are combined in the output object.
+
+Refer to \code{?\link[base]{cbind}} 
+for the interpretation of \code{deparse.level}.
 }
 }
 }
@@ -55,7 +58,6 @@ example(SpatialExperiment, echo=FALSE) # using the class example
 se1 <- se
 se1$sample_id <- "foo1"
 cbind(se, se1)
-
 }
 \author{
 Dario Righelli
