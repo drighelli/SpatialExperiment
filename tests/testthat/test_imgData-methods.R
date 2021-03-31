@@ -1,21 +1,21 @@
-example(read10xVisium)
+example(read10xVisium, echo = FALSE)
 
 # getImg -----------------------------------------------------------------------
 
 test_that("getImg,sample_id=image_id='foo' throws error", {
-    expect_error(getImg(ve, sample_id='foo', image_id='foo'))
+    expect_error(getImg(spe, sample_id='foo', image_id='foo'))
 })
 
 test_that("getImg,sample_id=image_id=NULL returns a 'SpatialImage'", {
-    x <- getImg(ve, sample_id=NULL, image_id=NULL)
-    y <- imgData(ve)$data[[1]]
+    x <- getImg(spe, sample_id=NULL, image_id=NULL)
+    y <- imgData(spe)$data[[1]]
     expect_is(x, "SpatialImage")
     expect_identical(x, y)
 })
 
 test_that("getImg,sample_id=image_id=TRUE returns a list of 'SpatialImage's", {
-    x <- getImg(ve, sample_id=TRUE, image_id=TRUE)
-    y <- imgData(ve)$data
+    x <- getImg(spe, sample_id=TRUE, image_id=TRUE)
+    y <- imgData(spe)$data
     expect_is(x, "list")
     expect_identical(x, y)
 })
@@ -23,36 +23,36 @@ test_that("getImg,sample_id=image_id=TRUE returns a list of 'SpatialImage's", {
 # addImg -----------------------------------------------------------------------
 
 test_that("addImg for existing sample_id,image_id throws error", {
-    i <- sample(nrow(df <- imgData(ve)), 1)
-    expect_error(addImg(ve, 
-        imageSource=imgSource(ve), scaleFactor=NA_real_,
+    i <- sample(nrow(df <- imgData(spe)), 1)
+    expect_error(addImg(spe, 
+        imageSource=imgSource(spe), scaleFactor=NA_real_,
         sample_id=df$sample_id[i], image_id=df$image_id[i]))
 })
 
 # rmvImg -----------------------------------------------------------------------
 
 test_that("rmvImg drops specified imgData entry", {
-    i <- sample(nrow(df <- imgData(ve)), 1)
-    x <- rmvImg(ve, sample_id=df$sample_id[i], image_id=df$image_id[i])
-    expect_identical(imgData(x), imgData(ve)[-i, ])
+    i <- sample(nrow(df <- imgData(spe)), 1)
+    x <- rmvImg(spe, sample_id=df$sample_id[i], image_id=df$image_id[i])
+    expect_identical(imgData(x), imgData(spe)[-i, ])
 })
 
 # imgSource --------------------------------------------------------------------
 
 test_that("imgSource,sample_id=image_id='foo' throws error", {
-    expect_error(imgSource(ve, sample_id='foo', image_id='foo'))
+    expect_error(imgSource(spe, sample_id='foo', image_id='foo'))
 })
 
 test_that("imgSource,sample_id=image_id=NULL returns character", {
-    x <- imgSource(ve, sample_id=NULL, image_id=NULL)
-    y <- imgSource(imgData(ve)$data[[1]])
+    x <- imgSource(spe, sample_id=NULL, image_id=NULL)
+    y <- imgSource(imgData(spe)$data[[1]])
     expect_is(x, "character")
     expect_identical(x, y)
 })
 
-test_that("imgSource,sample_id=image_id=TRUE returns character vector", {
-    x <- imgSource(ve, sample_id=TRUE, image_id=TRUE)
-    y <- vapply(imgData(ve)$data, imgSource, character(1))
+test_that("imgSource,sample_id=image_id=TRUE returns character spector", {
+    x <- imgSource(spe, sample_id=TRUE, image_id=TRUE)
+    y <- vapply(imgData(spe)$data, imgSource, character(1))
     expect_is(x, "character")
     expect_identical(x, y)
 })
