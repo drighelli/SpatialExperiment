@@ -17,9 +17,12 @@
 #' @return a SpatialExperiment class object
 #' @examples 
 #' example(SpatialExperiment)
-#' se1 <- se[,1:10]
-#' colData(se1)
-#' spatialData(se1)
+#' idx <- sample(ncol(spe), 10)
+#' sub <- spe[, idx]
+#' dim(sub)
+#' spatialData(sub, 
+#'   spatialCoords = TRUE, 
+#'   colData = TRUE)
 NULL
 
 #' @importFrom methods callNextMethod
@@ -30,8 +33,6 @@ setMethod("[",
         if (missing(i)) i <- TRUE
         if (missing(j)) j <- TRUE
         x <- callNextMethod()
-
-        spatialData(x) <- spatialData(x)[j, , drop=FALSE]
         keep <- imgData(x)$sample_id %in% unique(x$sample_id)
         imgData(x) <- imgData(x)[keep, ]
         return(x)
