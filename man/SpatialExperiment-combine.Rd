@@ -52,12 +52,29 @@ for the interpretation of \code{deparse.level}.
 }
 
 \examples{
-example(SpatialExperiment, echo=FALSE) # using the class example
+example(read10xVisium, echo = FALSE)
 
-# Combining:
-se1 <- se
-se1$sample_id <- "foo1"
-cbind(se, se1)
+# merging with duplicated 'sample_id's
+# will automatically make them unique
+spe1 <- spe2 <- spe
+spe3 <- cbind(spe1, spe2)
+unique(spe3$sample_id)
+
+# make sample identifiers unique
+spe1 <- spe2 <- spe
+spe1$sample_id <- paste(spe1$sample_id, "sample1", sep = ".")
+spe2$sample_id <- paste(spe2$sample_id, "sample2", sep = ".")
+
+# combine into single object
+spe <- cbind(spe1, spe2)
+
+# view joint 'imgData'
+imgData(spe)
+
+# tabulate number of spots mapped to tissue
+table(
+  in_tissue = spe$in_tissue, 
+  sample_id = spe$sample_id)
 }
 \author{
 Dario Righelli

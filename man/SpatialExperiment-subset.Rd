@@ -27,7 +27,10 @@ are updated across the colData and spatialData objects
 
 \examples{
 example(SpatialExperiment)
-se1 <- se[,1:10]
-colData(se1)
-spatialData(se1)
+idx <- sample(ncol(spe), 10)
+sub <- spe[, idx]
+dim(sub)
+spatialData(sub, 
+  spatialCoords = TRUE, 
+  colData = TRUE)
 }
