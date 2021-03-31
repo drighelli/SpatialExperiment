@@ -7,15 +7,40 @@
     if (!is.null(img <- imgData(x))) {
         sids <- unique(x$sample_id)
         if (!all(img$sample_id %in% sids))
-            msg <- c(msg, "all 'sample_id's in 'imgData'",
-                " should be in the 'colData's 'sample_id' field")
+            msg <- c(msg, paste(
+                "all 'sample_id's in 'imgData'",
+                "should be in the 'colData's 'sample_id' field"))
     }
 }
 
-.spatialData_validity <- function(df, coordnames, msg=NULL) {
-    is_valid <- all(apply(df[, coordnames], 2, is.numeric), TRUE)
-    if (!is_valid)
-        msg <- c(msg, paste("'spatialData' fields aren't valid"))
+#' @importFrom SingleCellExperiment int_colData
+.spatialCoords_validity <- function(x, msg=NULL) {
+    y <- int_colData(x)$spatialCoords
+    if (is.null(y)) {
+        msg <- c(msg, "no 'spatialCoords' field in 'int_colData'")
+    } else if (!is.matrix(y) && is.numeric(y)) {
+        msg <- c(msg, paste(
+            "'spatialCoords' field in 'int_colData'",
+            "should be a numeric matrix"))
+    }
+    return(msg)
+}
+
+#' @importFrom SingleCellExperiment int_metadata
+#' @importFrom SummarizedExperiment colData
+.spatialDataNames_validity <- function(x, msg=NULL) {
+    y <- int_metadata(x)$spatialDataNames
+    if (is.null(y)) {
+        msg <- c(msg, "no 'spatialDataNames' field in 'int_metadata'")
+    } else if (!is.character(y)) {
+        msg <- c(msg, paste(
+            "'spatialDataNames' field in 'int_metadata'",
+            "should be of type 'character'"))
+    } else if (!all(y %in% names(colData(x)))) {
+        msg <- c(msg, paste(
+            "all 'spatialDataNames' in 'int_metadata'",
+            "should correspond to columns in 'colData'"))
+    }
     return(msg)
 }
 
@@ -74,7 +99,8 @@
 .spe_validity <- function(object) {
     msg <- NULL
     msg <- .colData_validity(object, msg)
-    msg <- .spatialData_validity(object@spatialData, object@spatialCoordsNames, msg)
+    msg <- .spatialCoords_validity(object, msg)
+    msg <- .spatialDataNames_validity(object, msg)
     msg <- .imgData_validity(imgData(object), msg)
     if (length(msg)) return(msg)
     return(TRUE)
