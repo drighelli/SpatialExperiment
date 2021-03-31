@@ -1,8 +1,7 @@
 #' @rdname SpatialExperiment-methods
 #' @importFrom SingleCellExperiment int_metadata
 #' @export
-setMethod("imgData", "SpatialExperiment", 
-    function(x) int_metadata(x)$imgData)
+setMethod("imgData", "SpatialExperiment", function(x) int_metadata(x)$imgData)
 
 #' @rdname SpatialExperiment-methods
 #' @importFrom S4Vectors DataFrame

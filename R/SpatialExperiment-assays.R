@@ -1,13 +1,20 @@
-#' @title 
-#' Named assay getters and setters
+#' @title Named assay getters and setters
+#' @name SpatialExperiment-assays
+#' @rdname SpatialExperiment-assays
+#' @docType methods
+#' @aliases
+#' molecules
+#' molecules<-
+#' molecules,SpatialExperiment-method
+#' molecules<-,SpatialExperiment-method
 #'
 #' @description
 #' These are methods for getting or setting \code{assay(se, i=X, ...)} 
 #' where \code{se} is a \linkS4class{SpatialExperiment} object and \code{X} is 
 #' the name of the method.
 #' For example, \code{molecules} will get or set \code{X="molecules"}.
-#' This provides some convenience for users as well as encouraging standardization 
-#' of assay names across packages.
+#' This provides some convenience for users as well as 
+#' encouraging standardization of assay names across packages.
 #'
 #' @section Available methods:
 #' In the following code snippets, \code{x} is a \linkS4class{SpatialExperiment} 
@@ -17,12 +24,12 @@
 #' 
 #' \describe{
 #' \item{\code{molecules(x, ...)}, \code{molecules(x, ...) <- value}:}{
-#' Get or set a BumpyMatrix of raw count data, e.g., number of reads or transcripts.
+#' Get or set a BumpyMatrix of raw count data, 
+#' e.g., number of reads or transcripts.
 #' }
 #' }
 #' 
-#' @author
-#' Dario Righelli
+#' @author Dario Righelli
 #' 
 #' @seealso
 #' \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.
@@ -30,17 +37,7 @@
 #' @examples
 #' 
 #' ## TBD
-#' 
-#' @name SpatialExperiment-assays
-#' @rdname SpatialExperiment-assays
-#' @docType methods
-#' @aliases
-#' molecules
-#' molecules<-
-#' molecules,SpatialExperiment-method
-#' molecules<-,SpatialExperiment-method
 NULL
-
 
 GET_FUN <- function(exprs_values, ...) {
     (exprs_values) # To ensure evaluation
@@ -59,7 +56,6 @@ SET_FUN <- function(exprs_values, ...) {
 
 #' @export
 setMethod("molecules", "SpatialExperiment", GET_FUN("molecules"))
-
 
 #' @export
 setReplaceMethod("molecules", c("SingleCellExperiment", "ANY"), SET_FUN("molecules"))

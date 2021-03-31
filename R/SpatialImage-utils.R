@@ -1,4 +1,5 @@
-.remote_file_cache <- function(URL, cache) {
+.remote_file_cache <- function(URL, cache) 
+{
     # perhaps can be more tolerant of missing a BiocFileCache installation?
     if (is.null(cache)) {
         args <- list(ask=FALSE)
@@ -14,7 +15,8 @@ image.cache <- new.env()
 image.cache$cached <- list()
 
 #' @importFrom utils head tail object.size
-.get_from_cache <- function(ID, FUN) {
+.get_from_cache <- function(ID, FUN) 
+{
     img <- image.cache$cached[[ID]]
     if (!is.null(img)) {
         # if we get the image, we rotate it to the end of the cache so that it
@@ -39,7 +41,8 @@ image.cache$cached <- list()
     img
 }
 
-.flush_cache <- function() {
+.flush_cache <- function() 
+{
     # currently for use in tests only,
     # but may possibly want to export
     image.cache$cached <- list()

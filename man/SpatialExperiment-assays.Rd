@@ -13,8 +13,8 @@ These are methods for getting or setting \code{assay(se, i=X, ...)}
 where \code{se} is a \linkS4class{SpatialExperiment} object and \code{X} is 
 the name of the method.
 For example, \code{molecules} will get or set \code{X="molecules"}.
-This provides some convenience for users as well as encouraging standardization 
-of assay names across packages.
+This provides some convenience for users as well as 
+encouraging standardization of assay names across packages.
 }
 \section{Available methods}{
 
@@ -25,7 +25,8 @@ dimensions as \code{x}, and \code{...} are further arguments passed to
 
 \describe{
 \item{\code{molecules(x, ...)}, \code{molecules(x, ...) <- value}:}{
-Get or set a BumpyMatrix of raw count data, e.g., number of reads or transcripts.
+Get or set a BumpyMatrix of raw count data, 
+e.g., number of reads or transcripts.
 }
 }
 }
@@ -33,7 +34,6 @@ Get or set a BumpyMatrix of raw count data, e.g., number of reads or transcripts
 \examples{
 
 ## TBD
-
 }
 \seealso{
 \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.

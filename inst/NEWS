@@ -1,42 +1,68 @@
+changes in version 1.1.5 (2021-31-03)
++ version bump to x.y.z format with .z increment
++ general code-style revision to keep to Bioc guidelines including, e.g.
+  + usage of accessors (and not @)
+  + keeping to a 80-character limit
+  + spaces around logical operators (but not function arguments)
+  + in-line { for function definitions, if-else statements etc. 
+  + re-ordering of roxygen2 documentation to be consistent across scripts
+
 changes in version 1.1.434 (2021-26-02)
 + fixing subset method according to SummarizedExperiment generic definition
+
 changes in version 1.1.432 (2021-15-02)
 + fixing documentation on latex errors
+
 changes in version 1.1.430-1.1.431 (2021-12-02)
 + adding BumpyMatrix as suggests
 + update documentation
+
 changes in version 1.1.429 (2021-12-02)
 + adding cd_keep = TRUE binds all the colData to the spatialData 
 + fixing bug for cd_keep with multiple elements
+
 changes in version 1.1.428 (2021-12-02)
 + adding itemize to assays vignette item
 + correcting typo cd_keep->cd_bind in spatialData documentation
+
 changes in version 1.1.427 (2021-09-02)
 + fixing tenx vignette
+
 changes in version 1.1.426 (2021-09-02)
 + fixing read10xVisium example with data parameter
+
 changes in version 1.1.425 (2021-08-02)
 + restoring data parameter in read10xVisium
 + missing itemize in combine documentation
+
 changes in version 1.1.424 (2021-07-02)
 + cleaning documentation
 + removing spatialImage-methods.R file
+
 changes in version 1.1.423 (2021-02-02)
 + fixing documentation issues on imgData
+
 changes in version 1.1.422 (2021-29-01)
-+ removing ve data because of local image problem (using example(read10xVisium) instead)
++ removing ve data because of local image problem
+  (using example(read10xVisium) instead)
+
 changes in version 1.1.421 (2021-28-01)
 + fixing ve data local image problem
+
 changes in version 1.1.42 (2021-21-01)
 + implementing new SpatialExperiment class
 + spatialData slot 
 + imgData and image handling methods (HLC)
+
 changes in version 0.99.4 (2020-24-07)
 + implementing bioconductor revisions first round
+
 changes in versionn 0.99.3 (2020-21-07)
 + implementing imagePaths in VisiumExperiment class
 + SpatialExperiment can now be created also without spatial coordinates
+
 changes in versionn 0.99.2 (2020-17-07)
 + adding version 0.99.2
+
 changes in versionn 0.99.1 (2020-09-07)
 + adding version 0.99.1

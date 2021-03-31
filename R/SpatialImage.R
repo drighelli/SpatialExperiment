@@ -143,35 +143,41 @@ setMethod("imgRaster", "LoadedSpatialImage", function(x) x@image)
 
 #' @export
 #' @importFrom magick image_read image_destroy
-setMethod("imgRaster", "StoredSpatialImage", function(x, ...) {
-    path <- normalizePath(x@path)
-    FUN <- function() {
-        img <- image_read(path, ...)
-        on.exit(image_destroy(img))
-        as.raster(img)
-    }        
-    # adding file:// to protect against the hypothetical
-    # case where a file is named after a URL
-    .get_from_cache(paste0("file://", path), FUN)
-})
+setMethod("imgRaster", 
+    "StoredSpatialImage", 
+    function(x, ...) {
+        path <- normalizePath(x@path)
+        FUN <- function() {
+            img <- image_read(path, ...)
+            on.exit(image_destroy(img))
+            as.raster(img)
+        }        
+        # adding file:// to protect against the hypothetical
+        # case where a file is named after a URL
+        .get_from_cache(paste0("file://", path), FUN)
+    })
 
 #' @export
 #' @importFrom magick image_read image_destroy
-setMethod("imgRaster", "RemoteSpatialImage", function(x, cache=NULL, ...) {
-    URL <- x@url
-    FUN <- function() {
-        path <- .remote_file_cache(URL, cache)
-        img <- image_read(path, ...)
-        on.exit(image_destroy(img))
-        as.raster(img)
-    }        
-    .get_from_cache(URL, FUN)
-})
+setMethod("imgRaster", 
+    "RemoteSpatialImage", 
+    function(x, cache=NULL, ...) {
+        URL <- x@url
+        FUN <- function() {
+            path <- .remote_file_cache(URL, cache)
+            img <- image_read(path, ...)
+            on.exit(image_destroy(img))
+            as.raster(img)
+        }        
+        .get_from_cache(URL, FUN)
+    })
 
 #' @export
 setMethod("imgSource", "LoadedSpatialImage", function(x) NA_character_)
+
 #' @export
 setMethod("imgSource", "StoredSpatialImage", function(x) x@path)
+
 #' @export
 setMethod("imgSource", "RemoteSpatialImage", function(x) x@url)
 
@@ -183,8 +189,7 @@ setMethod("dim", "SpatialImage", function(x) dim(imgRaster(x)))
 #' @export
 setReplaceMethod("imgRaster",
     c("LoadedSpatialImage", "ANY"),
-    function(x, value)
-    {
+    function(x, value) {
         x@image <- value
         return(x)
     })
@@ -192,8 +197,7 @@ setReplaceMethod("imgRaster",
 #' @export
 setReplaceMethod("imgSource", 
     c("StoredSpatialImage", "character"), 
-    function(x, value) 
-    { 
+    function(x, value) { 
         .path_validity(value)
         x@path <- value
         return(x) 
@@ -202,8 +206,7 @@ setReplaceMethod("imgSource",
 #' @export
 setReplaceMethod("imgSource", 
     c("RemoteSpatialImage", "character"), 
-    function(x, value) 
-    { 
+    function(x, value) { 
         .url_validity(value)
         x@url <- value
         return(x) 
@@ -215,11 +218,18 @@ setReplaceMethod("imgSource",
 #' @method as.raster SpatialImage
 as.raster.SpatialImage <- function(x, ...) imgRaster(x, ...)
 
-setAs("SpatialImage", "LoadedSpatialImage", function(from) {
-    new("LoadedSpatialImage", image=imgRaster(from)) 
-})
+setAs("SpatialImage", 
+    "LoadedSpatialImage", 
+    function(from) {
+        img <- imgRaster(from)
+        new("LoadedSpatialImage", image=img)
+    }
+)
 
-setAs("RemoteSpatialImage", "StoredSpatialImage", function(from) {
-    path <- .remote_file_cache(from@url, cache=NULL)
-    new("StoredSpatialImage", path=path)
-})
+setAs("RemoteSpatialImage", 
+    "StoredSpatialImage", 
+    function(from) {
+        path <- .remote_file_cache(from@url, cache=NULL)
+        new("StoredSpatialImage", path=path)
+    }
+)
