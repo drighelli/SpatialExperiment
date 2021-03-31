@@ -78,16 +78,9 @@ coords <- read.table(
 fse <- SpatialExperiment(rowData=rownames(counts),
                         colData=labels,
                         assays=SimpleList(counts=as.matrix(counts)),
-                        spatialData=coords)
-spatialData(fse)
-spatialDataNames(fse)
-```
-
-Here we provide a ggplot example usage, without running it.
-
-```{r fig.width=6, fig.height=3, eval=FALSE}
-ggplot(spatialData(fse, cd_bind="class", as_df=TRUE), aes(x, y, col = class)) + 
-    geom_point() + coord_equal()
+                        spatialData=DataFrame(coords),
+                        spatialCoordsNames=c("x", "y"))
+head(spatialData(fse, spatialCoords = TRUE))
 ```
 
 # Session information {- .smaller}
