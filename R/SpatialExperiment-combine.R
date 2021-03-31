@@ -45,12 +45,29 @@
 #' Dario Righelli
 #'
 #' @examples
-#' example(SpatialExperiment, echo=FALSE) # using the class example
+#' example(read10xVisium, echo = FALSE)
 #'
-#' # Combining:
-#' se1 <- se
-#' se1$sample_id <- "foo1"
-#' cbind(se, se1)
+#' # merging with duplicated 'sample_id's
+#' # will automatically make them unique
+#' spe1 <- spe2 <- spe
+#' spe3 <- cbind(spe1, spe2)
+#' unique(spe3$sample_id)
+#'
+#' # make sample identifiers unique
+#' spe1 <- spe2 <- spe
+#' spe1$sample_id <- paste(spe1$sample_id, "sample1", sep = ".")
+#' spe2$sample_id <- paste(spe2$sample_id, "sample2", sep = ".")
+#' 
+#' # combine into single object
+#' spe <- cbind(spe1, spe2)
+#' 
+#' # view joint 'imgData'
+#' imgData(spe)
+#' 
+#' # tabulate number of spots mapped to tissue
+#' table(
+#'   in_tissue = spe$in_tissue, 
+#'   sample_id = spe$sample_id)
 NULL
 
 #' @rdname SpatialExperiment-combine
@@ -62,59 +79,36 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1) {
         S4Vectors:::disableValidity(TRUE)
         on.exit(S4Vectors:::disableValidity(old))
     }
-    out <- callNextMethod()
     args <- list(...)
     
-    ################################# keeping sample_id unique
-    # sampleids <- .createSampleIds(args)
-    # colData(out)$sample_id <- rep(names(sampleids), times=sampleids)
-    ####################
-
-    samplenms <- unique(names(.getIdsTable(args, colData)))
+    # check that 'sample_id's are unique;
+    # otherwise make them by appending 
+    # '.n' where n = sample number
+    sids <- unlist(lapply(args, function(.) unique(.$sample_id)))
+    if (length(sids) != length(unique(sids))) {
+        message(
+            "'sample_id's are duplicated across",
+            " 'SpatialExperiment' objects to cbind;",
+            " appending sample indices.")
+        idx <- c(0, cumsum(vapply(args, ncol, numeric(1))))
+        for (i in seq_along(args)) {
+            old <- args[[i]]$sample_id
+            new <- paste(old, i, sep = ".")
+            args[[i]]$sample_id <- new
+        }
+    }
     
-    if (length(samplenms) != length(args)) 
-        warning("sample_id are duplicated across",
-            " SpatialExperiment objects to cbind")
-
-    # BUGFIX: spatialData defaults to returning a matrix;
-    # but SpatialExperiment@spatialData needs to be a DFrame
-    outspd <- lapply(args, spatialData)
-    outspd <- do.call(rbind, outspd)
-    spatialData(out) <- outspd
+    # bind SPEs
+    out <- do.call(
+        callNextMethod, 
+        c(args, list(deparse.level=1)))
     
-    ############################## creating new imgData
-    ## handle imgData across multiple samples
+    # merge 'imgData' from multiple samples
     if (!is.null(imgData(args[[1]]))) { 
         newimgdata <- do.call(rbind, lapply(args, imgData))
-        int_metadata(out)[names(int_metadata(out)) %in% "imgData"] <- NULL
+        int_metadata(out)[names(int_metadata(out)) == "imgData"] <- NULL
         int_metadata(out)$imgData <- newimgdata
-        # imgids <- .getIdsTable(args, imgData)
-        # imgData(out)$sample_id <- rep(names(sampleids), imgids)
     } 
         
     return(out)
 })
-
-.getIdsTable <- function(args, speFUN) {
-    idsTab <- lapply(args, function(spE) {
-        sids <- speFUN(spE)$sample_id
-        o <- order(unique(sids))
-        table(sids)[o]
-    })
-    return(unlist(idsTab))
-}
-
-# .createSampleIds <- function(args)
-# {
-#     sampleids <- .getIdsTable(args, colData)
-#     dups <- duplicated(names(sampleids))
-#     # names(sampleids)[!dups] <- lapply(names(sampleids)[!dups], function(x) paste0(x, 0))
-#     i <- 1
-#     while( sum(dups) != 0 )
-#     {
-#         names(sampleids)[dups] <- lapply(names(sampleids)[dups], function(x) paste0(x, i))
-#         dups <- duplicated(names(sampleids))
-#         i <- i+1
-#     }
-#     return(sampleids)
-# }
