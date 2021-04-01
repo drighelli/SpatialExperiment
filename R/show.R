@@ -17,8 +17,11 @@
 #' @importFrom S4Vectors coolcat
 #' @importFrom methods callNextMethod
 .spe_show <- function(object) {
-    callNextMethod()
+    tmp <- object
+    spatialData(tmp) <- NULL
+    callNextMethod(tmp)
     coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
+    coolcat("spatialCoords names(%d) : %s\n", spatialCoordsNames(object))
     coolcat("imgData names(%d): %s\n", names(imgData(object)))
 }
 

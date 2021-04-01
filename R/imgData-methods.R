@@ -55,19 +55,19 @@
 #' example(read10xVisium)
 #' 
 #' # 'SpatialImage' accession
-#' (spi <- getImg(ve))
+#' (spi <- getImg(spe))
 #' plot(imgRaster(spi))
 #' 
 #' # remove an image
-#' imgData(ve)
-#' ve <- rmvImg(ve,
+#' imgData(spe)
+#' spe <- rmvImg(spe,
 #'   sample_id = "section1",
 #'   image_id = "lowres")
-#' imgData(ve)
+#' imgData(spe)
 #' 
 #' # add an image
 #' url <- "https://i.redd.it/3pw5uah7xo041.jpg"
-#' ve <- addImg(ve,
+#' spe <- addImg(spe,
 #'   sample_id = "section1",
 #'   image_id = "pomeranian",
 #'   imageSource = url,
@@ -75,7 +75,7 @@
 #'   load = FALSE)
 #' 
 #' # extract image
-#' img <- imgRaster(ve,
+#' img <- imgRaster(spe,
 #'   sample_id = "section1",
 #'   image_id = "pomeranian")
 #' plot(img)

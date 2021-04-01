@@ -55,23 +55,23 @@
 #' list.files(file.path(samples[1], "spatial"))
 #' file.path(samples[1], "raw_feature_bc_matrix")
 #' 
-#' (ve <- read10xVisium(samples, sample_ids, 
+#' (spe <- read10xVisium(samples, sample_ids, 
 #'   type="sparse", data="raw", 
 #'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
 #' table(
-#'   in_tissue = inTissue(ve), 
-#'   sample_id = ve$sample_id )
+#'   in_tissue = spe$in_tissue, 
+#'   sample_id = spe$sample_id)
 #' 
 #' # view available images
-#' imgData(ve)
+#' imgData(spe)
 #' 
 #' @importFrom rjson fromJSON
 #' @importFrom DropletUtils read10xCounts
 #' @importFrom methods as
-#' @importFrom S4Vectors DataFrame metadata 
-#' @importFrom SummarizedExperiment assay assay<- rowData rowData<- metadata<-
+#' @importFrom S4Vectors DataFrame 
+#' @importFrom SummarizedExperiment assays rowData
 #' @export
 read10xVisium <- function(samples="",
     sample_id=paste0("sample", seq_along(samples)),
@@ -141,17 +141,16 @@ read10xVisium <- function(samples="",
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)
-        sce$sample_id <- sids[i]
-        metadata(sce)$Samples <- NULL
-        rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
 
         # construct 'SpatialExperiment'
-        spe <- as(sce, "SpatialExperiment")
-        spatialCoordsNames(spe) <- c("array_col", "array_row")
         spd <- .read_xyz(xyz[i])
-        spd <- spd[colnames(spe), ]
-        spatialData(spe) <- spd
-        return(spe)
+        sce <- sce[, rownames(spd)]
+        SpatialExperiment(
+            assays = assays(sce),
+            rowData = DataFrame(symbol = rowData(sce)$Symbol),
+            sample_id = sids[i],
+            spatialData = DataFrame(spd),
+            spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"))
     }) 
     spe <- do.call(cbind, spel)
     imgData(spe) <- img

@@ -15,7 +15,7 @@
 #' 
 #' @examples 
 #' example(SpatialExperiment)
-#' colData(se) <- NULL
+#' colData(spe) <- NULL
 NULL
 
 # the following overwrites 'SummarizedExperiment's 'colData' 

@@ -1,3 +1,19 @@
+changes in version 1.1.6 (2021-01-04)
++ removed additional slots in the SPE class definition 
+  (i.e. spatialData and spatialCoordsNames)
++ spatialCoords stored in int_colData() = numeric matrix
++ spatialDataNames stored in int_metadata() 
+  = character vector specifying a subset of colData()
++ the SPE show method does not include spatialData in colData;
+  instead, spatialData/CoordNames are printed separately
++ the SPE constructor now allows specification of spatialData/Coords/-Names
+  where -Names can be a subset of the supplied colData();
+  spatialData/Coords are thus optional
++ cbind() now allows duplicated sample_ids, 
+  which are made unique with a message
++ consistent usage of "spe" for SpatialExperiment objects across 
+  all examples (previously, both ve and se were used as well)
+
 changes in version 1.1.5 (2021-31-03)
 + version bump to x.y.z format with .z increment
 + general code-style revision to keep to Bioc guidelines including, e.g.

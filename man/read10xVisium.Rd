@@ -71,17 +71,17 @@ list.files(samples[1])
 list.files(file.path(samples[1], "spatial"))
 file.path(samples[1], "raw_feature_bc_matrix")
 
-(ve <- read10xVisium(samples, sample_ids, 
+(spe <- read10xVisium(samples, sample_ids, 
   type="sparse", data="raw", 
   images = "lowres", load = FALSE))
 
 # tabulate number of spots mapped to tissue
 table(
-  in_tissue = inTissue(ve), 
-  sample_id = ve$sample_id )
+  in_tissue = spe$in_tissue, 
+  sample_id = spe$sample_id)
 
 # view available images
-imgData(ve)
+imgData(spe)
 
 }
 \author{

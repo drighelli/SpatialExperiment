@@ -82,11 +82,11 @@
 #'   symbol = rowData(sce)$Symbol)
 #'   
 #' # construct 'SpatialExperiment'
-#' (se <- SpatialExperiment(
+#' (spe <- SpatialExperiment(
 #'     assays = list(counts = assay(sce)),
 #'     colData = colData(sce), rowData = rd, imgData = img,
-#'     spatialData=xyz, 
-#'     spatialCoordsNames=c("array_col", "array_row"),
+#'     spatialData=DataFrame(xyz), 
+#'     spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
 #'     sample_id="foo"))
 NULL
 
@@ -95,8 +95,10 @@ NULL
 #' @export
 SpatialExperiment <- function(..., 
     sample_id="sample1",
+    spatialDataNames=NULL,
+    spatialCoordsNames=NULL,
     spatialData=NULL,
-    spatialCoordsNames=c("x", "y"),
+    spatialCoords=NULL,
     scaleFactors=1,
     imageSources=NULL,
     image_id=NULL,
@@ -106,8 +108,10 @@ SpatialExperiment <- function(...,
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
         sample_id=sample_id,
-        spatialData=spatialData,
+        spatialDataNames=spatialDataNames,
         spatialCoordsNames=spatialCoordsNames,
+        spatialData=spatialData,
+        spatialCoords=spatialCoords,
         scaleFactors=scaleFactors,
         imageSources=imageSources,
         loadImage=loadImage,
@@ -120,8 +124,10 @@ SpatialExperiment <- function(...,
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
     sample_id="sample1", 
+    spatialDataNames=NULL,
+    spatialCoordsNames=NULL,
     spatialData=NULL,
-    spatialCoordsNames=c("x", "y"),
+    spatialCoords=NULL,
     scaleFactors=1,
     imageSources=NULL,
     image_id=NULL,
@@ -138,6 +144,8 @@ SpatialExperiment <- function(...,
         stopifnot(
             is.character(sample_id),
             any(length(sample_id) == c(1, ncol(sce))))
+        if (ncol(sce) == 0) 
+            sample_id <- character()
         sce$sample_id <- sample_id
     } else {
         if (!is.character(sce$sample_id))
@@ -147,14 +155,59 @@ SpatialExperiment <- function(...,
     
     spe <- new("SpatialExperiment", sce)
 
-    if (!is.null(spatialData))
-        stopifnot( 
-            is.character(spatialCoordsNames),
-            spatialCoordsNames %in% colnames(spatialData))
-
-    spatialCoordsNames(spe) <- spatialCoordsNames
-    spatialData(spe) <- spatialData
+    # in the following code chunk, we give precedence 
+    # to spatialData/CoordsNames over spatialData/Coords
+    #   where spatialDataNames should be in colData,
+    #   and spatialCoordsNames can be in both colData and spatialData
+    # if both spatialData/Coords and -Names are supplied
+    #   we give an informative warning notifying the user
+    #   that spatialData/CoordsNames will be used 
     
+    msg <- function(.) message(sprintf(paste(                
+        "both '%s' and '%sNames'  have been supplied; using '%s'.",
+        "Set either to NULL to suppress this message"), ., ., .))
+    
+    if (!is.null(spatialCoordsNames)) {
+        stopifnot(
+            is.character(spatialCoordsNames),
+            all(spatialCoordsNames %in% names(colData(spe)))
+            || all(spatialCoordsNames %in% names(spatialData)))
+        if (!is.null(spatialCoords)) 
+            msg("spatialCoords")
+        if (all(spatialCoordsNames %in% names(colData(spe)))) {
+            spatialCoords(spe) <- as.matrix(colData(spe)[spatialCoordsNames])
+        } else {
+            i <- spatialCoordsNames
+            j <- setdiff(names(spatialData), i)
+            spatialCoords(spe) <- as.matrix(spatialData[i])
+            spatialData <- spatialData[j]
+        }
+    } else if (!is.null(spatialCoords)) {
+        stopifnot(
+            is.matrix(spatialCoords),
+            is.numeric(spatialCoords),
+            nrow(spatialCoords) == ncol(spe))
+        spatialCoords(spe) <- spatialCoords
+    } else {
+        spatialCoords(spe) <- NULL
+    }
+    
+    if (!is.null(spatialDataNames)) {
+        stopifnot(
+            is.character(spatialDataNames), 
+            spatialDataNames %in% names(colData(spe)))
+        if (!is.null(spatialData)) 
+            msg("spatialData")
+        spatialDataNames(spe) <- spatialDataNames
+    } else if (!is.null(spatialData)) {
+        stopifnot(
+            is(spatialData, "DFrame"),
+            nrow(spatialData) == ncol(spe))
+        spatialData(spe) <- spatialData
+    } else {
+        spatialData(spe) <- NULL
+    }
+
     if (!is.null(imgData)) {
         stopifnot(imgData$sample_id %in% spe$sample_id)
         imgData(spe) <- imgData

@@ -88,11 +88,11 @@ rd <- S4Vectors::DataFrame(
   symbol = rowData(sce)$Symbol)
   
 # construct 'SpatialExperiment'
-(se <- SpatialExperiment(
+(spe <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     colData = colData(sce), rowData = rd, imgData = img,
-    spatialData=xyz, 
-    spatialCoordsNames=c("array_col", "array_row"),
+    spatialData=DataFrame(xyz), 
+    spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     sample_id="foo"))
 }
 \author{

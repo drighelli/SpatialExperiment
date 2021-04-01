@@ -39,6 +39,7 @@
 #' ## TBD
 NULL
 
+#' @importFrom SummarizedExperiment assay
 GET_FUN <- function(exprs_values, ...) {
     (exprs_values) # To ensure evaluation
     function(x, ...) {
@@ -46,6 +47,7 @@ GET_FUN <- function(exprs_values, ...) {
     }
 }
 
+#' @importFrom SummarizedExperiment assay<-
 SET_FUN <- function(exprs_values, ...) {
     (exprs_values) # To ensure evaluation
     function(x, ..., value) {

@@ -28,5 +28,5 @@ In case a \code{NULL} value is passed, the \code{colData} are dropped.
 }
 \examples{
 example(SpatialExperiment)
-colData(se) <- NULL
+colData(spe) <- NULL
 }
