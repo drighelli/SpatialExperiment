@@ -1,3 +1,5 @@
+example(read10xVisium, echo = FALSE)
+
 test_that("empty constructor", {
     spe <- SpatialExperiment()
     expect_null(imgData(spe))
