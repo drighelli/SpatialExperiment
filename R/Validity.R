@@ -69,7 +69,7 @@
         return(msg)
     
     nms <- c("sample_id", "image_id", "data", "scaleFactor")
-    if (!all(nms %in% names(df)))
+    if (!identical(nms, names(df)))
         msg <- c(msg, paste(
             "'imgData' field in 'int_metadata' should have columns:",
             paste(sQuote(nms), collapse = ", ")))
