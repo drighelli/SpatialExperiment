@@ -2,10 +2,11 @@ example(read10xVisium, echo = FALSE)
 
 test_that("empty constructor", {
     spe <- SpatialExperiment()
-    expect_null(imgData(spe))
+    expect_is(imgData(spe), "DFrame")
+    expect_true(isEmpty(imgData(spe)))
     expect_identical(spatialDataNames(spe), character())
-    expect_is( spatialData(spe), "DFrame")
-    expect_true(isEmpty( spatialData(spe)))
+    expect_is(spatialData(spe), "DFrame")
+    expect_true(isEmpty(spatialData(spe)))
     expect_equal(dim(spatialData(spe)), c(ncol(spe), 0))
     expect_null(spatialCoordsNames(spe))
     expect_is(spatialCoords(spe), "matrix")
@@ -116,7 +117,9 @@ test_that(".sce_to_spe()", {
         colData=cd)
     spe <- .sce_to_spe(sce)
     expect_is(spe, "SpatialExperiment")
-    expect_null(imgData(spe))
+    expect_is(imgData(spe), "DFrame")
+    expect_true(isEmpty(imgData(spe)))
+    expect_is(spatialData(spe), "DFrame")
     expect_true(isEmpty(spatialData(spe)))
     expect_identical(colData(spe), colData(sce))
     
@@ -140,3 +143,4 @@ test_that("scaleFactors should be numeric, a named list or JSON file", {
     expect_silent(.sce_to_spe(sce, imageSources=img_fn, 
         scaleFactors=list(tissue_lowres_scalef=1)))
 })
+
