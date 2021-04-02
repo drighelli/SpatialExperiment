@@ -1,5 +1,11 @@
 example(read10xVisium, echo = FALSE)
 
+test_that("missing i/j retains all", {
+    expect_identical(spe, spe[, ])
+    expect_identical(spe, spe[TRUE, ])
+    expect_identical(spe, spe[, TRUE])
+})
+
 test_that("i=TRUE,j=TRUE retains all data", {
     expect_identical(spe, spe[TRUE, TRUE])
 })
