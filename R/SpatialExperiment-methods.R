@@ -175,8 +175,10 @@ setReplaceMethod("spatialData",
 setReplaceMethod("spatialData", 
     c("SpatialExperiment", "NULL"),
     function(x, value) {
+        # @<- is required here to enforce replacement because
+        # spatialDataNames are protected during colData replacement
         i <- spatialDataNames(x)
-        colData(x)[i] <- NULL
+        x@colData[i] <- NULL
         spatialDataNames(x) <- NULL
         return(x)
     }
