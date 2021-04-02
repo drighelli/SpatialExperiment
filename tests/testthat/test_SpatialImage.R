@@ -53,7 +53,7 @@ test_that("SpatialImage in-memory caching works as expected", {
     cache$cached <- list(A=img2, B=img2, C=img2)
     img <- imgRaster(fspi)
     expect_identical(normalizePath(names(cache$cached), mustWork=FALSE), 
-                     normalizePath(paste0("file://", path), mustWork=FALSE))
+                    normalizePath(paste0("file://", path), mustWork=FALSE))
 
     options(oldo)
 })
