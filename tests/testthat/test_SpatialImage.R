@@ -42,7 +42,12 @@ test_that("SpatialImage in-memory caching works as expected", {
     img2 <- img[1:500,1:500]
     cache$cached <- c(cache$cached, list(A=img2, B=img2, C=img2))
     dummy <- imgRaster(fspi)
-    expect_identical(names(cache$cached), c(LETTERS[1:3], paste0("file://", path)))
+    if (.Platform$OS.type == "unix") {
+        patha <- paste0("file://", path)
+    } else {
+        patha <- path
+    }
+    expect_identical(names(cache$cached), c(LETTERS[1:3], patha))
 
     # LRU eviction policy works as intended.
     SpatialExperiment:::.flush_cache()
