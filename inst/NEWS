@@ -1,4 +1,4 @@
-changes in version 1.1.6 (2021-01-04)
+changes in version 1.1.6 (2021-02-04)
 + removed additional slots in the SPE class definition 
   (i.e. spatialData and spatialCoordsNames)
 + spatialCoords stored in int_colData() = numeric matrix
@@ -13,6 +13,10 @@ changes in version 1.1.6 (2021-01-04)
   which are made unique with a message
 + consistent usage of "spe" for SpatialExperiment objects across 
   all examples (previously, both ve and se were used as well)
++ fixed cache/path-related error on windows in SpatialImage unit tests
++ added unit-tests of SpatialExperiment class validity
++ imgData field in int_metadata is now required 
+  to exist (but can be an empty DFrame)
 
 changes in version 1.1.5 (2021-31-03)
 + version bump to x.y.z format with .z increment
