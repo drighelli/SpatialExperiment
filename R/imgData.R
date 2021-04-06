@@ -10,19 +10,21 @@ setMethod("imgData", "SpatialExperiment", function(x) int_metadata(x)$imgData)
 setReplaceMethod("imgData",
     c("SpatialExperiment", "DataFrame"),
     function(x, value) {
-        msg <- .imgData_validity(value)
-        if (!is.null(msg))
-            stop(msg)
+        if (!isEmpty(value)) {
+            msg <- .imgData_validity(value)
+            if (!is.null(msg))
+                stop(msg)
+        }
         int_metadata(x)$imgData <- value
         return(x)
     })
 
 #' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_metadata<-
+#' @importFrom S4Vectors DataFrame
 #' @export
 setReplaceMethod("imgData",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
-        int_metadata(x)$imgData <- value
-        return(x)
+        value <- DataFrame()
+        `imgData<-`(x, value)
     })

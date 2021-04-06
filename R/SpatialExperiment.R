@@ -224,6 +224,8 @@ SpatialExperiment <- function(...,
                 imageSource=imageSources[i], scaleFactor=scaleFactor, 
                 sample_id=sample_id[i], image_id=image_id[i], load=loadImage)
         }
+    } else {
+        imgData(spe) <- NULL
     }
     return(spe)
 }
