@@ -56,7 +56,7 @@
 #' file.path(samples[1], "raw_feature_bc_matrix")
 #' 
 #' (spe <- read10xVisium(samples, sample_ids, 
-#'   type="sparse", data="raw", 
+#'   type = "sparse", data = "raw", 
 #'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
@@ -125,7 +125,7 @@ read10xVisium <- function(samples="",
     nan <- !file.exists(img_fns)
     if (all(nan)) {
         stop(sprintf(
-            "No matching files found for 'images = c(%s)", 
+            "No matching files found for 'images=c(%s)", 
             paste(dQuote(imgs), collapse=", ")))
     } else if (any(nan)) {
         message("Skipping missing images\n  ", 
@@ -146,11 +146,11 @@ read10xVisium <- function(samples="",
         spd <- .read_xyz(xyz[i])
         sce <- sce[, rownames(spd)]
         SpatialExperiment(
-            assays = assays(sce),
-            rowData = DataFrame(symbol = rowData(sce)$Symbol),
-            sample_id = sids[i],
-            spatialData = DataFrame(spd),
-            spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"))
+            assays=assays(sce),
+            rowData=DataFrame(symbol=rowData(sce)$Symbol),
+            sample_id=sids[i],
+            spatialData=DataFrame(spd),
+            spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"))
     }) 
     spe <- do.call(cbind, spel)
     imgData(spe) <- img
@@ -166,7 +166,7 @@ read10xVisium <- function(samples="",
     df <- lapply(seq_along(x), function(i) 
     {
         df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
-        if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep = "_")
+        if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep="_")
         if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
         df
     })

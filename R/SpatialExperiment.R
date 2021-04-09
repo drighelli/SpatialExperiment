@@ -191,7 +191,7 @@ SpatialExperiment <- function(...,
     } else {
         spatialCoords(spe) <- NULL
     }
-    
+
     if (!is.null(spatialDataNames)) {
         stopifnot(
             is.character(spatialDataNames), 
@@ -203,7 +203,8 @@ SpatialExperiment <- function(...,
         stopifnot(
             is(spatialData, "DFrame"),
             nrow(spatialData) == ncol(spe))
-        spatialData(spe) <- spatialData
+        colData(spe) <- cbind(colData(spe), spatialData)
+        spatialDataNames(spe) <- names(spatialData)
     } else {
         spatialData(spe) <- NULL
     }

@@ -17,6 +17,8 @@ changes in version 1.1.6 (2021-02-04)
 + added unit-tests of SpatialExperiment class validity
 + imgData field in int_metadata is now required 
   to exist (but can be an empty DFrame)
++ colData<- protects sample_id & spatialDataNames 
+  fields; spatialData<- protects colData
 
 changes in version 1.1.5 (2021-31-03)
 + version bump to x.y.z format with .z increment

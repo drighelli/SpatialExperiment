@@ -28,7 +28,6 @@ test_that("colData", {
     tmp <- spe
     tmp@colData$sample_id <- NULL
     expect_error(validObject(tmp))
-    # 
     # mismatch with sample_id in imgData
     tmp <- spe
     tmp@colData$sample_id <- "x"
