@@ -141,10 +141,15 @@ read10xVisium <- function(samples="",
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)
-
-        # construct 'SpatialExperiment'
+        # read in spatial data
         spd <- .read_xyz(xyz[i])
-        sce <- sce[, rownames(spd)]
+        # match ordering
+        obs <- intersect(
+            colnames(sce), 
+            rownames(spd))
+        sce <- sce[, obs]
+        spd <- spd[obs, ]
+        # construct 'SpatialExperiment'
         SpatialExperiment(
             assays=assays(sce),
             rowData=DataFrame(symbol=rowData(sce)$Symbol),
