@@ -1,0 +1,196 @@
+---
+title: "Building SpatialExperiment object"
+author: "Dario Righelli"
+date: "`r format(Sys.Date(), '%b %m, %Y')`"
+output: 
+    BiocStyle::html_document:
+        toc: true
+vignette: >
+    %\VignetteIndexEntry{Building SpatialExperiment object}
+    %\VignetteEncoding{UTF-8}
+    %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+    chunk_output_type: console
+---
+
+<style type="text/css"> .smaller { font-size: 10px } </style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
+```
+
+
+# Installation
+
+The SpatialExperiment is available via Bioconductor.
+
+```{r, eval=FALSE}
+if(!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SpatialExperiment")
+```
+
+Load the package as follows:
+
+```{r message = FALSE, warning = FALSE}
+library(SpatialExperiment)
+```
+
+The SpatialExperiment class constructor is defined with several argument to provide
+maximum flexibility to the user.
+
+In particular, we distinguish between spatialData and spatialCoords as follows:
+
+spatialData expects a DataFrame within all the the data associated to the spatial
+information (coordinates can be included).
+spatialCoords is a matrix within just the defined (via spatialCoordsNames) coordinates.
+
+When building a SpatialExperiment object the coordinates columns into the spatialData
+DFrame are looked via the spatialCoordsNames argument and stored separately as a matrix 
+into the spatialCoords.
+
+<!-- See the SpatialExperiment class documentation to have more details. -->
+
+<!-- SpatialExperiment(...,  -->
+<!--     sample_id="sample1", -->
+<!--     spatialDataNames=NULL, -->
+<!--     spatialCoordsNames=NULL, -->
+<!--     spatialData=NULL, -->
+<!--     spatialCoords=NULL, -->
+<!--     scaleFactors=1, -->
+<!--     imageSources=NULL, -->
+<!--     image_id=NULL, -->
+<!--     loadImage=FALSE, -->
+<!--     imgData=NULL)  -->
+
+# SpatialData and spatialCoordsNames
+
+```{r}
+cd <- DataFrame(x=1:26, y=1:26, z=letters)
+mat <- matrix(nrow=26, ncol=26)
+spe <- SpatialExperiment(assay=mat, spatialData=cd, spatialCoordsNames=c("x", "y"))
+spatialCoords(spe)
+spatialCoordsNames(spe)
+spatialData(spe)
+spatialDataNames(spe)
+colData(spe)
+```
+
+Alternatively, it is possible to define the spatialDataNames to declare colData columns as columns of spatialData DFrame
+<!-- as the colnames(spatialData) minus the spatialCoordsNames. -->
+
+
+```{r}
+cd <- DataFrame(x=1:26, y=1:26, z=letters)
+mat <- matrix(nrow=26, ncol=26)
+spe <- SpatialExperiment(assay=mat, colData=cd, spatialCoordsNames=c("x", "y"), spatialDataNames="z")
+spatialData(spe)
+head(spatialCoords(spe))
+colData(spe)
+```
+
+```{r}
+y <- diag(n <- 10)
+mat <- matrix(0, n, m <- 2)
+spe <- SpatialExperiment(assays = y, spatialCoords = mat)
+
+```
+
+It is also possible to set the spatialData, spatialCoords and the 
+colData separately.
+
+```{r}
+
+mat <- as.matrix(cd[,1:2])
+colnames(mat) <- c("ecs","uai")
+spad <- DataFrame(a=1:26, b=1:26, z=letters)
+asy <- matrix(nrow=26, ncol=26)
+spe <- SpatialExperiment(assays = asy, spatialCoords = mat, spatialData=spad, colData=cd)
+spatialData(spe)
+head(spatialCoords(spe))
+colData(spe)
+
+```
+
+# Image related technologies (i.e. 10x Visium)
+
+When working with 10x Visium Data or other technologies providing images,
+it is possible to store them into the imgData dedicated structure.
+
+Also, the SpatialExperiment class stores a sample_id value into the spatialData
+structure that is possible to set with the sample_id argument 
+(default is "sample_01")
+
+Here we show how to load the default space ranges dataset files and build 
+a SpE object.
+
+In particular the readImgData function is used to build an imgData DataFrame
+to be passed to the SpE constructor.
+It is mandatory that the sample_id used to build the imgData object is the same
+used to build the SpE object, otherwise an error is returned.
+
+```{r}
+dir <- system.file(
+   file.path("extdata", "10xVisium", "section1"),
+   package = "SpatialExperiment")
+ 
+# read in counts
+fnm <- file.path(dir, "raw_feature_bc_matrix")
+sce <- DropletUtils::read10xCounts(fnm)
+
+# read in image data
+img <- readImgData(
+    path = file.path(dir, "spatial"),
+    sample_id="foo")
+
+# read in spatial coordinates
+fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
+xyz <- read.csv(fnm, header = FALSE,
+    col.names = c(
+     "barcode", "in_tissue", "array_row", "array_col",
+     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+ 
+# construct observation & feature metadata
+rd <- S4Vectors::DataFrame(
+    symbol = rowData(sce)$Symbol)
+
+# construct 'SpatialExperiment'
+(spe <- SpatialExperiment(
+    assays = list(counts = assay(sce)),
+    colData = colData(sce), rowData = rd, imgData = img,
+    spatialData=DataFrame(xyz), 
+    spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+    sample_id="foo"))
+```
+
+Alternatively, to facilitate the import of 10x Visium Data, we developed the
+`read10xVisium` function, which can handle one or more samples organized in 
+folders reflecting the *space ranger* folder tree organization:
+
+sample <br/>
+  |—outs <br/>
+ · · |—raw/filtered_feature_bc_matrix.h5 <br/>
+ · · |—raw/filtered_feature_bc_matrix    <br/>
+ · · · · |—barcodes.tsv <br/>
+ · · · · |—features.tsv <br/>
+ · · · · |—matrix.mtx   <br/>
+ · · |—spatial <br/>
+ · · · · |—scalefactors_json.json    <br/>
+ · · · · |—tissue_lowres_image.png   <br/>
+ · · · · |—tissue_positions_list.csv <br/>
+
+```{r}
+dir <- system.file(
+  file.path("extdata", "10xVisium"),
+  package = "SpatialExperiment")
+
+sample_ids <- c("section1", "section2")
+samples <- file.path(dir, sample_ids)
+
+(spe <- read10xVisium(samples, sample_ids,
+  type = "sparse", data = "raw",
+  images = "lowres", load = FALSE))
+```
+
+    
+
