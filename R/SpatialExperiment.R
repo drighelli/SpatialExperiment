@@ -175,7 +175,10 @@ SpatialExperiment <- function(...,
         if (!is.null(spatialCoords)) 
             msg("spatialCoords")
         if (all(spatialCoordsNames %in% names(colData(spe)))) {
-            spatialCoords(spe) <- as.matrix(colData(spe)[spatialCoordsNames])
+            i <- spatialCoordsNames
+            j <- setdiff(names(colData(spe)), i)
+            spatialCoords(spe) <- as.matrix(colData(spe)[i])
+            colData(spe) <- colData(spe)[j]
         } else {
             i <- spatialCoordsNames
             j <- setdiff(names(spatialData), i)

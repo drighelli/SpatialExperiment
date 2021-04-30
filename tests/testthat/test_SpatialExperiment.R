@@ -27,6 +27,17 @@ test_that("spatialDataNames = character in colData", {
     expect_identical(spatialData(spe), cd)
 })
 
+test_that("spatialData/CoordsNames = character in colData", {
+    cd <- DataFrame(x=numeric(), y=numeric(), z=numeric())
+    spe <- SpatialExperiment(
+        colData=cd, 
+        spatialDataNames="z",
+        spatialCoordsNames=c("x", "y"))
+    expect_identical(spatialDataNames(spe), "z")
+    expect_identical(spatialCoordsNames(spe), c("x", "y"))
+    expect_true(!any(c("x", "y") %in% names(colData(spe))))
+})
+
 test_that("spatialCoords = numeric matrix", {
     y <- diag(n <- 10)
     mat <- matrix(0, n, m <- 2)
