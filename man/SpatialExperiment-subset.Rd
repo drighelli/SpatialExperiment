@@ -3,20 +3,25 @@
 \name{SpatialExperiment-subset}
 \alias{SpatialExperiment-subset}
 \alias{[,SpatialExperiment,ANY,ANY,ANY-method}
-\title{SpatialExperiment subset}
+\title{Subsetting SpatialExperiment objects}
 \arguments{
-\item{x}{a SpatialExperiment object}
+\item{x}{a \code{\link{SpatialExperiment}} object}
 
-\item{i}{the row indexes to subset}
+\item{i}{row indices for subsetting}
 
-\item{j}{the col indexes to subset}
+\item{j}{column indices for subsetting}
 }
 \value{
-a SpatialExperiment class object
+a \code{\link{SpatialExperiment}} object
 }
 \description{
-The subset method ensures that all the subsetted rows/cols 
-are updated across the colData and spatialData objects
+The subsetting method for \code{\link{SpatialExperiment}} objects ensures
+that spatial data attributes (\code{\link{spatialData}},
+\code{\link{spatialCoords}}, \code{\link{imgData}}) are subsetted correctly
+to match rows and columns with the remainder of the object.
+}
+\details{
+
 }
 \section{subset}{
 
@@ -26,11 +31,13 @@ are updated across the colData and spatialData objects
 }
 
 \examples{
-example(SpatialExperiment)
+example(read10xVisium)
+
+dim(spe)
+
+set.seed(123)
 idx <- sample(ncol(spe), 10)
 sub <- spe[, idx]
 dim(sub)
-spatialData(sub, 
-  spatialCoords = TRUE, 
-  colData = TRUE)
+spatialData(sub, spatialCoords = TRUE, colData = TRUE)
 }

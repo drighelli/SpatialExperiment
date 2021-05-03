@@ -1,6 +1,6 @@
 #' @name SpatialImage-class
 #' @title The SpatialImage class
-#'
+#' 
 #' @aliases
 #' SpatialImage
 #' SpatialImage-class
@@ -23,12 +23,12 @@
 #' imgSource<-,RemoteSpatialImage,character-method
 #' coerce,SpatialImage,LoadedSpatialImage-method
 #' coerce,RemoteSpatialImage,StoredSpatialImage-method
-#'
+#' 
 #' @description 
-#' The \code{SpatialImage} class hierarchy provides representations of images 
-#' from a variety of sources. It is used by the \linkS4class{SpatialExperiment} 
-#' to manage the loading of images across multiple studies.
-#'
+#' The \code{SpatialImage} class hierarchy provides representations of images
+#' from a variety of sources. It is used by the \linkS4class{SpatialExperiment}
+#' class to manage the loading of images across multiple studies.
+#' 
 #' @section Constructor:
 #' \code{SpatialImage(x, is.url)} will return a SpatialImage object.
 #' The class of the object depends on the type of \code{x}:
@@ -55,7 +55,7 @@
 #' in \code{...} are passed to \code{\link{image_read}}.
 #' This controls how the image is read into memory.
 #'
-#' For a RemoteSpatialIamge object \code{x}, the image file is first
+#' For a RemoteSpatialImage object \code{x}, the image file is first
 #' downloaded before the raster is returned. Here, \code{...} may contain
 #' an extra \code{cache} argument, which should be a BiocFileCache object 
 #' (from the \pkg{BiocFileCache} package) specifying the file cache location. 

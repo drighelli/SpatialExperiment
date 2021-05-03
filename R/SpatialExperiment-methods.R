@@ -1,35 +1,45 @@
-#' @title SpatialExperiment Methods
 #' @name SpatialExperiment-methods
-#' @rdname SpatialExperiment-methods
 #' 
-#' @aliases 
+#' @title Methods for spatial attributes
+#' 
+#' @aliases
 #' spatialData spatialData<- 
-#' spatialDataNames spatialDataNames<-
+#' spatialDataNames spatialDataNames<- 
 #' spatialCoords spatialCoords<- 
-#' spatialCoordsNames spatialCoordsNames<-
-#' imgData imgData<- scaleFactors
+#' spatialCoordsNames spatialCoordsNames<- 
+#' imgData imgData<- 
+#' scaleFactors
 #' 
-#' @description 
-#' The SpatialExperiment class provides a family of getter/setter methods 
-#' to get/replace the spatial data attributes.
-#' It is always suggested to use these accessors to facilitate future maintenance
-#' of the code.
+#' @description
+#' The \code{\link{SpatialExperiment}} class provides a family of methods to get
+#' and set spatial data attributes in \code{\link{SpatialExperiment}} objects.
+#' Spatial attributes include \code{spatialData}, \code{spatialCoords},
+#' \code{imgData}, and \code{scaleFactors}.
+#' 
+#' @param x A \code{\link{SpatialExperiment}} object.
+#' @param spatialCoords Logical specifying whether to include columns from
+#'   \code{spatialCoords} in the output \code{\link{DataFrame}} from
+#'   \code{spatialData}. Default = \code{FALSE}.
+#' @param colData Logical or character vector specifying any additional columns
+#'   from \code{colData} to include in the output \code{\link{DataFrame}} from
+#'   \code{spatialData}. Default = \code{FALSE} (no columns).
+#' @param value Replacement value for replacement methods.
+#' @param sample_id Logical value or character vector specifying sample
+#'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).
+#' @param image_id Logical value or character vector specifying image
+#'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).
+#' 
+#' @details
+#' Additional details for each type of data attribute are provided below.
+#' 
+#' 
+#' 
 #' We distinguish the spatial data from the spatial coordinates as described in 
 #' this paragraph.
 #' With spatial data we refer to the general data structure containing the 
 #' spatial coordinates, while we refer for spatial coordinates only to the 
 #' specific spatial coordinates columns (as x, y, z, ...).
 #' 
-#' @param x a SpatialExperiment class object
-#' @param value it varies depending on the invoked method see methods details.
-#' @param sample_id character string specifying sample 
-#' identifier(s); \code{TRUE} is equivalent to all samples.
-#' @param image_id character string indicating the image identifiers(s), 
-#' \code{TRUE} is equivalent to all images.
-#' @param spatialCoords logical specifying whether to include 
-#'   \code{spatialCoords} in the output \code{DataFrame}.
-#' @param colData logical or character vector specifying whether or 
-#'   which \code{colData} columns to include in the output \code{DataFrame}.
 #' 
 #' @section spatialData Methods:
 #' All the methods described in this section takes as input the \code{sample_id}

@@ -1,13 +1,13 @@
 #' @rdname read10xVisium
 #' 
-#' @title Load data from a 10X Visium experiment
+#' @title Load data from a 10x Genomics Visium experiment
 #' 
 #' @description 
-#' Creates a \code{\link{SpatialExperiment}} from the CellRanger 
-#' output directories for 10X Visium spatial gene expression data.
+#' Creates a \code{\link{SpatialExperiment}} from the Space Ranger 
+#' output directories for 10x Genomics Visium spatial gene expression data.
 #' 
 #' @param samples a character vector specifying one or more directories, 
-#'   each corresponding to a 10X Visium sample (see details);
+#'   each corresponding to a 10x Genomics Visium sample (see details);
 #'   if provided, names will be used as sample identifiers
 #' @param sample_id character string specifying unique sample identifiers,
 #'   one for each directory specified via \code{samples}; 
@@ -24,7 +24,7 @@
 #'   
 #' @details 
 #' The constructor assumes data from each sample are located 
-#' in a single output directory as returned by Space Range, 
+#' in a single output directory as returned by Space Ranger, 
 #' thus having the following file organization:
 #' 
 #' sample \cr
@@ -39,7 +39,7 @@
 #' · · · · |—tissue_lowres_image.png   \cr
 #' · · · · |—tissue_positions_list.csv \cr
 #'
-#' @return a \code{\link{SpatialExperiment}}
+#' @return a \code{\link{SpatialExperiment}} object
 #'
 #' @author Helena L. Crowell
 #'

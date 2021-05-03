@@ -39,7 +39,7 @@ coordinates according to the image's resolution}
 
 \item{load}{logical; should the image(s) be 
 loaded into memory as a \code{raster} object?
-if FALSE, will store the path/URL instead}
+if \code{FALSE}, will store the path/URL instead}
 }
 \value{
 \code{getImg()} returns a single or list of \code{SpatialImage}(s).
@@ -50,7 +50,7 @@ an image entry (row) in the \code{imgData} \code{DataFrame}.
 
 \code{imgRaster/Source()} access relevant data in the \code{SpatialImage}(s)
 stored inside the \code{imgData}'s \code{data} field. 
-Depending on whether or not multiple entries are accesses,
+Depending on whether or not multiple entries are accessed,
 a character string or vector is returned by \code{imgSource()}, and a 
 single or list of \code{raster} object(s) is returned by \code{imgRaster()}.
 }

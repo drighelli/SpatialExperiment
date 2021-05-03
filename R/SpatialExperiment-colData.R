@@ -1,20 +1,27 @@
-#' @title SpatialExperiment colData
 #' @name SpatialExperiment-colData
-#' @aliases colData colData<-  
 #' 
-#' @description 
-#' The colData setter expects a DataFrame with a \code{sample_id} column 
-#' reflecting the already existing \code{sample_id}(s) present in the object.
-#' An additional check is made on the \code{imgData} data structure.
-#' In case a \code{NULL} value is passed, the \code{colData} are dropped.
+#' @title SpatialExperiment colData
+#' 
+#' @aliases colData colData<- 
+#' 
+#' @description
+#' The \code{\link{SpatialExperiment}} class provides a modified \code{colData} setter, which ensures 
+#' that the \code{SpatialExperiment} object remains valid.
+#' 
+#' @details
+#' The \code{colData} setter expects a \code{\link{DataFrame}} with a
+#' \code{sample_id} column reflecting the already existing \code{sample_id}(s)
+#' present in the \code{SpatialExperiment} object. An additional check is
+#' performed against the \code{\link{imgData}} data structure. If a \code{NULL}
+#' value is provided, the \code{colData} is dropped.
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
 #' @param value a \code{\link[S4Vectors]{DataFrame}}
 #' 
-#' @return a SpatialExperiment object with updated colData 
+#' @return a \code{\link{SpatialExperiment}} object with updated \code{colData}
 #' 
-#' @examples 
-#' example(SpatialExperiment)
+#' @examples
+#' example(read10xVisium)
 #' colData(spe) <- NULL
 NULL
 

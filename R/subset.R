@@ -1,29 +1,42 @@
-# we overwrite the default subsetting method
-# to assure that the 'imgData' and 'spatialData' are subsetted if columns/rows 
-# are dropped
-#' @title SpatialExperiment subset
 #' @name SpatialExperiment-subset
-#' @description The subset method ensures that all the subsetted rows/cols 
-#' are updated across the colData and spatialData objects
+#' 
+#' @title Subsetting SpatialExperiment objects
+#' 
+#' @aliases [,SpatialExperiment,ANY,ANY,ANY-method
+#' 
+#' @description
+#' The subsetting method for \code{\link{SpatialExperiment}} objects ensures
+#' that spatial data attributes (\code{\link{spatialData}},
+#' \code{\link{spatialCoords}}, \code{\link{imgData}}) are subsetted correctly
+#' to match rows and columns with the remainder of the object.
+#' 
+#' @details
+#' 
 #' @section subset:
 #' \describe{
 #' \item{\code{[}:}{ subsetting method}
 #' }
-#' @aliases [,SpatialExperiment,ANY,ANY,ANY-method
-#' @param x a SpatialExperiment object
-#' @param i the row indexes to subset
-#' @param j the col indexes to subset
+#' @param x a \code{\link{SpatialExperiment}} object
+#' @param i row indices for subsetting
+#' @param j column indices for subsetting
 #' 
-#' @return a SpatialExperiment class object
-#' @examples 
-#' example(SpatialExperiment)
+#' @return a \code{\link{SpatialExperiment}} object
+#' 
+#' @examples
+#' example(read10xVisium)
+#' 
+#' dim(spe)
+#' 
+#' set.seed(123)
 #' idx <- sample(ncol(spe), 10)
 #' sub <- spe[, idx]
 #' dim(sub)
-#' spatialData(sub, 
-#'   spatialCoords = TRUE, 
-#'   colData = TRUE)
+#' spatialData(sub, spatialCoords = TRUE, colData = TRUE)
 NULL
+
+# we overwrite the default subsetting method
+# to assure that the 'imgData' and 'spatialData' are subsetted if columns/rows 
+# are dropped
 
 #' @importFrom methods callNextMethod
 #' @export
