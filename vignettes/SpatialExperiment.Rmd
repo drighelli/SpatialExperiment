@@ -36,44 +36,44 @@ Load the package as follows:
 library(SpatialExperiment)
 ```
 
-The SpatialExperiment class constructor is defined with several argument to provide
-maximum flexibility to the user.
+# The SpatialExperiment Class
 
-In particular, we distinguish between spatialData and spatialCoords as follows:
-
-spatialData expects a DataFrame within all the the data associated to the spatial
-information (coordinates can be included).
-spatialCoords is a matrix within just the defined (via spatialCoordsNames) coordinates.
-
-When building a SpatialExperiment object the coordinates columns into the spatialData
-DFrame are looked via the spatialCoordsNames argument and stored separately as a matrix
-into the spatialCoords.
-
-<!-- See the SpatialExperiment class documentation to have more details. -->
-
-<!-- SpatialExperiment(...,  -->
-<!--     sample_id="sample1", -->
-<!--     spatialDataNames=NULL, -->
-<!--     spatialCoordsNames=NULL, -->
-<!--     spatialData=NULL, -->
-<!--     spatialCoords=NULL, -->
-<!--     scaleFactors=1, -->
-<!--     imageSources=NULL, -->
-<!--     image_id=NULL, -->
-<!--     loadImage=FALSE, -->
-<!--     imgData=NULL)  -->
+The `SpatialExperiment` class is designed to represent spatially
+resolved transcriptomics (ST) data. It inherits from the
+`SingleCellExperiment` class and is used in the same manner. In
+addition, the class supports storage of spatial information via
+`spatialData` and `spatialCoords`, and storage of
+images via `imgData`.
 
 # SpatialData and spatialCoordsNames
+
+The `SpatialExperiment` class constructor is defined with several argument to
+provide maximum flexibility to the user.
+
+In particular, we distinguish between `spatialData` and `spatialCoords` as 
+follows:
+
+- `spatialData` expects a `DataFrame` within all the the data associated to the 
+spatial information (coordinates can be included).
+- `spatialCoords` is a `matrix` within just the defined (via `spatialCoordsNames`)
+ coordinates.
+
+When building a `SpatialExperiment` object the coordinates columns into the 
+`spatialData` `DFrame` are looked via the `spatialCoordsNames` argument and 
+stored separately as a `matrix` into the `spatialCoords`.
+
+Here is an example of spatialCoords built via `spatialData` and 
+`spatialCoordsNames`.
 
 ```{r}
 cd <- DataFrame(x=1:26, y=1:26, z=letters)
 mat <- matrix(nrow=26, ncol=26)
 spe <- SpatialExperiment(assay=mat, spatialData=cd, spatialCoordsNames=c("x", "y"))
-spatialCoords(spe)
+head(spatialCoords(spe))
 spatialCoordsNames(spe)
-spatialData(spe)
+head(spatialData(spe))
 spatialDataNames(spe)
-colData(spe)
+head(colData(spe))
 ```
 
 Alternatively, it is possible to define the `spatialDataNames` to declare
@@ -83,9 +83,9 @@ Alternatively, it is possible to define the `spatialDataNames` to declare
 cd <- DataFrame(x=1:26, y=1:26, z=letters)
 mat <- matrix(nrow=26, ncol=26)
 spe <- SpatialExperiment(assay=mat, colData=cd, spatialCoordsNames=c("x", "y"), spatialDataNames="z")
-spatialData(spe)
+head(spatialData(spe))
 head(spatialCoords(spe))
-colData(spe)
+head(colData(spe))
 ```
 
 Also, it is possible to load a `matrix` of coordinates with the `spatialCoords`
@@ -108,22 +108,16 @@ colnames(mat) <- c("ecs","uai")
 spad <- DataFrame(a=1:26, b=1:26, z=letters)
 asy <- matrix(nrow=26, ncol=26)
 spe <- SpatialExperiment(assays = asy, spatialCoords = mat, spatialData=spad, colData=cd)
-spatialData(spe)
+head(spatialData(spe))
 head(spatialCoords(spe))
-colData(spe)
-
-```
-
-Avoid colData
-
-```{r}
+head(colData(spe))
 
 ```
 
 
 # Working with multiple samples
 
-To work with multiple samples the `SpatialExperiment` class provides the cbind
+To work with multiple samples the `SpatialExperiment` class provides the `cbind`
 method which needs `sample_id`(s) unicity across each sample.
 
 In case the `sample_id`(s) are duplicated across the samples the `cbind`
@@ -135,7 +129,7 @@ spe3 <- cbind(spe1, spe2)
 unique(spe3$sample_id)
 ```
 
-Otherwise it is possible to create `sample_id`(s) in the following way.
+Otherwise, it is possible to create `sample_id`(s) in the following way.
 
 ```{r}
 # make sample identifiers unique
@@ -146,27 +140,24 @@ spe2$sample_id <- paste(spe2$sample_id, "sample2", sep = ".")
 # combine into single object
 spe3 <- cbind(spe1, spe2)
 
-# view joint 'imgData'
-imgData(spe3)
-
 spe3
 
 ```
 
 # Subsetting a SpatialExperiment object
 
-In case it is needed to subset an object the `subset` is automatically defined
+In case it is needed, to subset an object the `subset` is automatically defined
 as for any other Bioconductor *Experiment* class.
 
 For example it is possible to `subset` it by `sample_id` as follows:
 
 ```{r}
-spe3[, colData(spe)$sample_id=="section1.sample1"]
+# spe3[, colData(spe)$sample_id=="sample1.sample1"]
 ```
 
-# Spot-based data (i.e. 10x Visium)
+# Spot-based data (i.e. 10x Genomics Visium)
 
-When working with spot-based data as 10x Visium or other technologies providing
+When working with spot-based data as *10x Genomics Visium* or other technologies providing
 images, it is possible to store them into the `imgData` dedicated structure.
 
 Also, the `SpatialExperiment` class stores a `sample_id` value into the
@@ -216,8 +207,8 @@ rd <- S4Vectors::DataFrame(
     sample_id="foo"))
 ```
 
-Alternatively,  the `read10xVisium` function facilitates the import of 10x
-Visium Data to handle one or more samples organized in
+Alternatively,  the `read10xVisium` function facilitates the import of 
+*10x Genomics Visium* Data to handle one or more samples organized in
 folders reflecting the *space ranger* folder tree organization:
 
 sample <br/>
@@ -248,7 +239,7 @@ samples <- file.path(dir, sample_ids)
 
 # Molecule-based data
 
-To demonstrate how to accommodate molecule-based data (e.g. seqFISH) 
+To demonstrate how to accommodate molecule-based data (e.g. *seqFISH*) 
 inside a `SpatialExperiment` object, we generate some mock data of 
 `r n = 1000` molecule coordinates across `r ng = 50` and `r nc = 20` cells. 
 These should be formatted into a `data.frame` where each row corresponds to a 
@@ -287,7 +278,7 @@ mol <- splitAsBumpyMatrix(
     row = gs, col = cs)
 ```
 
-Finally, it is possible to construct a `SpatialExperiment` ovbject with two data 
+Finally, it is possible to construct a `SpatialExperiment` object with two data 
 slots: 
 - The `counts` assay stores the number of molecules per gene and cell 
 (equivalent to transcript counts in spot-based data).
@@ -313,6 +304,12 @@ The `BumpyMatrix` of molecule locations can be accessed using the dedicated
 
 ```{r message = FALSE, warning = FALSE}
 molecules(spe)
+```
+
+# SessionInfo
+
+```{r tidy=TRUE}
+sessionInfo()
 ```
 
 
