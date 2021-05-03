@@ -10,12 +10,11 @@
 #' \code{\link{spatialCoords}}, \code{\link{imgData}}) are subsetted correctly
 #' to match rows and columns with the remainder of the object.
 #' 
-#' @details
-#' 
 #' @section subset:
 #' \describe{
 #' \item{\code{[}:}{ subsetting method}
 #' }
+#' 
 #' @param x a \code{\link{SpatialExperiment}} object
 #' @param i row indices for subsetting
 #' @param j column indices for subsetting

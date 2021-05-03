@@ -20,9 +20,6 @@ that spatial data attributes (\code{\link{spatialData}},
 \code{\link{spatialCoords}}, \code{\link{imgData}}) are subsetted correctly
 to match rows and columns with the remainder of the object.
 }
-\details{
-
-}
 \section{subset}{
 
 \describe{
