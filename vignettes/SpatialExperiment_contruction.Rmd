@@ -46,7 +46,7 @@ information (coordinates can be included).
 spatialCoords is a matrix within just the defined (via spatialCoordsNames) coordinates.
 
 When building a SpatialExperiment object the coordinates columns into the spatialData
-DFrame are looked via the spatialCoordsNames argument and stored separately as a matrix 
+DFrame are looked via the spatialCoordsNames argument and stored separately as a matrix
 into the spatialCoords.
 
 <!-- See the SpatialExperiment class documentation to have more details. -->
@@ -76,9 +76,8 @@ spatialDataNames(spe)
 colData(spe)
 ```
 
-Alternatively, it is possible to define the spatialDataNames to declare colData columns as columns of spatialData DFrame
-<!-- as the colnames(spatialData) minus the spatialCoordsNames. -->
-
+Alternatively, it is possible to define the `spatialDataNames` to declare
+`colData` columns as columns of `spatialData` `DFrame`.
 
 ```{r}
 cd <- DataFrame(x=1:26, y=1:26, z=letters)
@@ -89,6 +88,9 @@ head(spatialCoords(spe))
 colData(spe)
 ```
 
+Also, it is possible to load a `matrix` of coordinates with the `spatialCoords`
+argument.
+
 ```{r}
 y <- diag(n <- 10)
 mat <- matrix(0, n, m <- 2)
@@ -96,7 +98,7 @@ spe <- SpatialExperiment(assays = y, spatialCoords = mat)
 
 ```
 
-It is also possible to set the spatialData, spatialCoords and the 
+It is also possible to set the spatialData, spatialCoords and the
 colData separately.
 
 ```{r}
@@ -112,28 +114,79 @@ colData(spe)
 
 ```
 
-# Image related technologies (i.e. 10x Visium)
+Avoid colData
 
-When working with 10x Visium Data or other technologies providing images,
-it is possible to store them into the imgData dedicated structure.
+```{r}
 
-Also, the SpatialExperiment class stores a sample_id value into the spatialData
-structure that is possible to set with the sample_id argument 
+```
+
+
+# Working with multiple samples
+
+To work with multiple samples the `SpatialExperiment` class provides the cbind
+method which needs `sample_id`(s) unicity across each sample.
+
+In case the `sample_id`(s) are duplicated across the samples the `cbind`
+takes care of this unicity appending indeces to each duplicated one.
+
+```{r}
+spe1 <- spe2 <- spe
+spe3 <- cbind(spe1, spe2)
+unique(spe3$sample_id)
+```
+
+Otherwise it is possible to create `sample_id`(s) in the following way.
+
+```{r}
+# make sample identifiers unique
+spe1 <- spe2 <- spe
+spe1$sample_id <- paste(spe1$sample_id, "sample1", sep = ".")
+spe2$sample_id <- paste(spe2$sample_id, "sample2", sep = ".")
+
+# combine into single object
+spe3 <- cbind(spe1, spe2)
+
+# view joint 'imgData'
+imgData(spe3)
+
+spe3
+
+```
+
+# Subsetting a SpatialExperiment object
+
+In case it is needed to subset an object the `subset` is automatically defined
+as for any other Bioconductor *Experiment* class.
+
+For example it is possible to `subset` it by `sample_id` as follows:
+
+```{r}
+spe3[, colData(spe)$sample_id=="section1.sample1"]
+```
+
+# Spot-based data (i.e. 10x Visium)
+
+When working with spot-based data as 10x Visium or other technologies providing
+images, it is possible to store them into the `imgData` dedicated structure.
+
+Also, the `SpatialExperiment` class stores a `sample_id` value into the
+`spatialData` structure that is possible to set with the `sample_id` argument
 (default is "sample_01")
 
-Here we show how to load the default space ranges dataset files and build 
-a SpE object.
+Here it is shown how to load the default *space ranger* dataset files and build
+a `SpatialExperiment` object.
 
-In particular the readImgData function is used to build an imgData DataFrame
-to be passed to the SpE constructor.
-It is mandatory that the sample_id used to build the imgData object is the same
-used to build the SpE object, otherwise an error is returned.
+In particular the `readImgData` function is used to build an `imgData`
+`DataFrame` to be passed to the `SpatialExperiment` constructor.
+It is mandatory that the `sample_id` used to build the `imgData` object is the
+same one used to build the `SpatialExperiment` object, otherwise an error is
+returned.
 
 ```{r}
 dir <- system.file(
    file.path("extdata", "10xVisium", "section1"),
    package = "SpatialExperiment")
- 
+
 # read in counts
 fnm <- file.path(dir, "raw_feature_bc_matrix")
 sce <- DropletUtils::read10xCounts(fnm)
@@ -149,7 +202,7 @@ xyz <- read.csv(fnm, header = FALSE,
     col.names = c(
      "barcode", "in_tissue", "array_row", "array_col",
      "pxl_row_in_fullres", "pxl_col_in_fullres"))
- 
+
 # construct observation & feature metadata
 rd <- S4Vectors::DataFrame(
     symbol = rowData(sce)$Symbol)
@@ -158,13 +211,13 @@ rd <- S4Vectors::DataFrame(
 (spe <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     colData = colData(sce), rowData = rd, imgData = img,
-    spatialData=DataFrame(xyz), 
+    spatialData=DataFrame(xyz),
     spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     sample_id="foo"))
 ```
 
-Alternatively, to facilitate the import of 10x Visium Data, we developed the
-`read10xVisium` function, which can handle one or more samples organized in 
+Alternatively,  the `read10xVisium` function facilitates the import of 10x
+Visium Data to handle one or more samples organized in
 folders reflecting the *space ranger* folder tree organization:
 
 sample <br/>
@@ -192,5 +245,74 @@ samples <- file.path(dir, sample_ids)
   images = "lowres", load = FALSE))
 ```
 
-    
+
+# Molecule-based data
+
+To demonstrate how to accommodate molecule-based data (e.g. seqFISH) 
+inside a `SpatialExperiment` object, we generate some mock data of 
+`r n = 1000` molecule coordinates across `r ng = 50` and `r nc = 20` cells. 
+These should be formatted into a `data.frame` where each row corresponds to a 
+molecule, and columns specify the xy-position as well as which gene/cell the 
+molecule has been assigned to: 
+
+```{r message = FALSE, warning = FALSE}
+# sample xy-coordinates in [0,1]
+x <- runif(n)
+y <- runif(n)
+# assign each molecule to some gene-cell pair
+gs <- paste0("gene", seq(ng))
+cs <- paste0("cell", seq(nc))
+gene <- sample(gs, n, TRUE)
+cell <- sample(cs, n, TRUE)
+# construct data.frame of molecule coodinates
+df <- data.frame(gene, cell, x, y)
+head(df)
+```
+
+Next, it is possible to re-shape the above table into a 
+`r BiocStyle::Biocpkg("BumpyMatrix")` using `splitAsBumpyMatrix()`, which takes 
+as input the xy-coordinates, as well as arguments specifying the row and column 
+index of each observation:
+
+```{r message = FALSE, warning = FALSE}
+# (assure gene & cell are factor so that
+# missing observations aren't dropped)
+df$gene <- factor(df$gene, gs)
+df$cell <- factor(df$cell, cs)
+# construct BumpyMatrix
+library(BumpyMatrix)
+
+mol <- splitAsBumpyMatrix(
+    df[, c("x", "y")], 
+    row = gs, col = cs)
+```
+
+Finally, it is possible to construct a `SpatialExperiment` ovbject with two data 
+slots: 
+- The `counts` assay stores the number of molecules per gene and cell 
+(equivalent to transcript counts in spot-based data).
+- The `molecules` assay holds the spatial molecule positions (xy-coordinates).
+Here, each entry is a `DFrame` that contains the positions of all molecules 
+from a given gene that have been assigned to a given cell. 
+
+```{r message = FALSE, warning = FALSE}
+# get count matrix
+y <- with(df, table(gene, cell))
+y <- as.matrix(unclass(y))
+y[1:5, 1:5]
+# construct SpatialExperiment
+spe <- SpatialExperiment(
+    assays = list(
+        counts = y, 
+        molecules = mol))
+spe
+```
+
+The `BumpyMatrix` of molecule locations can be accessed using the dedicated 
+`molecules()` accessor:
+
+```{r message = FALSE, warning = FALSE}
+molecules(spe)
+```
+
 
