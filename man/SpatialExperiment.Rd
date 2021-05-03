@@ -76,8 +76,7 @@ spot-based ST platforms) or cells (for molecule-based ST platforms). As for
 stored in the \code{\link{assays}} slot, and row and column metadata in
 \code{\link{rowData}} and \code{\link{colData}}. For molecule-based ST data,
 the additional measurements per molecule per cell can be stored in a
-\code{\link{BumpyMatrix}}-formatted \code{assay} named
-\code{\link{molecules}}.
+\code{BumpyMatrix}-formatted \code{assay} named \code{\link{molecules}}.
 
 The additional arguments in the constructor documented above (e.g.
 \code{spatialData}, \code{spatialCoords}, \code{imgData}, and others)

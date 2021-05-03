@@ -18,15 +18,15 @@
 #' 
 #' @section Available methods:
 #' In the following code, \code{spe} is a \code{\link{SpatialExperiment}}
-#' object, \code{value} is a \code{\link{BumpyMatrix}}-like object with the same
+#' object, \code{value} is a \code{BumpyMatrix}-like object with the same
 #' dimensions as \code{spe}, and \code{...} are further arguments passed to
 #' \code{\link{assay}} (for the getter) or \code{\link{assay<-}} (for the
 #' setter).
 #' 
 #' \describe{
 #' \item{\code{molecules(x, ...)}, \code{molecules(x, ...) <- value}:}{
-#' Get or set a \code{\link{BumpyMatrix}} of raw count data, e.g., number of
-#' reads or transcripts.
+#' Get or set a \code{BumpyMatrix} of raw count data, e.g., number of reads or
+#' transcripts.
 #' }
 #' }
 #' 
