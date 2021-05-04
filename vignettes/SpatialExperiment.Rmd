@@ -55,8 +55,8 @@ follows:
 
 - `spatialData` expects a `DataFrame` with all the data associated with the 
 spatial information (optionally including spatial coordinates from `spatialCoords`).
-- `spatialCoords` is a numeric `matrix` containing only the defined (via `spatialCoordsNames`) 
-spatial coordinates.
+- `spatialCoords` is a numeric `matrix` containing only the defined 
+(via `spatialCoordsNames`) spatial coordinates.
 
 When building a `SpatialExperiment` object, the columns of spatial coordinates from the 
 `spatialData` `DFrame` are identified via the `spatialCoordsNames` argument and 
@@ -68,9 +68,11 @@ Following is an example of `spatialCoords` built via `spatialData` and
 ```{r}
 cd <- DataFrame(x=1:26, y=1:26, z=letters)
 mat <- matrix(nrow=26, ncol=26)
-spe <- SpatialExperiment(
-  assay=mat, spatialData=cd, spatialCoordsNames=c("x", "y")
-)
+
+spe <- SpatialExperiment(assay=mat, 
+    spatialData=cd, 
+    spatialCoordsNames=c("x", "y"))
+
 head(spatialCoords(spe))
 spatialCoordsNames(spe)
 head(spatialData(spe))
@@ -91,9 +93,10 @@ the `spatialData` `DFrame` from the columns of `colData`.
 ```{r}
 cd <- DataFrame(x=1:26, y=1:26, z=letters)
 mat <- matrix(nrow=26, ncol=26)
+
 spe <- SpatialExperiment(
-  assay=mat, colData=cd, spatialCoordsNames=c("x", "y"), spatialDataNames="z"
-)
+  assay=mat, colData=cd, spatialCoordsNames=c("x", "y"), spatialDataNames="z")
+
 head(spatialData(spe))
 head(spatialCoords(spe))
 head(colData(spe))
@@ -105,9 +108,8 @@ Also, it is possible to load a numeric `matrix` of coordinates with the
 ```{r}
 y <- diag(n <- 10)
 mat <- matrix(0, n, m <- 2)
-spe <- SpatialExperiment(
-  assays = y, spatialCoords = mat
-)
+
+spe <- SpatialExperiment(assays = y, spatialCoords = mat)
 ```
 
 Finally, it is possible to set `spatialData`, `spatialCoords`, and `colData` 
@@ -118,9 +120,9 @@ mat <- as.matrix(cd[,1:2])
 colnames(mat) <- c("ecs","uai")
 spad <- DataFrame(a=1:26, b=1:26, z=letters)
 asy <- matrix(nrow=26, ncol=26)
-spe <- SpatialExperiment(
-  assays = asy, spatialCoords = mat, spatialData=spad, colData=cd
-)
+spe <- SpatialExperiment(assays = asy, spatialCoords = mat, 
+    spatialData=spad, colData=cd)
+
 head(spatialData(spe))
 head(spatialCoords(spe))
 head(colData(spe))
@@ -164,7 +166,21 @@ the objects, as for any other Bioconductor *Experiment* class.
 For example, it is possible to `subset` by `sample_id` as follows:
 
 ```{r}
-# spe3[, colData(spe)$sample_id=="sample1.sample1"]
+spe3[, colData(spe)$sample_id=="sample1.sample1"]
+```
+
+# sample_id requires one-to-one mapping replacement
+
+In particular, when trying to replace the `sample_id`(s) of a `SpatialExperiment`
+object, these must map uniquely with the already existing ones, otherwise an 
+error is returned.
+
+```{r}
+new <- spe3$sample_id; 
+new[1] <- "sample1.sample2"
+spe3$sample_id <- new
+new[1] <- "third.one.of.two"
+spe3$sample_id <- new
 ```
 
 

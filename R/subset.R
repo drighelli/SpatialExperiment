@@ -33,8 +33,10 @@ setMethod("[",
         if (missing(i)) i <- TRUE
         if (missing(j)) j <- TRUE
         x <- callNextMethod()
-        keep <- imgData(x)$sample_id %in% unique(x$sample_id)
-        imgData(x) <- imgData(x)[keep, ]
+        if ( !isEmpty(imgData(x)) ) {
+            keep <- imgData(x)$sample_id %in% unique(x$sample_id)
+            imgData(x) <- imgData(x)[keep, ]
+        }
         return(x)
     }
 )
