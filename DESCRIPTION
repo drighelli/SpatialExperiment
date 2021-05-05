@@ -29,6 +29,6 @@ Depends: methods, SingleCellExperiment
 Imports: 
     BiocFileCache, DropletUtils, rjson, magick, grDevices,
     S4Vectors, SummarizedExperiment, BiocGenerics, utils
-Suggests: knitr, Matrix, testthat, BiocStyle, BumpyMatrix
+Suggests: knitr, rmarkdown, testthat, BiocStyle, BumpyMatrix
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
