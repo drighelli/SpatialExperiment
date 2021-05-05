@@ -2,11 +2,11 @@
 % Please edit documentation in R/read10xVisium.R
 \name{read10xVisium}
 \alias{read10xVisium}
-\title{Load data from a 10X Visium experiment}
+\title{Load data from a 10x Genomics Visium experiment}
 \usage{
 read10xVisium(
   samples = "",
-  sample_id = paste0("sample", seq_along(samples)),
+  sample_id = paste0("sample", sprintf("\%02d", seq_along(samples))),
   type = c("HDF5", "sparse"),
   data = c("filtered", "raw"),
   images = "lowres",
@@ -15,7 +15,7 @@ read10xVisium(
 }
 \arguments{
 \item{samples}{a character vector specifying one or more directories, 
-each corresponding to a 10X Visium sample (see details);
+each corresponding to a 10x Genomics Visium sample (see details);
 if provided, names will be used as sample identifiers}
 
 \item{sample_id}{character string specifying unique sample identifiers,
@@ -36,15 +36,15 @@ Valid values are \code{"lowres", "hires", "fullres", "detected", "aligned"}}
 as a \code{grob}? If FALSE, will store the path/URL instead.}
 }
 \value{
-a \code{\link{SpatialExperiment}}
+a \code{\link{SpatialExperiment}} object
 }
 \description{
-Creates a \code{\link{SpatialExperiment}} from the CellRanger 
-output directories for 10X Visium spatial gene expression data.
+Creates a \code{\link{SpatialExperiment}} from the Space Ranger 
+output directories for 10x Genomics Visium spatial gene expression data.
 }
 \details{
 The constructor assumes data from each sample are located 
-in a single output directory as returned by Space Range, 
+in a single output directory as returned by Space Ranger, 
 thus having the following file organization:
 
 sample \cr
@@ -71,17 +71,17 @@ list.files(samples[1])
 list.files(file.path(samples[1], "spatial"))
 file.path(samples[1], "raw_feature_bc_matrix")
 
-(ve <- read10xVisium(samples, sample_ids, 
-  type="sparse", data="raw", 
+(spe <- read10xVisium(samples, sample_ids, 
+  type = "sparse", data = "raw", 
   images = "lowres", load = FALSE))
 
 # tabulate number of spots mapped to tissue
 table(
-  in_tissue = inTissue(ve), 
-  sample_id = ve$sample_id )
+  in_tissue = spe$in_tissue, 
+  sample_id = spe$sample_id)
 
 # view available images
-imgData(ve)
+imgData(spe)
 
 }
 \author{

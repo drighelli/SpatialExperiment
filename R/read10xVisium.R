@@ -1,13 +1,13 @@
 #' @rdname read10xVisium
 #' 
-#' @title Load data from a 10X Visium experiment
+#' @title Load data from a 10x Genomics Visium experiment
 #' 
 #' @description 
-#' Creates a \code{\link{SpatialExperiment}} from the CellRanger 
-#' output directories for 10X Visium spatial gene expression data.
+#' Creates a \code{\link{SpatialExperiment}} from the Space Ranger 
+#' output directories for 10x Genomics Visium spatial gene expression data.
 #' 
 #' @param samples a character vector specifying one or more directories, 
-#'   each corresponding to a 10X Visium sample (see details);
+#'   each corresponding to a 10x Genomics Visium sample (see details);
 #'   if provided, names will be used as sample identifiers
 #' @param sample_id character string specifying unique sample identifiers,
 #'   one for each directory specified via \code{samples}; 
@@ -24,7 +24,7 @@
 #'   
 #' @details 
 #' The constructor assumes data from each sample are located 
-#' in a single output directory as returned by Space Range, 
+#' in a single output directory as returned by Space Ranger, 
 #' thus having the following file organization:
 #' 
 #' sample \cr
@@ -39,7 +39,7 @@
 #' · · · · |—tissue_lowres_image.png   \cr
 #' · · · · |—tissue_positions_list.csv \cr
 #'
-#' @return a \code{\link{SpatialExperiment}}
+#' @return a \code{\link{SpatialExperiment}} object
 #'
 #' @author Helena L. Crowell
 #'
@@ -55,26 +55,26 @@
 #' list.files(file.path(samples[1], "spatial"))
 #' file.path(samples[1], "raw_feature_bc_matrix")
 #' 
-#' (ve <- read10xVisium(samples, sample_ids, 
-#'   type="sparse", data="raw", 
+#' (spe <- read10xVisium(samples, sample_ids, 
+#'   type = "sparse", data = "raw", 
 #'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
 #' table(
-#'   in_tissue = inTissue(ve), 
-#'   sample_id = ve$sample_id )
+#'   in_tissue = spe$in_tissue, 
+#'   sample_id = spe$sample_id)
 #' 
 #' # view available images
-#' imgData(ve)
+#' imgData(spe)
 #' 
 #' @importFrom rjson fromJSON
 #' @importFrom DropletUtils read10xCounts
 #' @importFrom methods as
-#' @importFrom S4Vectors DataFrame metadata 
-#' @importFrom SummarizedExperiment assay assay<- rowData rowData<- metadata<-
+#' @importFrom S4Vectors DataFrame 
+#' @importFrom SummarizedExperiment assays rowData
 #' @export
 read10xVisium <- function(samples="",
-    sample_id=paste0("sample", seq_along(samples)),
+    sample_id=paste0("sample", sprintf("%02d", seq_along(samples))),
     type=c("HDF5", "sparse"),
     data=c("filtered", "raw"),
     images="lowres",
@@ -125,7 +125,7 @@ read10xVisium <- function(samples="",
     nan <- !file.exists(img_fns)
     if (all(nan)) {
         stop(sprintf(
-            "No matching files found for 'images = c(%s)", 
+            "No matching files found for 'images=c(%s)", 
             paste(dQuote(imgs), collapse=", ")))
     } else if (any(nan)) {
         message("Skipping missing images\n  ", 
@@ -141,17 +141,21 @@ read10xVisium <- function(samples="",
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)
-        sce$sample_id <- sids[i]
-        metadata(sce)$Samples <- NULL
-        rowData(sce) <- DataFrame(symbol=rowData(sce)$Symbol)
-
-        # construct 'SpatialExperiment'
-        spe <- as(sce, "SpatialExperiment")
-        spatialCoordsNames(spe) <- c("array_col", "array_row")
+        # read in spatial data
         spd <- .read_xyz(xyz[i])
-        spd <- spd[colnames(spe), ]
-        spatialData(spe) <- spd
-        return(spe)
+        # match ordering
+        obs <- intersect(
+            colnames(sce), 
+            rownames(spd))
+        sce <- sce[, obs]
+        spd <- spd[obs, ]
+        # construct 'SpatialExperiment'
+        SpatialExperiment(
+            assays=assays(sce),
+            rowData=DataFrame(symbol=rowData(sce)$Symbol),
+            sample_id=sids[i],
+            spatialData=DataFrame(spd),
+            spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"))
     }) 
     spe <- do.call(cbind, spel)
     imgData(spe) <- img
@@ -167,7 +171,7 @@ read10xVisium <- function(samples="",
     df <- lapply(seq_along(x), function(i) 
     {
         df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
-        if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep = "_")
+        if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep="_")
         if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
         df
     })

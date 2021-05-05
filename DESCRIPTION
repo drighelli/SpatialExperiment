@@ -1,16 +1,16 @@
 Package: SpatialExperiment
 Type: Package
 Title: S4 Class for Spatial Experiments handling 
-Version: 1.1.5
-Date: 2021-02-26
+Version: 1.1.700
+Date: 2021-05-05
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
         person("Davide", "Risso", role=c("aut"), 
         email="risso.davide@gmail.com"),
-        person("Helena L.", "Crowell", role=c("ctb"), 
+        person("Helena L.", "Crowell", role=c("aut"), 
         email="helena.crowell@uzh.ch"),
-        person("Lukas M.", "Weber", role=c("ctb"), 
+        person("Lukas M.", "Weber", role=c("aut"), 
         email="lukas.weber.edu@gmail.com")
         )
 Description: Defines S4 classes for storing data for spatial experiments.
@@ -21,14 +21,14 @@ Description: Defines S4 classes for storing data for spatial experiments.
 License: GPL-3
 BugReports: https://github.com/drighelli/SpatialExperiment/issues
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 biocViews: 
     DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
-    Infrastructure, SingleCell
+    Infrastructure, SingleCell, GeneExpression
 Depends: methods, SingleCellExperiment
 Imports: 
     BiocFileCache, DropletUtils, rjson, magick, grDevices,
     S4Vectors, SummarizedExperiment, BiocGenerics, utils
-Suggests: knitr, Matrix, testthat, BiocStyle, BumpyMatrix
+Suggests: knitr, rmarkdown, testthat, BiocStyle, BumpyMatrix
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

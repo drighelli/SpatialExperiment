@@ -1,21 +1,31 @@
-#' @title SpatialExperiment colData
 #' @name SpatialExperiment-colData
-#' @aliases colData colData<-  
 #' 
-#' @description 
-#' The colData setter expects a DataFrame with a \code{sample_id} column 
-#' reflecting the already existing \code{sample_id}(s) present in the object.
-#' An additional check is made on the \code{imgData} data structure.
-#' In case a \code{NULL} value is passed, the \code{colData} are dropped.
+#' @title SpatialExperiment colData
+#' 
+#' @aliases colData colData<- 
+#' 
+#' @description
+#' The \code{\link{SpatialExperiment}} class provides a modified \code{colData}
+#' setter, which ensures that the \code{SpatialExperiment} object remains valid.
+#' 
+#' @details
+#' The \code{colData} setter performs several checks to ensure validity. If the
+#' replacement \code{colData} does not contain a \code{sample_id} column, the
+#' existing \code{sample_id}s will be retained. If the replacement
+#' \code{colData} contains \code{sample_id}s, a check is performed to ensure the
+#' number of unique \code{sample_id}s is the same, i.e. a one-to-one mapping is
+#' possible. If the replacement is \code{NULL}, the \code{sample_id}s are
+#' retained. In addition, checks are performed against the \code{sample_id}s in
+#' \code{\link{imgData}}.
 #' 
 #' @param x a \code{\link{SpatialExperiment}}
 #' @param value a \code{\link[S4Vectors]{DataFrame}}
 #' 
-#' @return a SpatialExperiment object with updated colData 
+#' @return a \code{\link{SpatialExperiment}} object with updated \code{colData}
 #' 
-#' @examples 
-#' example(SpatialExperiment)
-#' colData(se) <- NULL
+#' @examples
+#' example(read10xVisium)
+#' colData(spe) <- NULL
 NULL
 
 # the following overwrites 'SummarizedExperiment's 'colData' 
@@ -39,32 +49,48 @@ setReplaceMethod("colData",
         colData(se) <- value
         new <- colData(se)
         
-        # check that 'sample_id's remain valid & update 'imgData' accordingly
-        ns_old <- length(sids_old <- unique(old$sample_id))
-        ns_new <- length(sids_new <- unique(new$sample_id))
-        if (ns_old != ns_new) {
-            warning(sprintf(
-                "Number of unique 'sample_id's is %s, but %s %s provided.\n",
-                ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
-        } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
-            warning("New 'sample_id's must map uniquely")
-        } else if (!is.null(imgData(x))) {
-            m <- match(imgData(x)$sample_id, sids_old)
-            imgData(x)$sample_id <- sids_new[m]
+        if (!is.null(new$sample_id)) {
+            # check that 'sample_id's remain valid & update 'imgData' accordingly
+            ns_old <- length(sids_old <- unique(old$sample_id))
+            ns_new <- length(sids_new <- unique(new$sample_id))
+            if (ns_old != ns_new) {
+                stop(sprintf(
+                    "Number of unique 'sample_id's is %s, but %s %s provided.\n",
+                    ns_old, ns_new, ifelse(ns_new > 1, "were", "was")))
+            } else if (sum(table(old$sample_id, new$sample_id) != 0) != ns_old) {
+                stop("New 'sample_id's must map uniquely")
+            } else if (!is.null(imgData(x))) {
+                m <- match(imgData(x)$sample_id, sids_old)
+                imgData(x)$sample_id <- sids_new[m]
+            }    
+        } else {
+            # if none provided, retain original sample_id field
+            value$sample_id <- old$sample_id
         }
+
+        # protect spatialData from being replaced
+        spd <- spatialData(x, 
+            spatialCoords=FALSE, 
+            colData=FALSE)
+        value <- cbind(value, spd)
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
     }
 )
 
 #' @rdname SpatialExperiment-colData
-#' @importFrom S4Vectors DataFrame
 #' @importFrom SummarizedExperiment colData colData<-
 #' @export
 setReplaceMethod("colData",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
-        warning("Dropping colData could break",
-            " imgData and spatialData functionality.")
-        BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
+        # replacement by NULL keeps 
+        # sample_id & spatialDataNames
+        ids <- colData(x)["sample_id"]
+        spd <- spatialData(x, 
+            spatialCoords=FALSE, 
+            colData=FALSE)
+        value <- cbind(ids, spd)
+        colData(x) <- value
+        return(x)
     }
 )

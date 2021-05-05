@@ -42,7 +42,9 @@ test_that("SpatialImage in-memory caching works as expected", {
     img2 <- img[1:500,1:500]
     cache$cached <- c(cache$cached, list(A=img2, B=img2, C=img2))
     dummy <- imgRaster(fspi)
-    expect_identical(names(cache$cached), c(LETTERS[1:3], paste0("file://", path)))
+    expect_identical(
+        normalizePath(names(cache$cached), mustWork=FALSE), 
+        normalizePath(c(LETTERS[1:3], paste0("file://", path)), mustWork=FALSE))
 
     # LRU eviction policy works as intended.
     SpatialExperiment:::.flush_cache()
@@ -50,7 +52,9 @@ test_that("SpatialImage in-memory caching works as expected", {
 
     cache$cached <- list(A=img2, B=img2, C=img2)
     img <- imgRaster(fspi)
-    expect_identical(names(cache$cached), paste0("file://", path))
+    expect_identical(
+        normalizePath(names(cache$cached), mustWork=FALSE), 
+        normalizePath(paste0("file://", path), mustWork=FALSE))
 
     options(oldo)
 })

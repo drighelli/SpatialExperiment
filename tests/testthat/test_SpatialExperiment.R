@@ -1,3 +1,96 @@
+example(read10xVisium, echo = FALSE)
+
+test_that("empty constructor", {
+    spe <- SpatialExperiment()
+    expect_is(imgData(spe), "DFrame")
+    expect_true(isEmpty(imgData(spe)))
+    expect_identical(spatialDataNames(spe), character())
+    expect_is(spatialData(spe), "DFrame")
+    expect_true(isEmpty(spatialData(spe)))
+    expect_equal(dim(spatialData(spe)), c(ncol(spe), 0))
+    expect_null(spatialCoordsNames(spe))
+    expect_is(spatialCoords(spe), "matrix")
+    expect_equal(dim(spatialCoords(spe)), c(ncol(spe), 0))
+})
+
+test_that("spatialCoordsNames = character in colData", {
+    cd <- DataFrame(x=numeric(), y=numeric())
+    spe <- SpatialExperiment(colData=cd, spatialCoordsNames=names(cd))
+    expect_identical(spatialCoordsNames(spe), names(cd))
+    expect_identical(spatialCoords(spe), as.matrix(cd))  
+})
+
+test_that("spatialDataNames = character in colData", {
+    cd <- DataFrame(x=numeric(), y=numeric())
+    spe <- SpatialExperiment(colData=cd, spatialDataNames=names(cd))
+    expect_identical(spatialDataNames(spe), names(cd))
+    expect_identical(spatialData(spe), cd)
+})
+
+test_that("spatialData/CoordsNames = character in colData", {
+    cd <- DataFrame(x=numeric(), y=numeric(), z=numeric())
+    spe <- SpatialExperiment(
+        colData=cd, 
+        spatialDataNames="z",
+        spatialCoordsNames=c("x", "y"))
+    expect_identical(spatialDataNames(spe), "z")
+    expect_identical(spatialCoordsNames(spe), c("x", "y"))
+    expect_true(!any(c("x", "y") %in% names(colData(spe))))
+})
+
+test_that("spatialCoords = numeric matrix", {
+    y <- diag(n <- 10)
+    mat <- matrix(0, n, m <- 2)
+    spe <- SpatialExperiment(assays = y, spatialCoords = mat)
+    expect_is(spatialCoords(spe), "matrix")
+    expect_identical(spatialCoords(spe), mat)
+    expect_null(spatialCoordsNames(spe))
+    
+    colnames(mat) <- seq(m)
+    spe <- SpatialExperiment(assays = y, spatialCoords = mat)
+    expect_is(spatialCoords(spe), "matrix")
+    expect_identical(spatialCoords(spe), mat)
+    expect_identical(spatialCoordsNames(spe), colnames(mat))
+})
+
+test_that("spatialData = DFrame", {
+    mat <- matrix(0, n <- 10, m <- 5)
+    expect_error(SpatialExperiment(spatialData = mat))
+    y <- diag(n)
+    df <- DataFrame(mat)
+    names(df) <- letters[seq(m)]
+    spe <- SpatialExperiment(assays = y, spatialData = df)
+    expect_is(spatialData(spe), "DFrame")
+    expect_identical(spatialData(spe), df)
+    expect_identical(spatialDataNames(spe), names(df))
+})
+
+test_that("message when spatialData & -Names are supplied", {
+    cd <- DataFrame(x=numeric(), y=numeric())
+    expect_message(
+        spe <- SpatialExperiment(
+            colData=cd, 
+            spatialData=cd, 
+            spatialDataNames=names(cd)))
+    expect_identical(spe, 
+        SpatialExperiment(
+            colData=cd, 
+            spatialDataNames=names(cd)))
+})
+
+test_that("message when spatialCoords & -Names are supplied", {
+    cd <- DataFrame(x=numeric(), y=numeric())
+    expect_message(
+        spe <- SpatialExperiment(
+            colData=cd, 
+            spatialCoords=cd, 
+            spatialCoordsNames=names(cd)))
+    expect_identical(spe, 
+        SpatialExperiment(
+            colData=cd, 
+            spatialCoordsNames=names(cd)))
+})
+
 gs <- paste0("gene", seq_len(ng <- 200))
 cs <- paste0("cell", seq_len(nc <- 100))
 y <- matrix(runif(ng*nc), ng, nc, dimnames=list(gs, cs))
@@ -35,7 +128,9 @@ test_that(".sce_to_spe()", {
         colData=cd)
     spe <- .sce_to_spe(sce)
     expect_is(spe, "SpatialExperiment")
-    expect_null(imgData(spe))
+    expect_is(imgData(spe), "DFrame")
+    expect_true(isEmpty(imgData(spe)))
+    expect_is(spatialData(spe), "DFrame")
     expect_true(isEmpty(spatialData(spe)))
     expect_identical(colData(spe), colData(sce))
     
@@ -47,7 +142,7 @@ test_that("scaleFactors should be numeric, a named list or JSON file", {
     sce <- SingleCellExperiment(assays=list(counts=y), colData=cd)
     dir <- system.file(
         file.path("extdata", "10xVisium", "section1", "spatial"),
-        package = "SpatialExperiment")
+        package="SpatialExperiment")
     sf_fn <- file.path(dir, "scalefactors_json.json")
     img_fn <- file.path(dir, "tissue_lowres_image.png")
     
@@ -59,3 +154,4 @@ test_that("scaleFactors should be numeric, a named list or JSON file", {
     expect_silent(.sce_to_spe(sce, imageSources=img_fn, 
         scaleFactors=list(tissue_lowres_scalef=1)))
 })
+

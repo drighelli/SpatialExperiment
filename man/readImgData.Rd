@@ -2,7 +2,7 @@
 % Please edit documentation in R/readImgData.R
 \name{readImgData}
 \alias{readImgData}
-\title{Read images & scale factors}
+\title{Read images & scale factors for 10x Genomics Visium}
 \usage{
 readImgData(
   path = ".",
@@ -15,11 +15,12 @@ readImgData(
 \arguments{
 \item{path}{a path where to find one or more images}
 
-\item{sample_id}{the \code{sample_id} for the \code{SpatialExperiment} object}
+\item{sample_id}{the \code{sample_id} for the \code{\link{SpatialExperiment}}
+object}
 
 \item{imageSources}{the images source path(s)}
 
-\item{scaleFactors}{the json file where to find the scale factors}
+\item{scaleFactors}{the .json file where to find the scale factors}
 
 \item{load}{logical; should the image(s) be loaded into memory
 as a \code{grob}? If FALSE, will store the path/URL instead.}
@@ -28,7 +29,8 @@ as a \code{grob}? If FALSE, will store the path/URL instead.}
 a \code{\link{DataFrame}}
 }
 \description{
-Read images & scale factors
+Function to read in images and scale factors for 10x Genomics Visium data,
+and return as a valid \code{\link{imgData}} \code{DataFrame}.
 }
 \examples{
 dir <- system.file(

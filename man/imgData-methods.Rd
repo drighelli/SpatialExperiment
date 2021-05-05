@@ -39,7 +39,7 @@ coordinates according to the image's resolution}
 
 \item{load}{logical; should the image(s) be 
 loaded into memory as a \code{raster} object?
-if FALSE, will store the path/URL instead}
+if \code{FALSE}, will store the path/URL instead}
 }
 \value{
 \code{getImg()} returns a single or list of \code{SpatialImage}(s).
@@ -50,7 +50,7 @@ an image entry (row) in the \code{imgData} \code{DataFrame}.
 
 \code{imgRaster/Source()} access relevant data in the \code{SpatialImage}(s)
 stored inside the \code{imgData}'s \code{data} field. 
-Depending on whether or not multiple entries are accesses,
+Depending on whether or not multiple entries are accessed,
 a character string or vector is returned by \code{imgSource()}, and a 
 single or list of \code{raster} object(s) is returned by \code{imgRaster()}.
 }
@@ -72,19 +72,19 @@ the image-related data stored inside a \code{SpatialExperiment}'s
 example(read10xVisium)
 
 # 'SpatialImage' accession
-(spi <- getImg(ve))
+(spi <- getImg(spe))
 plot(imgRaster(spi))
 
 # remove an image
-imgData(ve)
-ve <- rmvImg(ve,
+imgData(spe)
+spe <- rmvImg(spe,
   sample_id = "section1",
   image_id = "lowres")
-imgData(ve)
+imgData(spe)
 
 # add an image
 url <- "https://i.redd.it/3pw5uah7xo041.jpg"
-ve <- addImg(ve,
+spe <- addImg(spe,
   sample_id = "section1",
   image_id = "pomeranian",
   imageSource = url,
@@ -92,7 +92,7 @@ ve <- addImg(ve,
   load = FALSE)
 
 # extract image
-img <- imgRaster(ve,
+img <- imgRaster(spe,
   sample_id = "section1",
   image_id = "pomeranian")
 plot(img)

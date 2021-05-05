@@ -1,62 +1,123 @@
 #' @name SpatialExperiment
-#' @rdname SpatialExperiment
+#' 
 #' @title The SpatialExperiment class
 #' 
-#' @description
-#' The SpatialExperiment class is designed to represent spatial omics data. 
-#' It inherits from the \linkS4class{SingleCellExperiment} class and
-#' is used in the same manner. In addition, the class supports storage of images
-#' for multiple samples and of different resolutions via \code{\link{imgData}}.
-#' @param ... 
-#'   arguments to be passed to the \code{\link{SingleCellExperiment}} 
-#'   constructor to fill the slots of the base class.
-#' @param sample_id 
-#' a character of a sample identifier in
-#' conformity with the \code{sample_id} in \code{imgData}
-#' It is automatically detected from the colData, if not present 
-#' it assigns the value present into this paramenter (default is "sample_01").
-#' @param spatialData 
-#' the spatial coordinates DataFrame can have multiple columns. 
-#' The coordinates must be named as specified into the \code{spatialCoordsNames} 
-#' argument.
-#' @param spatialCoordsNames a character vector indicating the names of the 
-#' coordinates into the \code{spatialData} structure. (Default is \code{c("x", "y")})
-#' @param scaleFactors 
-#' the scale factors to be associated with the image(s) (optional, default 1).
-#' It can be a number, a file path linking to a JSON file or the values read 
-#' from a 10x Visium scaleFactors JSON file.
-#' In these last two cases (10x Visium scale factors), 
-#' it automatically detects which factor 
-#' has to be loaded, depending on the resolution of the loaded image 
-#' (see \code{imageSources}).
-#' @param imgData (optional)
-#'   a \code{DataFrame} storing the image data (see details).
-#' @param imageSources (optional)
-#' one or more image sources, they can be local paths or URLs.
-#' @param image_id (optional)
-#' a character vector of the same length of \code{imageSources} within unique 
-#' \code{image_id}(s).
-#' @param loadImage 
-#' a logical indicating if the image has to be loaded in memory 
-#' (default is FALSE).
+#' @aliases
+#' SpatialExperiment
+#' SpatialExperiment-class
 #' 
-#' @details 
-#' The contructor expects the user to provide a \code{sample_id} column into the
-#' \code{colData}, otherwise it assigns the \code{sample_id} parameter value.
-#' If the \code{imgData} argument is not \code{NULL}, it considers it 
-#' already built, otherwise it builds it from the \code{imgSources}, 
-#' combining the \code{image_id} if provided. 
-#' Otherwise it builds the \code{image_id} from the \code{sample_id} and 
-#' the \code{imageSources}.
-#' If multiple samples have to be combined, please refer to 
+#' @description
+#' The \code{SpatialExperiment} class is designed to represent spatially
+#' resolved transcriptomics (ST) data. It inherits from the
+#' \code{\link{SingleCellExperiment}} class and is used in the same manner. In
+#' addition, the class supports storage of spatial information via
+#' \code{\link{spatialData}} and \code{\link{spatialCoords}}, and storage of
+#' images via \code{\link{imgData}}.
+#' 
+#' @param ... Arguments passed to the \code{\link{SingleCellExperiment}}
+#'   constructor to fill the slots of the base class.
+#' @param sample_id A \code{character} sample identifier, which matches the
+#'   \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
+#'   be stored in a new column in \code{\link{colData}}, if not already present.
+#'   Default = \code{sample1}.
+#' @param spatialDataNames A \code{character} vector of column names from
+#'   \code{\link{colData}} to include in \code{\link{spatialData}}.
+#'   Alternatively, the \code{spatialData} argument may be provided. If both are
+#'   provided, \code{spatialDataNames} is given precedence, and a warning is
+#'   returned.
+#' @param spatialCoordsNames A \code{character} vector of column names from
+#'   \code{\link{colData}} or \code{\link{spatialData}} containing spatial
+#'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
+#'   Alternatively, the \code{spatialCoords} argument may be provided. If both
+#'   are provided, \code{spatialCoordsNames} is given precedence, and a warning
+#'   is returned. Default = \code{c("x", "y")}.
+#' @param spatialData A \code{\link{DataFrame}} containing columns to store in
+#'   \code{\link{spatialData}}, which must contain at least the columns of
+#'   spatial coordinates. Alternatively, \code{spatialDataNames} may be
+#'   provided. If both are provided, \code{spatialDataNames} is given
+#'   precedence, and a warning is returned.
+#' @param spatialCoords A numeric matrix containing columns of spatial
+#'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
+#'   Alternatively, \code{spatialCoordsNames} may be provided. If both are
+#'   provided, \code{spatialCoordsNames} is given precedence, and a warning is
+#'   returned.
+#' @param scaleFactors Optional scale factors associated with the image(s). This
+#'   can be provided as a numeric value, numeric vector, list, or file path to a
+#'   JSON file for the 10x Genomics Visium platform. For 10x Genomics Visium,
+#'   the correct scale factor will automatically be selected depending on the
+#'   resolution of the image from \code{imageSources}. Default = \code{1}.
+#' @param imgData Optional \code{\link{DataFrame}} containing the image data.
+#'   Alternatively, this can be built from the arguments \code{imageSources} and
+#'   \code{image_id} (see Details).
+#' @param imageSources Optional file path(s) or URL(s) for one or more image
+#'   sources.
+#' @param image_id Optional character vector (same length as
+#'   \code{imageSources}) containing unique image identifiers.
+#' @param loadImage Logical indicating whether to load image into memory.
+#'   Default = \code{FALSE}.
+#' 
+#' @details
+#' In this class, rows represent genes, and columns represent spots (for
+#' spot-based ST platforms) or cells (for molecule-based ST platforms). As for
+#' \code{\link{SingleCellExperiment}}, \code{counts} and \code{logcounts} can be
+#' stored in the \code{\link{assays}} slot, and row and column metadata in
+#' \code{\link{rowData}} and \code{\link{colData}}. For molecule-based ST data,
+#' the additional measurements per molecule per cell can be stored in a
+#' \code{BumpyMatrix}-formatted \code{assay} named \code{\link{molecules}}.
+#' 
+#' The additional arguments in the constructor documented above (e.g.
+#' \code{spatialData}, \code{spatialCoords}, \code{imgData}, and others)
+#' represent the main extensions to the \code{\link{SingleCellExperiment}} class
+#' to store associated spatial and imaging information for ST data.
+#' 
+#' The constructor expects \code{colData} to contain a column named
+#' \code{sample_id}. If this is not present, it will assign the value from the
+#' \code{sample_id} argument. If the \code{imgData} argument is provided, the
+#' constructor expects the \code{\link{imgData}} \code{\link{DataFrame}} to
+#' already be built. Otherwise, it will build it from the \code{imageSources}
+#' and (optional) \code{image_id} arguments. If \code{image_id} is not provided,
+#' this will be assumed from \code{sample_id} and \code{imageSources} instead.
+#' To combine multiple samples within a single object, see
 #' \code{\link{combine}}.
 #' 
+#' For 10x Genomics Visium datasets, the function \code{\link{read10xVisium}}
+#' can be used to load data and create a \code{SpatialExperiment} object
+#' directly from Space Ranger output files.
 #' 
-#' @author Dario Righelli & Helena L. Crowell
+#' @seealso
+#' \code{?"\link{SpatialExperiment-methods}"}, which includes:
+#' \code{\link{spatialData}}, \code{\link{spatialDataNames}},
+#' \code{\link{spatialCoords}}, \code{\link{spatialCoordsNames}},
+#' \code{\link{imgData}}, \code{\link{scaleFactors}}
 #' 
-#' @return a \code{SpatialExperiment} object
+#' \code{?"\link{SpatialExperiment-assays}"}, which includes:
+#' \code{\link{molecules}}
+#' 
+#' \code{?"\link{SpatialExperiment-colData}"}
+#' 
+#' \code{?"\link{SpatialExperiment-combine}"}
+#' 
+#' \code{?"\link{SpatialExperiment-subset}"}
+#' 
+#' \code{?"\link{SpatialExperiment-misc}"}
+#' 
+#' \code{\link{readImgData}}
+#' 
+#' \code{?"\link{imgData-methods}"}
+#' 
+#' \code{\link{SpatialImage}}
+#' 
+#' \code{\link{read10xVisium}}
+#' 
+#' @author Dario Righelli and Helena L. Crowell
+#' 
+#' @return A \code{SpatialExperiment} object.
 #' 
 #' @examples
+#' #########################################################
+#' # Example 1: Spot-based ST (10x Visium) using constructor
+#' #########################################################
+#' 
 #' dir <- system.file(
 #'   file.path("extdata", "10xVisium", "section1"),
 #'   package = "SpatialExperiment")
@@ -82,21 +143,67 @@
 #'   symbol = rowData(sce)$Symbol)
 #'   
 #' # construct 'SpatialExperiment'
-#' (se <- SpatialExperiment(
+#' (spe <- SpatialExperiment(
 #'     assays = list(counts = assay(sce)),
 #'     colData = colData(sce), rowData = rd, imgData = img,
-#'     spatialData=xyz, 
-#'     spatialCoordsNames=c("array_col", "array_row"),
+#'     spatialData=DataFrame(xyz), 
+#'     spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
 #'     sample_id="foo"))
+#'     
+#' #############################################################
+#' # Example 2: Spot-based ST (10x Visium) using 'read10xVisium'
+#' #############################################################
+#' 
+#' # see ?read10xVisium for details
+#' example(read10xVisium)
+#' 
+#' ##############################
+#' # Example 3: Molecule-based ST
+#' ##############################
+#' 
+#' # create simulated data
+#' n <- 1000; ng <- 50; nc <- 20
+#' # sample xy-coordinates in [0,1]
+#' x <- runif(n)
+#' y <- runif(n)
+#' # assign each molecule to some gene-cell pair
+#' gs <- paste0("gene", seq(ng))
+#' cs <- paste0("cell", seq(nc))
+#' gene <- sample(gs, n, TRUE)
+#' cell <- sample(cs, n, TRUE)
+#' # construct data.frame of molecule coodinates
+#' df <- data.frame(gene, cell, x, y)
+#' 
+#' # (assure gene & cell are factor so that
+#' # missing observations aren't dropped)
+#' df$gene <- factor(df$gene, gs)
+#' df$cell <- factor(df$cell, cs)
+#' 
+#' # construct BumpyMatrix
+#' mol <- BumpyMatrix::splitAsBumpyMatrix(
+#'     df[, c("x", "y")], 
+#'     row = gs, col = cs)
+#' 
+#' # get count matrix
+#' y <- with(df, table(gene, cell))
+#' y <- as.matrix(unclass(y))
+#' 
+#' # construct SpatialExperiment
+#' spe_mol <- SpatialExperiment(
+#'     assays = list(
+#'         counts = y, 
+#'         molecules = mol))
 NULL
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-    sample_id="sample1",
+    sample_id="sample01",
+    spatialDataNames=NULL,
+    spatialCoordsNames=NULL,
     spatialData=NULL,
-    spatialCoordsNames=c("x", "y"),
+    spatialCoords=NULL,
     scaleFactors=1,
     imageSources=NULL,
     image_id=NULL,
@@ -106,8 +213,10 @@ SpatialExperiment <- function(...,
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce,
         sample_id=sample_id,
-        spatialData=spatialData,
+        spatialDataNames=spatialDataNames,
         spatialCoordsNames=spatialCoordsNames,
+        spatialData=spatialData,
+        spatialCoords=spatialCoords,
         scaleFactors=scaleFactors,
         imageSources=imageSources,
         loadImage=loadImage,
@@ -119,9 +228,11 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
-    sample_id="sample1", 
+    sample_id="sample01", 
+    spatialDataNames=NULL,
+    spatialCoordsNames=NULL,
     spatialData=NULL,
-    spatialCoordsNames=c("x", "y"),
+    spatialCoords=NULL,
     scaleFactors=1,
     imageSources=NULL,
     image_id=NULL,
@@ -138,6 +249,8 @@ SpatialExperiment <- function(...,
         stopifnot(
             is.character(sample_id),
             any(length(sample_id) == c(1, ncol(sce))))
+        if (ncol(sce) == 0) 
+            sample_id <- character()
         sce$sample_id <- sample_id
     } else {
         if (!is.character(sce$sample_id))
@@ -147,14 +260,63 @@ SpatialExperiment <- function(...,
     
     spe <- new("SpatialExperiment", sce)
 
-    if (!is.null(spatialData))
-        stopifnot( 
-            is.character(spatialCoordsNames),
-            spatialCoordsNames %in% colnames(spatialData))
-
-    spatialCoordsNames(spe) <- spatialCoordsNames
-    spatialData(spe) <- spatialData
+    # in the following code chunk, we give precedence 
+    # to spatialData/CoordsNames over spatialData/Coords
+    #   where spatialDataNames should be in colData,
+    #   and spatialCoordsNames can be in both colData and spatialData
+    # if both spatialData/Coords and -Names are supplied
+    #   we give an informative warning notifying the user
+    #   that spatialData/CoordsNames will be used 
     
+    msg <- function(.) message(sprintf(paste(                
+        "both '%s' and '%sNames'  have been supplied; using '%s'.",
+        "Set either to NULL to suppress this message"), ., ., .))
+    
+    if (!is.null(spatialCoordsNames)) {
+        stopifnot(
+            is.character(spatialCoordsNames),
+            all(spatialCoordsNames %in% names(colData(spe)))
+            || all(spatialCoordsNames %in% names(spatialData)))
+        if (!is.null(spatialCoords)) 
+            msg("spatialCoords")
+        if (all(spatialCoordsNames %in% names(colData(spe)))) {
+            i <- spatialCoordsNames
+            j <- setdiff(names(colData(spe)), i)
+            spatialCoords(spe) <- as.matrix(colData(spe)[i])
+            colData(spe) <- colData(spe)[j]
+        } else {
+            i <- spatialCoordsNames
+            j <- setdiff(names(spatialData), i)
+            spatialCoords(spe) <- as.matrix(spatialData[i])
+            spatialData <- spatialData[j]
+        }
+    } else if (!is.null(spatialCoords)) {
+        stopifnot(
+            is.matrix(spatialCoords),
+            is.numeric(spatialCoords),
+            nrow(spatialCoords) == ncol(spe))
+        spatialCoords(spe) <- spatialCoords
+    } else {
+        spatialCoords(spe) <- NULL
+    }
+
+    if (!is.null(spatialDataNames)) {
+        stopifnot(
+            is.character(spatialDataNames), 
+            spatialDataNames %in% names(colData(spe)))
+        if (!is.null(spatialData)) 
+            msg("spatialData")
+        spatialDataNames(spe) <- spatialDataNames
+    } else if (!is.null(spatialData)) {
+        stopifnot(
+            is(spatialData, "DFrame"),
+            nrow(spatialData) == ncol(spe))
+        colData(spe) <- cbind(colData(spe), spatialData)
+        spatialDataNames(spe) <- names(spatialData)
+    } else {
+        spatialData(spe) <- NULL
+    }
+
     if (!is.null(imgData)) {
         stopifnot(imgData$sample_id %in% spe$sample_id)
         imgData(spe) <- imgData
@@ -171,6 +333,8 @@ SpatialExperiment <- function(...,
                 imageSource=imageSources[i], scaleFactor=scaleFactor, 
                 sample_id=sample_id[i], image_id=image_id[i], load=loadImage)
         }
+    } else {
+        imgData(spe) <- NULL
     }
     return(spe)
 }

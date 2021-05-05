@@ -1,44 +1,47 @@
-#' @title Named assay getters and setters
 #' @name SpatialExperiment-assays
-#' @rdname SpatialExperiment-assays
-#' @docType methods
+#' 
+#' @title Methods for named assays
+#' 
 #' @aliases
 #' molecules
 #' molecules<-
 #' molecules,SpatialExperiment-method
 #' molecules<-,SpatialExperiment-method
-#'
+#' 
 #' @description
-#' These are methods for getting or setting \code{assay(se, i=X, ...)} 
-#' where \code{se} is a \linkS4class{SpatialExperiment} object and \code{X} is 
-#' the name of the method.
-#' For example, \code{molecules} will get or set \code{X="molecules"}.
-#' This provides some convenience for users as well as 
-#' encouraging standardization of assay names across packages.
-#'
+#' The \code{\link{SpatialExperiment}} class provides methods for getting or
+#' setting named \code{\link{assays}}. For example, \code{molecules(spe)} will
+#' get or set an \code{assay} named \code{molecules} from object \code{spe},
+#' equivalent to \code{assay(spe, i = "molecules")}. This provides a convenient
+#' interface for users and encourages standardization of assay names across
+#' packages.
+#' 
 #' @section Available methods:
-#' In the following code snippets, \code{x} is a \linkS4class{SpatialExperiment} 
-#' object, \code{value} is a BumpyMatrix-like object with the same 
-#' dimensions as \code{x}, and \code{...} are further arguments passed to 
-#' \code{\link{assay}} (for the getter) or \code{\link{assay<-}} (for the setter).
+#' In the following code, \code{spe} is a \code{\link{SpatialExperiment}}
+#' object, \code{value} is a \code{BumpyMatrix}-like object with the same
+#' dimensions as \code{spe}, and \code{...} are further arguments passed to
+#' \code{\link{assay}} (for the getter) or \code{\link{assay<-}} (for the
+#' setter).
 #' 
 #' \describe{
 #' \item{\code{molecules(x, ...)}, \code{molecules(x, ...) <- value}:}{
-#' Get or set a BumpyMatrix of raw count data, 
-#' e.g., number of reads or transcripts.
+#' Get or set an assay named \code{molecules}, which is usually assumed to be a
+#' \code{BumpyMatrix}-formatted object containing spatial coordinates (and any
+#' other information) of the individual molecules per gene per cell.
 #' }
 #' }
 #' 
 #' @author Dario Righelli
 #' 
 #' @seealso
-#' \code{\link{assay}} and \code{\link{assay<-}}, for the wrapped methods.
+#' \code{\link{assay}} and \code{\link{assay<-}}
 #' 
 #' @examples
-#' 
-#' ## TBD
+#' example(SpatialExperiment)
+#' molecules(spe_mol)
 NULL
 
+#' @importFrom SummarizedExperiment assay
 GET_FUN <- function(exprs_values, ...) {
     (exprs_values) # To ensure evaluation
     function(x, ...) {
@@ -46,6 +49,7 @@ GET_FUN <- function(exprs_values, ...) {
     }
 }
 
+#' @importFrom SummarizedExperiment assay<-
 SET_FUN <- function(exprs_values, ...) {
     (exprs_values) # To ensure evaluation
     function(x, ..., value) {

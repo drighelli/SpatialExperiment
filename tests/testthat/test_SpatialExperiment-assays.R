@@ -1,11 +1,11 @@
-example(read10xVisium)
+example(read10xVisium, echo = FALSE)
 
 test_that("molecules()/<- gets/sets assay(., 'molecules')", {
-    tmp <- ve
+    tmp <- spe
     expect_identical(
-        molecules(tmp) <- assay(ve),
-        assay(tmp, "molecules") <- assay(ve))
+        molecules(tmp) <- assay(spe),
+        assay(tmp, "molecules") <- assay(spe))
     expect_identical(
         assayNames(tmp), 
-        c(assayNames(ve), "molecules"))
+        c(assayNames(spe), "molecules"))
 })

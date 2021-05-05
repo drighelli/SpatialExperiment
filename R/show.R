@@ -1,24 +1,33 @@
 #' @name SpatialExperiment-misc
-#' @title Miscellaneous \code{SpatialExperiment} methods
 #' 
-#' @description 
-#' Miscellaneous methods for the \code{\link{SpatialExperiment}} class
-#' and its descendants that do not fit in any other documentation category
-#' such as, for example, show methods.
+#' @title Miscellaneous SpatialExperiment methods
 #' 
-#' @param object a \code{SpatialExperiment}.
+#' @description
+#' Miscellaneous methods for the \code{\link{SpatialExperiment}} class and its
+#' descendants that do not fit into any other documentation category such as,
+#' for example, show methods.
 #' 
-#' @return none.
+#' @param object a \code{\link{SpatialExperiment}} object
 #' 
-#' @author Dario Righelli & Helena L. Crowell
+#' @return Returns NULL
+#' 
+#' @author Dario Righelli and Helena L. Crowell
+#' 
+#' @examples
+#' example(read10xVisium)
+#' spe
+NULL
 
 # SpatialExperiment show method ------------------------------------------------
 
 #' @importFrom S4Vectors coolcat
 #' @importFrom methods callNextMethod
 .spe_show <- function(object) {
-    callNextMethod()
+    tmp <- object
+    spatialData(tmp) <- NULL
+    callNextMethod(tmp)
     coolcat("spatialData names(%d) : %s\n", spatialDataNames(object))
+    coolcat("spatialCoords names(%d) : %s\n", spatialCoordsNames(object))
     coolcat("imgData names(%d): %s\n", names(imgData(object)))
 }
 
@@ -28,17 +37,18 @@ setMethod("show", "SpatialExperiment", .spe_show)
 # SpatialImage show method -----------------------------------------------------
 
 #' @name SpatialImage-misc
-#' @title Miscellaneous \code{SpatialImage} methods
+#' @title Miscellaneous SpatialImage methods
 #' 
-#' @description 
-#' Miscellaneous methods for the \code{\link{SpatialImage}} class that do not 
-#' fit in any other documentation category such as, for example, show methods.
+#' @description
+#' Miscellaneous methods for the \code{\link{SpatialImage}} class that do not
+#' fit into any other documentation category such as, for example, show methods.
 #' 
-#' @param object a \code{SpatialImage}.
+#' @param object a \code{SpatialImage} object
 #' 
-#' @return none.
+#' @return none
 #' 
 #' @author Helena L. Crowell
+NULL
 
 .spi_show <- function(object) {
     dim <- paste(dim(object), collapse=" x ")

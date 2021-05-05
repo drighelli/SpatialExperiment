@@ -2,25 +2,26 @@
 % Please edit documentation in R/show.R
 \name{SpatialExperiment-misc}
 \alias{SpatialExperiment-misc}
-\alias{.spe_show}
 \alias{show,SpatialExperiment-method}
-\title{Miscellaneous \code{SpatialExperiment} methods}
+\title{Miscellaneous SpatialExperiment methods}
 \usage{
-.spe_show(object)
-
 \S4method{show}{SpatialExperiment}(object)
 }
 \arguments{
-\item{object}{a \code{SpatialExperiment}.}
+\item{object}{a \code{\link{SpatialExperiment}} object}
 }
 \value{
-none.
+Returns NULL
 }
 \description{
-Miscellaneous methods for the \code{\link{SpatialExperiment}} class
-and its descendants that do not fit in any other documentation category
-such as, for example, show methods.
+Miscellaneous methods for the \code{\link{SpatialExperiment}} class and its
+descendants that do not fit into any other documentation category such as,
+for example, show methods.
+}
+\examples{
+example(read10xVisium)
+spe
 }
 \author{
-Dario Righelli & Helena L. Crowell
+Dario Righelli and Helena L. Crowell
 }
