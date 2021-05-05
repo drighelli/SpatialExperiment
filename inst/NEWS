@@ -1,3 +1,9 @@
+changes in version 1.1.7 (2021-05-05)
++ updating roles in DESCRIPTION file
++ adding GeneExpression biocVie
++ switching LazyData to false
++ fixing return value in show method documentation
+
 changes in version 1.1.6 (2021-02-04)
 + removed additional slots in the SPE class definition 
   (i.e. spatialData and spatialCoordsNames)
