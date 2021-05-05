@@ -10,6 +10,9 @@
 \arguments{
 \item{object}{a \code{\link{SpatialExperiment}} object}
 }
+\value{
+Returns NULL
+}
 \description{
 Miscellaneous methods for the \code{\link{SpatialExperiment}} class and its
 descendants that do not fit into any other documentation category such as,
