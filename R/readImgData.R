@@ -1,10 +1,15 @@
 #' @rdname readImgData
-#' @title Read images & scale factors 
+#' @title Read images & scale factors for 10x Genomics Visium
+#' 
+#' @description
+#' Function to read in images and scale factors for 10x Genomics Visium data,
+#' and return as a valid \code{\link{imgData}} \code{DataFrame}.
 #' 
 #' @param path a path where to find one or more images
-#' @param sample_id the \code{sample_id} for the \code{SpatialExperiment} object
+#' @param sample_id the \code{sample_id} for the \code{\link{SpatialExperiment}}
+#'   object
 #' @param imageSources the images source path(s) 
-#' @param scaleFactors the json file where to find the scale factors
+#' @param scaleFactors the .json file where to find the scale factors
 #' @param load logical; should the image(s) be loaded into memory
 #'   as a \code{grob}? If FALSE, will store the path/URL instead.
 #' 

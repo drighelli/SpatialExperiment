@@ -2,23 +2,20 @@
 % Please edit documentation in R/show.R
 \name{SpatialImage-misc}
 \alias{SpatialImage-misc}
-\alias{.spi_show}
 \alias{show,SpatialImage-method}
-\title{Miscellaneous \code{SpatialImage} methods}
+\title{Miscellaneous SpatialImage methods}
 \usage{
-.spi_show(object)
-
 \S4method{show}{SpatialImage}(object)
 }
 \arguments{
-\item{object}{a \code{SpatialImage}.}
+\item{object}{a \code{SpatialImage} object}
 }
 \value{
-none.
+none
 }
 \description{
-Miscellaneous methods for the \code{\link{SpatialImage}} class that do not 
-fit in any other documentation category such as, for example, show methods.
+Miscellaneous methods for the \code{\link{SpatialImage}} class that do not
+fit into any other documentation category such as, for example, show methods.
 }
 \author{
 Helena L. Crowell

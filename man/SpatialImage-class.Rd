@@ -24,9 +24,9 @@
 \alias{coerce,RemoteSpatialImage,StoredSpatialImage-method}
 \title{The SpatialImage class}
 \description{
-The \code{SpatialImage} class hierarchy provides representations of images 
-from a variety of sources. It is used by the \linkS4class{SpatialExperiment} 
-to manage the loading of images across multiple studies.
+The \code{SpatialImage} class hierarchy provides representations of images
+from a variety of sources. It is used by the \linkS4class{SpatialExperiment}
+class to manage the loading of images across multiple studies.
 }
 \section{Constructor}{
 
@@ -57,7 +57,7 @@ For a StoredSpatialImage object \code{x}, additional arguments
 in \code{...} are passed to \code{\link{image_read}}.
 This controls how the image is read into memory.
 
-For a RemoteSpatialIamge object \code{x}, the image file is first
+For a RemoteSpatialImage object \code{x}, the image file is first
 downloaded before the raster is returned. Here, \code{...} may contain
 an extra \code{cache} argument, which should be a BiocFileCache object 
 (from the \pkg{BiocFileCache} package) specifying the file cache location. 
