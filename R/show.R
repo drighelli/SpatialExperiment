@@ -9,7 +9,7 @@
 #' 
 #' @param object a \code{\link{SpatialExperiment}} object
 #' 
-#' @return none
+#' @return NULL
 #' 
 #' @author Dario Righelli and Helena L. Crowell
 #' 

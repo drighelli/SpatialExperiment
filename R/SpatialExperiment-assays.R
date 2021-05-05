@@ -25,8 +25,9 @@
 #' 
 #' \describe{
 #' \item{\code{molecules(x, ...)}, \code{molecules(x, ...) <- value}:}{
-#' Get or set a \code{BumpyMatrix} of raw count data, e.g., number of reads or
-#' transcripts.
+#' Get or set an assay named \code{molecules}, which is usually assumed to be a
+#' \code{BumpyMatrix}-formatted object containing spatial coordinates (and any
+#' other information) of the individual molecules per gene per cell.
 #' }
 #' }
 #' 

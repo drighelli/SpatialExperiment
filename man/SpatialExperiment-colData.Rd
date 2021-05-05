@@ -21,15 +21,18 @@
 a \code{\link{SpatialExperiment}} object with updated \code{colData}
 }
 \description{
-The \code{\link{SpatialExperiment}} class provides a modified \code{colData} setter, which ensures 
-that the \code{SpatialExperiment} object remains valid.
+The \code{\link{SpatialExperiment}} class provides a modified \code{colData}
+setter, which ensures that the \code{SpatialExperiment} object remains valid.
 }
 \details{
-The \code{colData} setter expects a \code{\link{DataFrame}} with a
-\code{sample_id} column reflecting the already existing \code{sample_id}(s)
-present in the \code{SpatialExperiment} object. An additional check is
-performed against the \code{\link{imgData}} data structure. If a \code{NULL}
-value is provided, the \code{colData} is dropped.
+The \code{colData} setter performs several checks to ensure validity. If the
+replacement \code{colData} does not contain a \code{sample_id} column, the
+existing \code{sample_id}s will be retained. If the replacement
+\code{colData} contains \code{sample_id}s, a check is performed to ensure the
+number of unique \code{sample_id}s is the same, i.e. a one-to-one mapping is
+possible. If the replacement is \code{NULL}, the \code{sample_id}s are
+retained. In addition, checks are performed against the \code{sample_id}s in
+\code{\link{imgData}}.
 }
 \examples{
 example(read10xVisium)
