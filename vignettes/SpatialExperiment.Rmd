@@ -175,7 +175,7 @@ In particular, when trying to replace the `sample_id`(s) of a `SpatialExperiment
 object, these must map uniquely with the already existing ones, otherwise an 
 error is returned.
 
-```{r}
+```{r, error=TRUE}
 new <- spe3$sample_id; 
 new[1] <- "sample1.sample2"
 spe3$sample_id <- new
