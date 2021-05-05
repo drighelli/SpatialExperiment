@@ -74,7 +74,7 @@
 #' @importFrom SummarizedExperiment assays rowData
 #' @export
 read10xVisium <- function(samples="",
-    sample_id=paste0("sample", seq_along(samples)),
+    sample_id=paste0("sample", sprintf("%02d", seq_along(samples))),
     type=c("HDF5", "sparse"),
     data=c("filtered", "raw"),
     images="lowres",

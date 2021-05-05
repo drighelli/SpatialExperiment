@@ -94,7 +94,7 @@ NULL
 #' @importFrom SingleCellExperiment SingleCellExperiment
 #' @export
 SpatialExperiment <- function(..., 
-    sample_id="sample1",
+    sample_id="sample01",
     spatialDataNames=NULL,
     spatialCoordsNames=NULL,
     spatialData=NULL,
@@ -123,7 +123,7 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 .sce_to_spe <- function(sce,
-    sample_id="sample1", 
+    sample_id="sample01", 
     spatialDataNames=NULL,
     spatialCoordsNames=NULL,
     spatialData=NULL,
