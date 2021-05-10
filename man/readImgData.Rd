@@ -36,8 +36,8 @@ and return as a valid \code{\link{imgData}} \code{DataFrame}.
 dir <- system.file(
   file.path("extdata", "10xVisium", "section1", "spatial"),
   package = "SpatialExperiment")
-  
-# base directory contains 
+
+# base directory contains
 # - scale factors (scalefactors_json.json)
 # - one image (tissue_lowres_image.png)
 list.files(dir)
