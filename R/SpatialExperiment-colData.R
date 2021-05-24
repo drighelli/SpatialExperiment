@@ -94,3 +94,32 @@ setReplaceMethod("colData",
         return(x)
     }
 )
+
+#' @rdname SpatialExperiment-colData
+#' @export
+setMethod("colData",
+    "SpatialExperiment",
+    function(x, spatialData = FALSE, spatialCoords = FALSE) {
+        stopifnot(
+            is.logical(spatialData),
+            length(spatialData) == 1)
+        stopifnot(
+            is.logical(spatialCoords),
+            length(spatialCoords) == 1)
+        
+        nms_spd <- spatialDataNames(x)
+        nms_spc <- spatialCoordsNames(x)
+        # colData names that are not also in spatialData or spatialCoords
+        nms_cd <- setdiff(setdiff(names(colData(x)), nms_spd), nms_spc)
+        
+        cd <- colData(x)[nms_cd]
+        
+        if (spatialData) {
+            cd <- cbind(cd, spatialData(x, spatialCoords = FALSE, colData = FALSE))
+        }
+        if (spatialCoords) {
+            cd <- cbind(cd, spatialCoords(x))
+        }
+        return(cd)
+    }
+)
