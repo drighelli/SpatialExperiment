@@ -46,3 +46,9 @@ test_that("valid sample_id<- updates imgData", {
     i <- match(imgData(spe)$sample_id, old)
     expect_identical(imgData(tmp)$sample_id, new[i])
 })
+
+test_that("no duplicated columns from spatialData when adding new columns to colData", {
+    colnames_old <- colnames(colData(spe))
+    colData(spe)$testing <- 1
+    expect_equal(colnames(colData(spe)), c(colnames_old, "testing"))
+})
