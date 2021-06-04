@@ -72,8 +72,8 @@ setReplaceMethod("colData",
         spd <- spatialData(x, 
             spatialCoords=FALSE, 
             colData=FALSE)
-        ## restoring spatialData if not any spatialCoordsNames is in the new value
-        if (!all(spatialCoordsNames(x) %in% colnames(value))) {
+        ## restoring spatialData if not any spatialDataNames is in the new value
+        if (!all(spatialDataNames(x) %in% colnames(value))) {
             value <- cbind(value, spd)
         }
         
