@@ -6,14 +6,11 @@
 \alias{colData<-}
 \alias{colData<-,SpatialExperiment,DataFrame-method}
 \alias{colData<-,SpatialExperiment,NULL-method}
-\alias{colData,SpatialExperiment-method}
 \title{SpatialExperiment colData}
 \usage{
 \S4method{colData}{SpatialExperiment,DataFrame}(x) <- value
 
 \S4method{colData}{SpatialExperiment,`NULL`}(x) <- value
-
-\S4method{colData}{SpatialExperiment}(x, spatialData = FALSE, spatialCoords = FALSE)
 }
 \arguments{
 \item{x}{a \code{\link{SpatialExperiment}}}
