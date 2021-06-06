@@ -72,7 +72,11 @@ setReplaceMethod("colData",
         spd <- spatialData(x, 
             spatialCoords=FALSE, 
             colData=FALSE)
-        value <- cbind(value, spd)
+        ## restoring spatialData if not any spatialDataNames is in the new value
+        if (!all(spatialDataNames(x) %in% colnames(value))) {
+            value <- cbind(value, spd)
+        }
+        
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
     }
 )
@@ -94,3 +98,4 @@ setReplaceMethod("colData",
         return(x)
     }
 )
+
