@@ -77,4 +77,3 @@ test_that("SpatialImage URL caching works as expected", {
 
     options(oldc)
 })
-
