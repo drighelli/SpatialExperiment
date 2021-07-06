@@ -13,20 +13,14 @@
     return(msg)
 }
 
-#' @importFrom SingleCellExperiment int_metadata
-#' @importFrom SummarizedExperiment colData
-.spatialDataNames_validity <- function(x, msg=NULL) {
-    y <- int_metadata(x)$spatialDataNames
+.spatialData_validity <- function(x, msg=NULL) {
+    y <- int_colData(x)$spatialData
     if (is.null(y)) {
-        msg <- c(msg, "no 'spatialDataNames' field in 'int_metadata'")
-    } else if (!is.character(y)) {
+        msg <- c(msg, "no 'spatialData' field in 'int_colData'")
+    } else if (!is(y, "DFrame")) {
         msg <- c(msg, paste(
-            "'spatialDataNames' field in 'int_metadata'",
-            "should be of type 'character'"))
-    } else if (!all(y %in% names(colData(x)))) {
-        msg <- c(msg, paste(
-            "all 'spatialDataNames' in 'int_metadata'",
-            "should correspond to columns in 'colData'"))
+            "'spatialData' field in 'int_colData'",
+            "should be a 'DFrame'"))
     }
     return(msg)
 }
@@ -93,8 +87,9 @@
     msg <- NULL
     msg <- .colData_validity(object, msg)
     msg <- .imgData_validity(object, msg)
+    msg <- .spatialData_validity(object, msg)
     msg <- .spatialCoords_validity(object, msg)
-    msg <- .spatialDataNames_validity(object, msg)
+    #msg <- .spatialDataNames_validity(object, msg)
     if (length(msg)) return(msg)
     return(TRUE)
 }

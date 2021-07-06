@@ -60,9 +60,10 @@
 #'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
+#' cd <- colData(spe, spatialData = TRUE)
 #' table(
-#'   in_tissue = spe$in_tissue, 
-#'   sample_id = spe$sample_id)
+#'   in_tissue = cd$in_tissue, 
+#'   sample_id = cd$sample_id)
 #' 
 #' # view available images
 #' imgData(spe)
