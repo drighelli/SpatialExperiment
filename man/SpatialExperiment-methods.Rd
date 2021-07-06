@@ -105,13 +105,9 @@ numeric matrix containing only the defined spatial coordinates (e.g. columns
 optional argument \code{spatialCoords}, which can be used to include the 
 columns of spatial coordinates (\code{spatialCoords}) in the output 
 \code{DataFrame}.}
-\item{\code{spatialData(x) <- value}: }{The \code{spatialData} setter 
-expects a \code{DataFrame} with the defined column names for the spatial coordinates. 
-Spatial coordinate names can be set with the \code{spatialCoordNames} setter, 
-and are set as \code{c("x", "y")} by default by the 
-\code{\link{SpatialExperiment}} constructor. If the input does not
-contain an \code{in_tissue} column, this will be included with a default
-value of \code{1}.}
+\item{\code{spatialData(x) <- value}: }{The \code{spatialData} setter
+expects a \code{DataFrame}. If the input does not contain an \code{in_tissue} 
+column, this will be included with a default value of \code{1}.}
 \item{\code{spatialCoords(x)}: }{Getter for numeric matrix of spatial
 coordinates.}
 \item{\code{spatialCoords(x) <- value}: }{Setter for numeric matrix of
