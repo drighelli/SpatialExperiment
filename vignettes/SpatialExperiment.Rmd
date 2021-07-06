@@ -58,6 +58,8 @@ spatial information (optionally including spatial coordinates from `spatialCoord
 - `spatialCoords` is a numeric `matrix` containing only the defined 
 (via `spatialCoordsNames`) spatial coordinates.
 
+Both `spatialData` and `spatialCoords` are sperately stored inside the `int_colData` slot.
+
 When building a `SpatialExperiment` object, the columns of spatial coordinates from the 
 `spatialData` `DFrame` are identified via the `spatialCoordsNames` argument and 
 stored separately as a numeric `matrix` within `spatialCoords`.
@@ -128,6 +130,14 @@ head(spatialCoords(spe))
 head(colData(spe))
 ```
 
+It is also possible to combine the `spatialData` and `spatialCoords` with the 
+`colData` with two dedicated arguments.
+
+```{r}
+colData(spe, spatialData=TRUE)
+colData(spe, spatialCoords=TRUE)
+colData(spe, spatialData=TRUE, spatialCoords=TRUE)
+```
 
 # Working with multiple samples
 
@@ -264,6 +274,82 @@ samples <- file.path(dir, sample_ids)
 (spe <- read10xVisium(samples, sample_ids,
     type = "sparse", data = "raw",
     images = "lowres", load = FALSE))
+
+```
+
+
+# Image data
+
+All image related data are stored inside the `int_metadata`'s `imgData` field as `DataFrame` of the following structure: 
+
+* each row corresponds to one image for a given sample and with a given unique image identifier (e.g. its resolutions)
+* for each image, columns specify:
+  * which `sample_id` the image belongs to
+  * a unique `image_id` in order to accommodate multiple images for a given sample (e.g. of different resolutions)
+  * the image's `data` (a `SpatialImage` object)
+  * the `scaleFactor` that adjusts pixel positions of the original, full-resolution image to pixel positions in the image
+
+The `imgData()` accessor can be used to retrieve the image data stored within the object:
+
+```{r}
+imgData(spe)
+```
+
+## The `SpatialImage` class
+
+Images are stored inside the `data` field of the `imgData` as a list of `SpatialImage`s. Each image may be of one of the following sub-classes:
+
+* `LoadedSpatialImage`
+  * represents an image that is fully realized into memory as a `raster` object
+  * `@image` contains a `raster` object: a matrix of RGB colors for each pixel in the image
+* `StoredSpatialImage`: 
+  * represents an image that is stored in a local file (e.g., as a .png, .jpg or .tif), and loaded into memory only on request
+  * `@path` specifies a local file from which to retrieve the image
+* `RemoteSpatialImage`
+  * represents an image that is remotely hosted (under some URL), and retrieved only on request
+  * `@url` specifies where to retrieve the image from
+
+A `SpatialImage` can be accessed using `getImg()`, or retrieved directly from the `imgData()`:
+
+```{r}
+(spi <- getImg(spe))
+identical(spi, imgData(spe)$data[[1]])
+```
+
+Data available in an object of class `SpatialImage` may be accessed via the `imgRaster()` and `imgSource()` accessors:
+
+```{r fig.small = TRUE}
+plot(imgRaster(spe))
+```
+
+## Adding/removing images
+
+Images entries may be added or removed from a `SpatialExperiment`'s `imgData` `DataFrame` using `addImg()` and `rmvImg()`, respectively.
+
+Besides a path or URL to source the image from and a numeric scale factor, `addImg()` requires specification of the `sample_id` the new image belongs to, and an `image_id` that is not yet in use for that sample:
+
+```{r fig.small=TRUE, eval=TRUE}
+url <- "https://i.redd.it/3pw5uah7xo041.jpg"
+spe <- addImg(spe, 
+    sample_id = "section1", image_id = "pomeranian",
+    imageSource = url, scaleFactor = NA_real_, load = TRUE)
+img <- imgRaster(spe, 
+    sample_id = "section1", 
+    image_id = "pomeranian")
+plot(img)
+```
+
+The `rmvImg()` function is more flexible in the specification of the `sample/image_id` arguments. Specifically, 
+
+- `TRUE` is equivalent to *all*, e.g. `sample_id = "<sample>", image_id = TRUE` will drop all images for a given sample.
+- `NULL` defaults to the first entry available, e.g., `sample_id = "<sample>", image_id = NULL` will drop the first image for a given sample.
+
+For example, `sample_id,image_id = TRUE,TRUE` will specify all images; `NULL,NULL` corresponds to the first image entry in the `imgData`; `TRUE,NULL` equals the first image for all samples; and `NULL,TRUE` matches all images for the first sample.
+
+Here, we remove `section1`'s `pomeranian` image added in the previous code chunk; the image is now completely gone from the `imgData`:
+
+```{r}
+imgData(spe <- rmvImg(spe, "section1", "pomeranian"))
 ```
 
 
