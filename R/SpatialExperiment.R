@@ -67,8 +67,8 @@
 #' 
 #' The additional arguments in the constructor documented above (e.g.
 #' \code{spatialData}, \code{spatialCoords}, \code{imgData}, and others)
-#' represent the main extensions to the \code{\link{SingleCellExperiment}} class
-#' to store associated spatial and imaging information for ST data.
+#' represent the main extensions to the \code{\link{SingleCellExperiment}}
+#' class to store associated spatial and imaging information for ST data.
 #' 
 #' The constructor expects \code{colData} to contain a column named
 #' \code{sample_id}. If this is not present, it will assign the value from the
@@ -306,13 +306,18 @@ SpatialExperiment <- function(...,
             spatialDataNames %in% names(colData(spe)))
         if (!is.null(spatialData)) 
             msg("spatialData")
-        spatialDataNames(spe) <- spatialDataNames
+        i <- spatialDataNames
+        j <- setdiff(names(colData(spe)), i)
+        spd <- colData(spe)[i]
+        colData(spe) <- colData(spe)[j]
+        spatialData(spe) <- spd
     } else if (!is.null(spatialData)) {
         stopifnot(
             is(spatialData, "DFrame"),
             nrow(spatialData) == ncol(spe))
-        colData(spe) <- cbind(colData(spe), spatialData)
-        spatialDataNames(spe) <- names(spatialData)
+        spatialData(spe) <- spatialData
+        # colData(spe) <- cbind(colData(spe), spatialData)
+        # spatialDataNames(spe) <- names(spatialData)
     } else {
         spatialData(spe) <- NULL
     }

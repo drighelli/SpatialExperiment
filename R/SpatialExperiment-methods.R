@@ -17,12 +17,12 @@
 #' \code{imgData}, and \code{scaleFactors}.
 #' 
 #' @param x A \code{\link{SpatialExperiment}} object.
+#' @param spatialData Logical specifying whether to include columns from
+#'   \code{spatialData} in the output \code{\link{DataFrame}} from
+#'   \code{colData}. Default = \code{FALSE}
 #' @param spatialCoords Logical specifying whether to include columns from
 #'   \code{spatialCoords} in the output \code{\link{DataFrame}} from
 #'   \code{spatialData}. Default = \code{FALSE}.
-#' @param colData Logical or character vector specifying any additional columns
-#'   from \code{colData} to include in the output \code{\link{DataFrame}} from
-#'   \code{spatialData}. Default = \code{FALSE} (no columns).
 #' @param value Replacement value for replacement methods.
 #' @param sample_id Logical value or character vector specifying sample
 #'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).
@@ -41,15 +41,15 @@
 #' 
 #' @section spatialData and spatialCoords methods:
 #' \describe{
-#' \item{\code{spatialData(x)}: }{The \code{spatialData} getter provides the
-#' optional arguments \code{spatialCoords} and \code{colData}, which can be used
-#' to include the columns of spatial coordinates (\code{spatialCoords}) and any
-#' additional columns from \code{colData} in the output \code{DataFrame}.}
-#' \item{\code{spatialData(x) <- value}: }{The \code{spatialData} setter expects
-#' a \code{data.frame} or \code{DataFrame} with the defined column names for the
-#' spatial coordinates. Spatial coordinate names can be set with the
-#' \code{spatialCoordNames} setter, and are set as \code{c("x", "y")} by default
-#' by the \code{\link{SpatialExperiment}} constructor. If the input does not
+#' \item{\code{spatialData(x)}: }{The \code{spatialData} getter provides the 
+#' optional argument \code{spatialCoords}, which can be used to include the 
+#' columns of spatial coordinates (\code{spatialCoords}) in the output 
+#' \code{DataFrame}.}
+#' \item{\code{spatialData(x) <- value}: }{The \code{spatialData} setter 
+#' expects a \code{DataFrame} with the defined column names for the spatial coordinates. 
+#' Spatial coordinate names can be set with the \code{spatialCoordNames} setter, 
+#' and are set as \code{c("x", "y")} by default by the 
+#' \code{\link{SpatialExperiment}} constructor. If the input does not
 #' contain an \code{in_tissue} column, this will be included with a default
 #' value of \code{1}.}
 #' \item{\code{spatialCoords(x)}: }{Getter for numeric matrix of spatial
@@ -103,7 +103,7 @@
 #' spatialData(spe) <- spdata
 #' 
 #' # return additional columns for spatialData
-#' spatialData(spe, spatialCoords=TRUE, colData="sample_id")
+#' spatialData(spe, spatialCoords=TRUE)
 #' 
 #' # change spatial coordinate names
 #' spatialCoordsNames(spe)
@@ -115,9 +115,10 @@
 #' scaleFactors(spe)
 #' 
 #' # tabulate number of spots mapped to tissue
+#' cd <- colData(spe, spatialData = TRUE)
 #' table(
-#'   in_tissue = spe$in_tissue, 
-#'   sample_id = spe$sample_id)
+#'   in_tissue = cd$in_tissue, 
+#'   sample_id = cd$sample_id)
 #' 
 #' @importFrom SingleCellExperiment int_colData int_colData<-
 #' @importFrom S4Vectors nrow SimpleList isEmpty DataFrame
@@ -127,30 +128,19 @@ NULL
 # spatialData ------------------------------------------------------------------
 
 #' @rdname SpatialExperiment-methods
+#' @importFrom SingleCellExperiment int_colData
 #' @export
 setMethod("spatialData", 
     "SpatialExperiment",
-    function(x, spatialCoords = FALSE, colData = FALSE) {
+    function(x, spatialCoords = FALSE) {
         stopifnot(
             is.logical(spatialCoords), 
             length(spatialCoords) == 1)
-        
-        nms <- spatialDataNames(x)
-        
-        if (is.character(colData)) {
-            stopifnot(colData %in% names(colData(x)))
-            nms <- c(nms, colData)
-        } else {
-            stopifnot(is.logical(colData), length(colData) == 1)
-            if (colData) {
-                nms <- names(colData(x))
-            }
-        }
-        spd <- colData(x)[nms]
+        out <- int_colData(x)$spatialData
         if (spatialCoords) {
-            spd <- cbind(spd, spatialCoords(x))
+            out <- cbind(out, spatialCoords(x))
         }
-        return(spd)
+        return(out)
     }
 )
 
@@ -160,29 +150,20 @@ setReplaceMethod("spatialData",
     c("SpatialExperiment", "DFrame"),
     function(x, value) {
         stopifnot(nrow(value) == ncol(x))
-        
-        new <- names(value)
-        old <- spatialDataNames(x)
-        
-        spatialDataNames(x) <- new
-        cd_keep <- setdiff(names(colData(x)), old)
-        colData(x) <- cbind(colData(x)[cd_keep], value)
- 
+        int_colData(x)$spatialData <- value
         return(x)
     }
 )
 
 #' @rdname SpatialExperiment-methods
+#' @importFrom S4Vectors make_zero_col_DFrame
 #' @export
 setReplaceMethod("spatialData", 
     c("SpatialExperiment", "NULL"),
     function(x, value) {
-        # @<- is required here to enforce replacement because
-        # spatialDataNames are protected during colData replacement
-        i <- spatialDataNames(x)
-        x@colData[i] <- NULL
-        spatialDataNames(x) <- NULL
-        return(x)
+        value <- make_zero_col_DFrame(ncol(x))
+        rownames(value) <- rownames(spatialData(x))
+        `spatialData<-`(x, value)
     }
 )
 
@@ -193,27 +174,27 @@ setReplaceMethod("spatialData",
 #' @export
 setMethod("spatialDataNames", 
     "SpatialExperiment", 
-    function(x) int_metadata(x)$spatialDataNames)
+    function(x) names(spatialData(x)))
 
 #' @rdname SpatialExperiment-methods
 #' @export
 setReplaceMethod("spatialDataNames", 
     c("SpatialExperiment", "character"),
     function(x, value) {
-        int_metadata(x)$spatialDataNames <- value
+        names(int_colData(x)$spatialData) <- value
         return(x)
     }
 )
 
-#' @rdname SpatialExperiment-methods
-#' @export
-setReplaceMethod("spatialDataNames", 
-    c("SpatialExperiment", "NULL"),
-    function(x, value) {
-        spatialDataNames(x) <- character()
-        return(x)
-    }
-)
+#' #' @rdname SpatialExperiment-methods
+#' #' @export
+#' setReplaceMethod("spatialDataNames", 
+#'     c("SpatialExperiment", "NULL"),
+#'     function(x, value) {
+#'         spatialDataNames(x) <- character()
+#'         return(x)
+#'     }
+#' )
 
 # spatialCoords ----------------------------------------------------------------
 
