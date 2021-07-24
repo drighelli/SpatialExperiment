@@ -1,66 +1,25 @@
 # SpatialExperiment
 
-SpatialExperiment package provides an S4 class for Spatial Omics data handling.
+`SpatialExperiment` is a Bioconductor class designed to represent spatially resolved transcriptomics data.
 
-Since version 1.1.42 SpatialExperiment package has changed in several ways.
+The `SpatialExperiment` package is available from [Bioconductor](https://bioconductor.org/packages/SpatialExperiment).
 
-+ VisiumExperiment and SpatialExperiment classes are merged into the
-SpatialExperiment class.
-+ Newer version of SpatialExperiment has image loading handling with `imgData` 
-structure
-+ Molecular-based data can be handled with `molecular` [BumpyMatrix](http://bioconductor.org/packages/BumpyMatrix/) assay.
-+ 10x Visium standard data import support with `read10xVisium` function.
-+ Check vignettes and documentation for further details.
+A vignette containing examples and documentation is available from the Bioconductor page.
 
 
-# Installation
+## Installation
 
-SpatialExperiment is available on the [Bioductor official repository](https://bioconductor.org/packages/SpatialExperiment/).
-Today (January 2021) version 1.1.42 is available on Bioconductor devel (v3.13).
-
-To install it use:
+The `SpatialExperiment` package can be installed using standard Bioconductor installation procedures. For more details, see the Bioconductor website.
 
 ```
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-# The following initializes usage of Bioc devel
-BiocManager::install(version='devel')
-
+install.packages("BiocManager")
 BiocManager::install("SpatialExperiment")
 ```
 
-or, alternatively, use the following for the latest github-devel version:
 
-```
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("drighelli/SpatialExperiment")
-```
+## Paper and citation
 
-# Add-ons
+Additional details are provided in our paper:
 
-## Spatial Experiment and multimodal data 
-
-SpatialExperiment class can be included into a MultiAssayExperiment object as 
-a dedicated assay.
-Check how it handles seqFISH data into the `SingleCellMultiModal::seqFISH()`
-package function.
-
-SingleCellMultiModal is available in Bioconductor and can be installed via:
-
-```
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install("SingleCellMultiModal")
-```
-
-
-## Spatial Analysis
-
-To provide additional examples for spatial transcriptomics analysis we're constantly populating the https://github.com/drighelli/SpatialAnalysisWorkflows repository.
-
-These will hopefully find a place into a dedicated package for Spatial Transcriptomics data analysis examples.
-
+[Righell D.\*, Weber L.M.\*, Crowell H.L.\*, Pardo B., Collado-Torres L., Ghazanfar S., Lun A.T.L., Hicks S.C.<sup>+</sup>, and Risso D.<sup>+</sup> (2021), *SpatialExperiment: infrastructure for spatially resolved transcriptomics data in R using Bioconductor*, bioRxiv, 2021.01.27.428431v1](https://www.biorxiv.org/content/10.1101/2021.01.27.428431v1)
 
