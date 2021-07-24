@@ -48,3 +48,11 @@ test_that("no duplicated columns from spatialData when adding new columns to col
     colData(spe)$testing <- 1
     expect_equal(colnames(colData(spe)), c(colnames_old, "testing"))
 })
+
+test_that("colData > spatialData > spatialCoords hierarchy", {
+    expect_identical(cbind(colData(spe), spatialData(spe), spatialCoords(spe)), 
+                     colData(spe, spatialData = TRUE, spatialCoords = TRUE))
+    expect_identical(cbind(spatialData(spe), spatialCoords(spe)), 
+                     spatialData(spe, spatialCoords = TRUE))
+    
+})
