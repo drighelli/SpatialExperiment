@@ -12,7 +12,7 @@ constructor to fill the slots of the base class.}
 \item{sample_id}{A \code{character} sample identifier, which matches the
 \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
 be stored in a new column in \code{\link{colData}}, if not already present.
-Default = \code{sample1}.}
+Default = \code{sample01}.}
 
 \item{spatialDataNames}{A \code{character} vector of column names from
 \code{\link{colData}} to include in \code{\link{spatialData}}.
