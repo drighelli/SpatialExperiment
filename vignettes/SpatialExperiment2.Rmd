@@ -61,7 +61,7 @@ spe
 In addition to observation metadata stored inside the `colData` slot of 
 a `SingleCellExperiment`, the `SpatialExperiment` class can accommodate: 
 
-- `spatialData`, a `DataFrame` containing spatial metadata 
+- `spatialData`, a `DataFrame` containing spatial metadata  
 (e.g. whether or not an observation was mapped to tissue)
 - `spatialCoords`, a numeric matrix of spatial coordinates (e.g. `x` and `y`)
 
@@ -93,14 +93,14 @@ colData(spe, spatialData = TRUE, spatialCoords = TRUE)
 All image related data are stored inside the `int_metadata`'s 
 `imgData` field as a `DataFrame` of the following structure: 
 
-* each row corresponds to one image for a given sample 
+* each row corresponds to one image for a given sample  
 and with a given unique image identifier (e.g. its resolutions)
 * for each image, columns specify:
   * which `sample_id` the image belongs to
-  * a unique `image_id` in order to accommodate multiple images 
+  * a unique `image_id` in order to accommodate multiple images  
   for a given sample (e.g. of different resolutions)
   * the image's `data` (a `SpatialImage` object)
-  * the `scaleFactor` that adjusts pixel positions of the original, 
+  * the `scaleFactor` that adjusts pixel positions of the original,  
   full-resolution image to pixel positions in the image
 
 The `imgData()` accessor can be used to retrieve 
@@ -120,11 +120,11 @@ Images are stored inside the `data` field of the `imgData` as a list of
   * `@image` contains a `raster` object: a matrix 
   of RGB colors for each pixel in the image
 * `StoredSpatialImage`
-  * represents an image that is stored in a local file (e.g., as 
+  * represents an image that is stored in a local file (e.g., as  
   .png, .jpg or .tif), and loaded into memory only on request
   * `@path` specifies a local file from which to retrieve the image
 * `RemoteSpatialImage`
-  * represents an image that is remotely hosted 
+  * represents an image that is remotely hosted  
   (under some URL), and retrieved only on request
   * `@url` specifies where to retrieve the image from
 
@@ -169,11 +169,11 @@ plot(img)
 The `rmvImg()` function is more flexible in the specification 
 of the `sample_id` and `image_id` arguments. Specifically:
 
-- `TRUE` is equivalent to *all*, e.g. 
-`sample_id = "<sample>"`, `image_id = TRUE` 
+- `TRUE` is equivalent to *all*, e.g.  
+`sample_id = "<sample>"`, `image_id = TRUE`  
 will drop all images for a given sample
-- `NULL` defaults to the first entry available, e.g. 
-`sample_id = "<sample>"`, `image_id = NULL` 
+- `NULL` defaults to the first entry available, e.g.  
+`sample_id = "<sample>"`, `image_id = NULL`  
 will drop the first image for a given sample
 
 For example, `sample_id = TRUE`, `image_id = TRUE` will specify all images; 
