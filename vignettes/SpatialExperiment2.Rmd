@@ -252,8 +252,16 @@ spe4 <- SpatialExperiment(
 ```
 
 Importantly, all of the above `SpatialExperiment()` function calls 
-lead to construction of the exact same object (although column orders in `colData` 
-may differ, depending on which arguments were provided).
+lead to construction of the exact same object:
+
+```{r}
+all(identical(spe1, spe2), 
+    identical(spe1, spe3), 
+    identical(spe1, spe4), 
+    identical(spe2, spe3), 
+    identical(spe2, spe4), 
+    identical(spe3, spe4))
+```
 
 Finally, all of `spatialData/Coords(Names)` are optional. I.e., 
 we can construct a SPE using only a subset of the above arguments:
