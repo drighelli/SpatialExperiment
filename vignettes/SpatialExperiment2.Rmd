@@ -48,7 +48,7 @@ In addition, the class supports storage of spatial information
 via `spatialData` and `spatialCoords`, and storage of
 images via `imgData`.
 
-For demonstration of the general class anatomy, we load an example 
+For demonstration of the general class structure, we load an example 
 `SpatialExperiment` (abbreviated as SPE) object (variable `spe`):
 
 ```{r}
