@@ -23,23 +23,7 @@ editor_options:
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
 ```
 
-# Installation
-
-The `SpatialExperiment` package is available via Bioconductor.
-
-```{r, eval = FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("SpatialExperiment")
-```
-
-Load the package as follows:
-
-```{r message = FALSE, warning = FALSE}
-library(SpatialExperiment)
-```
-
-# The SpatialExperiment class
+# Class structure
 
 The `SpatialExperiment` class is designed to represent spatially
 resolved transcriptomics (ST) data. It inherits from the
@@ -56,7 +40,7 @@ example(read10xVisium, echo = FALSE)
 spe
 ```
 
-## `spatialData` \& `spatialCoords`
+## `spatialData` \& `-Coords`
 
 In addition to observation metadata stored inside the `colData` slot of 
 a `SingleCellExperiment`, the `SpatialExperiment` class can accommodate: 
