@@ -1,23 +1,19 @@
 example(read10xVisium, echo = FALSE)
 
-test_that("colData()<-NULL retains only sample_id & spatialDataNames fields", {
+test_that("colData()<-NULL retains only sample_id", {
     tmp <- spe
     tmp$foo <- "foo"
     colData(tmp) <- NULL
     expect_null(tmp$foo)
     expect_identical(tmp$sample_id, spe$sample_id)
-    expect_identical(spatialData(tmp), spatialData(spe))
 })
 
-test_that(paste(
-    "valid colData<- without sample_id field", 
-    "protects sample_id & spatialDataNames fields"), {
+test_that("valid colData<- without sample_id field protects sample_id", {
     tmp <- spe
     tmp$foo <- "foo"
     colData(tmp) <- DataFrame(x=seq(ncol(tmp)))
     expect_null(tmp$foo)
     expect_identical(tmp$sample_id, spe$sample_id)
-    expect_equivalent(spatialData(tmp), spatialData(spe))
 })
 
 test_that("colData<- with valid sample_id field passes", {
@@ -51,4 +47,12 @@ test_that("no duplicated columns from spatialData when adding new columns to col
     colnames_old <- colnames(colData(spe))
     colData(spe)$testing <- 1
     expect_equal(colnames(colData(spe)), c(colnames_old, "testing"))
+})
+
+test_that("colData > spatialData > spatialCoords hierarchy", {
+    expect_identical(cbind(colData(spe), spatialData(spe), spatialCoords(spe)), 
+                     colData(spe, spatialData = TRUE, spatialCoords = TRUE))
+    expect_identical(cbind(spatialData(spe), spatialCoords(spe)), 
+                     spatialData(spe, spatialCoords = TRUE))
+    
 })

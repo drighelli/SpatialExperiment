@@ -12,7 +12,7 @@ constructor to fill the slots of the base class.}
 \item{sample_id}{A \code{character} sample identifier, which matches the
 \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
 be stored in a new column in \code{\link{colData}}, if not already present.
-Default = \code{sample1}.}
+Default = \code{sample01}.}
 
 \item{spatialDataNames}{A \code{character} vector of column names from
 \code{\link{colData}} to include in \code{\link{spatialData}}.
@@ -80,8 +80,8 @@ the additional measurements per molecule per cell can be stored in a
 
 The additional arguments in the constructor documented above (e.g.
 \code{spatialData}, \code{spatialCoords}, \code{imgData}, and others)
-represent the main extensions to the \code{\link{SingleCellExperiment}} class
-to store associated spatial and imaging information for ST data.
+represent the main extensions to the \code{\link{SingleCellExperiment}}
+class to store associated spatial and imaging information for ST data.
 
 The constructor expects \code{colData} to contain a column named
 \code{sample_id}. If this is not present, it will assign the value from the

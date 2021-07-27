@@ -36,5 +36,30 @@ retained. In addition, checks are performed against the \code{sample_id}s in
 }
 \examples{
 example(read10xVisium)
+
+# return additional columns for colData
+head(colData(spe, spatialData = TRUE, spatialCoords = TRUE))
+
+# empty replacement retains sample identifiers
 colData(spe) <- NULL
+names(colData(spe))
+
+# replacement of sample identifiers
+# requires one-to-one mapping
+
+## invalid replacement
+
+tryCatch(
+  spe$sample_id <- seq(ncol(spe)),
+  error = function(e) message(e)) 
+  
+## valid replacement  
+  
+old <- c("section1", "section2")
+new <- c("sample_A", "sample_B")
+idx <- match(spe$sample_id, old)
+
+tmp <- spe
+tmp$sample_id <- new[idx]
+table(spe$sample_id, tmp$sample_id)
 }

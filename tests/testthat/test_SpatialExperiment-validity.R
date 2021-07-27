@@ -34,6 +34,25 @@ test_that("colData", {
     expect_error(validObject(tmp))
 })
 
+test_that("SpatialData", {
+    # initialize mock SPE
+    spe <- SpatialExperiment(
+        assays=diag(n <- 10),
+        colData=DataFrame(a=seq(n), b=seq(n)))
+    # invalid replacements
+    foo <- list(NA, 1, "c", vector("list", ncol(spe)))
+    for (. in foo) {
+        int_colData(spe)$spatialData <- .
+        expect_error(validObject(spe)) 
+    }
+    # valid replacements
+    foo <- list(DataFrame(seq(ncol(spe))))
+    for (. in foo) {
+        int_colData(spe)$spatialData <- .
+        expect_true(validObject(spe)) 
+    }
+})
+
 test_that("spatialCoords", {
     # initialize mock SPE
     spe <- SpatialExperiment(
@@ -59,25 +78,6 @@ test_that("spatialCoords", {
         matrix(NA_integer_, n))
     for (. in foo) {
         int_colData(spe)$spatialCoords <- .
-        expect_true(validObject(spe)) 
-    }
-})
-
-test_that("SpatialDataNames", {
-    # initialize mock SPE
-    spe <- SpatialExperiment(
-        assays=diag(n <- 10),
-        colData=DataFrame(a=seq(n), b=seq(n)))
-    # invalid replacements
-    foo <- list(NULL, NA, 1, "c", c("a", "c"), c(NA, "c"))
-    for (. in foo) {
-        int_metadata(spe)$spatialDataNames <- .
-        expect_error(validObject(spe)) 
-    }
-    # valid replacements
-    foo <- list(character(), "a", "b", c("a", "b"))
-    for (. in foo) {
-        int_metadata(spe)$spatialDataNames <- .
         expect_true(validObject(spe)) 
     }
 })
