@@ -36,6 +36,7 @@ For demonstration of the general class structure, we load an example
 `SpatialExperiment` (abbreviated as SPE) object (variable `spe`):
 
 ```{r}
+library(SpatialExperiment)
 example(read10xVisium, echo = FALSE)
 spe
 ```
