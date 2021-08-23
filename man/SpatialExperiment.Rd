@@ -166,7 +166,7 @@ df$cell <- factor(df$cell, cs)
 # construct BumpyMatrix
 mol <- BumpyMatrix::splitAsBumpyMatrix(
     df[, c("x", "y")], 
-    row = gs, col = cs)
+    row = df$gene, col = df$cell)
 
 # get count matrix
 y <- with(df, table(gene, cell))
