@@ -181,9 +181,9 @@
 #' 
 #' # construct BumpyMatrix
 #' mol <- BumpyMatrix::splitAsBumpyMatrix(
-#'     df[, c("x", "y")], 
-#'     row = gs, col = cs)
-#' 
+#'     df[, c("x", "y")],
+#'     row = df$gene, column = df$cell)
+#'
 #' # get count matrix
 #' y <- with(df, table(gene, cell))
 #' y <- as.matrix(unclass(y))
