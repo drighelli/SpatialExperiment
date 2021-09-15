@@ -17,7 +17,7 @@ test_that("data are read correctly", {
     cnms <- c(
         "barcode", "in_tissue", "array_row", "array_col", 
         "pxl_col_in_fullres", "pxl_row_in_fullres")
-    xyz <- file.path(samples, "spatial", "tissue_positions_list.csv")
+    xyz <- file.path(samples, "outs", "spatial", "tissue_positions_list.csv")
     xyz <- lapply(xyz, read.csv, header=FALSE, row.names=1, col.names=cnms)
     
     sids <- rep.int(sample_ids, vapply(xyz, nrow, numeric(1)))
@@ -29,7 +29,7 @@ test_that("data are read correctly", {
         table(cd$sample_id, cd$in_tissue),
         table(xyz$sample_id, xyz$in_tissue))
 
-    sfs <- file.path(samples, "spatial", "scalefactors_json.json")
+    sfs <- file.path(samples, "outs", "spatial", "scalefactors_json.json")
     sfs <- lapply(sfs, function(.) fromJSON(file=.))
     sfs <- vapply(sfs, function(.) .[["tissue_lowres_scalef"]], numeric(1))
     expect_identical(imgData(x)$scaleFactor, sfs)

@@ -1,7 +1,7 @@
 # This tests the SpatialImage architecture.
 # library(testthat); library(SpatialExperiment); source("test_spatial_image.R")
 
-path <- system.file("extdata", "10xVisium", "section1", "spatial", 
+path <- system.file("extdata", "10xVisium", "section1", "outs", "spatial", 
     "tissue_lowres_image.png", package="SpatialExperiment")
 
 test_that("SpatialImage constructors and basic methods work as expected", {
