@@ -99,17 +99,17 @@ read10xVisium <- function(samples="",
     names(samples) <- sids
     
     # setup file paths
-    fns <- paste0(
+    fns <- file.path("outs", paste0(
         data, "_feature_bc_matrix", 
-        switch(type, HDF5=".h5", ""))
+        switch(type, HDF5=".h5", "")))
     counts <- file.path(samples, fns)
+    stopifnot(all(file.exists(counts)))
     
-    # TODO: check that these files exist & are of valid format
-    # otherwise things will fail & give unhelpful error messages
-    
-    dir <- file.path(samples, "spatial")
+    dir <- file.path(samples, "outs", "spatial")
     xyz <- file.path(dir, "tissue_positions_list.csv")
+    stopifnot(all(file.exists(xyz)))
     sfs <- file.path(dir, "scalefactors_json.json")
+    stopifnot(all(file.exists(sfs)))
     names(xyz) <- names(sfs) <- sids
     
     # read image data
