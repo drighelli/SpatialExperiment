@@ -103,7 +103,7 @@ directly from Space Ranger output files.
 #########################################################
 
 dir <- system.file(
-  file.path("extdata", "10xVisium", "section1"),
+  file.path("extdata", "10xVisium", "section1", "outs"),
   package = "SpatialExperiment")
 
 # read in counts
@@ -165,7 +165,7 @@ df$cell <- factor(df$cell, cs)
 
 # construct BumpyMatrix
 mol <- BumpyMatrix::splitAsBumpyMatrix(
-    df[, c("x", "y")], 
+    df[, c("x", "y")],
     row = df$gene, column = df$cell)
 
 # get count matrix
