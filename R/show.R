@@ -56,11 +56,9 @@ NULL
         if (nchar(str) > 50) {
             ss <- strsplit(str, "")[[1]]
             ss <- split(ss, ceiling(seq_along(ss)/40))
-            str <- paste(
-                lapply(ss, paste, collapse=""),
-                collapse="\n  ")
+            str <- paste(lapply(ss, paste, collapse=""), collapse="\n  ")
         }
-        cat("imgSource(): \n ", str)
+        cat("imgSource(): \n ", str, "\n")
     }
 }
 
