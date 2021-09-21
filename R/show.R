@@ -49,8 +49,11 @@ setMethod("show", "SpatialExperiment", .spe_show)
 NULL
 
 .spi_show <- function(object) {
-    dim <- paste(dim(object), collapse=" x ")
-    cat("A", dim, class(object), "\n")
+    # dim <- paste(dim(object), collapse=" x ")
+    dim <- as.character(dim(object))
+    str <- paste0("A width=", dim[2], " x height=", dim[1], " ", class(object),
+        "\n")
+    cat(str)
     str <- imgSource(object)
     if (!is.na(str)) {
         if (nchar(str) > 50) {
