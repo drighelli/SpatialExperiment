@@ -189,10 +189,10 @@
 #' y <- as.matrix(unclass(y))
 #' 
 #' # construct SpatialExperiment
-#' spe_mol <- SpatialExperiment(
+#' (spe_mol <- SpatialExperiment(
 #'     assays = list(
 #'         counts = y, 
-#'         molecules = mol))
+#'         molecules = mol)))
 NULL
 
 #' @importFrom S4Vectors DataFrame
@@ -347,7 +347,7 @@ SpatialExperiment <- function(...,
 setAs(
     from="SingleCellExperiment", 
     to="SpatialExperiment", 
-    function(from) .sce_to_spe(from, sample_id=NULL))
+    function(from) .sce_to_spe(from))
 
 #' @importFrom rjson fromJSON
 .get_scaleFactor <- function(scaleFactors, imageSource=NULL) {
