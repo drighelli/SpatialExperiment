@@ -56,9 +56,9 @@ NULL
     cat(str)
     str <- imgSource(object)
     if (!is.na(str)) {
-        if (nchar(str) > 50) {
+        if (nchar(str) > 80) {
             ss <- strsplit(str, "")[[1]]
-            ss <- split(ss, ceiling(seq_along(ss)/40))
+            ss <- split(ss, ceiling(seq_along(ss)/80))
             str <- paste(lapply(ss, paste, collapse=""), collapse="\n  ")
         }
         cat("imgSource(): \n ", str, "\n")
