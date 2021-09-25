@@ -51,7 +51,7 @@ NULL
 .spi_show <- function(object) {
     # dim <- paste(dim(object), collapse=" x ")
     dim <- as.character(dim(object))
-    str <- paste0("A ", dim[2], " x ", dim[1], " (width x height) ", 
+    str <- paste0(dim[2], " x ", dim[1], " (width x height) ", 
                   class(object), "\n")
     cat(str)
     str <- imgSource(object)
