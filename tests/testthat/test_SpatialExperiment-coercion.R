@@ -5,6 +5,9 @@ fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 xyz <- read.csv(fnm, header = FALSE, col.names = c(
     "barcode", "in_tissue", "array_row", "array_col",
     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+img <- readImgData(
+    path = file.path(dir, "spatial"),
+    sample_id="sample01")
 
 test_that("SingleCellExperiment to SpatialExperiment", {
     example(SingleCellExperiment, echo=FALSE)
