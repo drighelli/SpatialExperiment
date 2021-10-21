@@ -2,6 +2,9 @@
 % Please edit documentation in R/coerce.R
 \name{SpatialExperiment-coercion}
 \alias{SpatialExperiment-coercion}
+\alias{coerce,}
+\alias{SingleCellExperiment,}
+\alias{SpatialExperiment-method}
 \alias{toSpatialExperiment}
 \title{SpatialExperiment coertion methods}
 \arguments{
@@ -72,7 +75,22 @@ and additional arguments as explained in the related section of this
 documentation.
 }
 \examples{
-example(SpatialExperiment, echo=FALSE)
+dir <- system.file(
+file.path("extdata", "10xVisium", "section1"),
+package = "SpatialExperiment")
+
+# read in counts
+fnm <- file.path(dir, "raw_feature_bc_matrix")
+sce <- DropletUtils::read10xCounts(fnm)
+
+
+# read in spatial coordinates
+fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
+xyz <- read.csv(fnm, header = FALSE,
+                col.names = c(
+                    "barcode", "in_tissue", "array_row", "array_col",
+                    "pxl_row_in_fullres", "pxl_col_in_fullres"))
+
 
 ## as method
 int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
@@ -81,18 +99,15 @@ int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
 spe <- as(sce, "SpatialExperiment")
 ## Coercing an sce with imgData
 img <- readImgData(
-  path = file.path(dir, "spatial"),
-  sample_id="sample01")
+    path = file.path(dir, "spatial"),
+    sample_id="sample01")
 int_colData(sce)$imgData <- img
 spe <- as(sce, "SpatialExperiment")
 
 ## toSpatialExperiment method
-img <- readImgData(
-  path = file.path(dir, "spatial"),
-  sample_id="foo")
 (spe <- toSpatialExperiment(sce,
     imgData = img,
     spatialData=DataFrame(xyz), 
     spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
-    sample_id="foo"))
+    sample_id="sample01"))
 }

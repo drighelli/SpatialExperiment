@@ -127,7 +127,7 @@ rd <- S4Vectors::DataFrame(
   symbol = rowData(sce)$Symbol)
   
 # construct 'SpatialExperiment'
-(spe1 <- SpatialExperiment(
+(spe <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     colData = colData(sce), rowData = rd, imgData = img,
     spatialData=DataFrame(xyz), 

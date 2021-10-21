@@ -1,6 +1,6 @@
 #' @name SpatialExperiment-coercion
 #' @title SpatialExperiment coertion methods
-#' @aliases toSpatialExperiment
+#' 
 #' @description 
 #' The \code{SpatialExperiment} class inherits from the 
 #' \code{SingleCellExperiment} class making necessary to coerce between these 
@@ -57,8 +57,27 @@
 #' @param loadImage Logical indicating whether to load image into memory.
 #'   Default = \code{FALSE}.
 #' 
+#' @aliases 
+#' coerce, SingleCellExperiment, SpatialExperiment-method
+#' toSpatialExperiment
+#' 
 #' @examples 
-#' example(SpatialExperiment, echo=FALSE)
+#' dir <- system.file(
+#' file.path("extdata", "10xVisium", "section1"),
+#' package = "SpatialExperiment")
+#' 
+#' # read in counts
+#' fnm <- file.path(dir, "raw_feature_bc_matrix")
+#' sce <- DropletUtils::read10xCounts(fnm)
+#' 
+#' 
+#' # read in spatial coordinates
+#' fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
+#' xyz <- read.csv(fnm, header = FALSE,
+#'                 col.names = c(
+#'                     "barcode", "in_tissue", "array_row", "array_col",
+#'                     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+#' 
 #' 
 #' ## as method
 #' int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
@@ -67,23 +86,20 @@
 #' spe <- as(sce, "SpatialExperiment")
 #' ## Coercing an sce with imgData
 #' img <- readImgData(
-#'   path = file.path(dir, "spatial"),
-#'   sample_id="sample01")
+#'     path = file.path(dir, "spatial"),
+#'     sample_id="sample01")
 #' int_colData(sce)$imgData <- img
 #' spe <- as(sce, "SpatialExperiment")
 #' 
 #' ## toSpatialExperiment method
-#' img <- readImgData(
-#'   path = file.path(dir, "spatial"),
-#'   sample_id="foo")
 #' (spe <- toSpatialExperiment(sce,
 #'     imgData = img,
 #'     spatialData=DataFrame(xyz), 
 #'     spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
-#'     sample_id="foo"))
+#'     sample_id="sample01"))
 NULL
 
-#' @exportMethod coerce
+
 setAs(
     from="SingleCellExperiment", 
     to="SpatialExperiment", 
