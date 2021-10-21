@@ -211,7 +211,7 @@ SpatialExperiment <- function(...,
     imgData=NULL) {
     
     sce <- SingleCellExperiment(...)
-    spe <- .sce_to_spe(sce=sce,
+    spe <- .sce_to_spe(sce=sce, ## what happened to the image_id?
         sample_id=sample_id,
         spatialDataNames=spatialDataNames,
         spatialCoordsNames=spatialCoordsNames,
@@ -344,11 +344,7 @@ SpatialExperiment <- function(...,
     return(spe)
 }
 
-setAs(
-    from="SingleCellExperiment", 
-    to="SpatialExperiment", 
-    function(from) .sce_to_spe(from))
-
+## COMMENT: Is this the right place for this method?
 #' @importFrom rjson fromJSON
 .get_scaleFactor <- function(scaleFactors, imageSource=NULL) {
     

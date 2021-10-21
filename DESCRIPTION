@@ -31,4 +31,4 @@ Imports:
     S4Vectors, SummarizedExperiment, BiocGenerics, utils
 Suggests: knitr, rmarkdown, testthat, BiocStyle, BumpyMatrix
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

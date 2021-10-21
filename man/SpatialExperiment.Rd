@@ -127,7 +127,7 @@ rd <- S4Vectors::DataFrame(
   symbol = rowData(sce)$Symbol)
   
 # construct 'SpatialExperiment'
-(spe <- SpatialExperiment(
+(spe1 <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     colData = colData(sce), rowData = rd, imgData = img,
     spatialData=DataFrame(xyz), 
@@ -165,7 +165,7 @@ df$cell <- factor(df$cell, cs)
 
 # construct BumpyMatrix
 mol <- BumpyMatrix::splitAsBumpyMatrix(
-    df[, c("x", "y")], 
+    df[, c("x", "y")],
     row = df$gene, column = df$cell)
 
 # get count matrix
@@ -173,10 +173,10 @@ y <- with(df, table(gene, cell))
 y <- as.matrix(unclass(y))
 
 # construct SpatialExperiment
-spe_mol <- SpatialExperiment(
+(spe_mol <- SpatialExperiment(
     assays = list(
         counts = y, 
-        molecules = mol))
+        molecules = mol)))
 }
 \seealso{
 \code{?"\link{SpatialExperiment-methods}"}, which includes:
