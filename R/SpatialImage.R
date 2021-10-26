@@ -23,6 +23,12 @@
 #' imgSource<-,RemoteSpatialImage,character-method
 #' coerce,SpatialImage,LoadedSpatialImage-method
 #' coerce,RemoteSpatialImage,StoredSpatialImage-method
+#' rotateImg
+#' rotateImg,SpatialImage-method
+#' rotateImg,LoadedSpatialImage-method
+#' mirrorImg
+#' mirrorImg,SpatialImage-method
+#' mirrorImg,LoadedSpatialImage-method
 #' 
 #' @description 
 #' The \code{SpatialImage} class hierarchy provides representations of images
@@ -82,6 +88,19 @@
 #' modified by setting \code{options("SpatialExperiment.cache.size")} 
 #' to some number of bytes, e.g., \code{2^32}.
 #' 
+#' @section Transformations:
+#' Two basic image transformations are currently 
+#' supported for any SpatialImage \code{x}, namely,
+#' \code{rotateImg(x, degrees)} for clockwise (\code{degrees > 0}) and 
+#' counter-clockwise (\code{degrees < 0}) rotation, and 
+#' \code{mirrorImg(x, axis)} for horizontal (\code{axis = "h"}) and 
+#' vertical (\code{axis = "v"}) mirroring.
+#' 
+#' Note that, both \code{rotateImg()} and \code{mirrorImg()} operate
+#' on the \code{raster} matrix of the input \code{SpatialImage}. 
+#' Thus, any \code{SpatialImage} will automatically be coerced 
+#' into a \code{LoadedSpatialImage} upon rotation/mirroring.
+#' 
 #' @section Other methods:
 #' \code{dim(x)} will return an integer vector of length 2, 
 #' containing the width and height of the image in pixels.
@@ -113,6 +132,29 @@
 #' # coercing to an explicitly in-memory raster
 #' spi <- as(spi, "LoadedSpatialImage")
 #' plot(as.raster(spi))
+#' 
+#' ###################
+#' # transformations #
+#' ###################
+#' 
+#' # (counter-)clockwise rotation
+#' spi1 <- rotateImg(spi, degrees = +90)
+#' spi2 <- rotateImg(spi, degrees = -90)
+#' 
+#' par(mfrow = c(1, 3))
+#' plot(as.raster(spi))
+#' plot(as.raster(spi1))
+#' plot(as.raster(spi2))
+#' 
+#' # horizontal/vertical mirroring
+#' spi1 <- mirrorImg(spi, axis = "h")
+#' spi2 <- mirrorImg(spi, axis = "v")
+#' 
+#' par(mfrow = c(1, 3))
+#' plot(as.raster(spi))
+#' plot(as.raster(spi1))
+#' plot(as.raster(spi2))
+#' 
 NULL
 
 #' @importFrom grDevices is.raster
@@ -233,3 +275,42 @@ setAs("RemoteSpatialImage",
         new("StoredSpatialImage", path=path)
     }
 )
+
+# transformations --------------------------------------------------------------
+
+#' @export
+setMethod("rotateImg", 
+    "LoadedSpatialImage", 
+    function(x, degrees=90) {
+        r <- imgRaster(x)
+        r <- .rotate(r, degrees)
+        imgRaster(x) <- r
+        return(x)
+    })
+
+#' @export
+setMethod("rotateImg", 
+    "SpatialImage", 
+    function(x, degrees=90) {
+        x <- as(x, "LoadedSpatialImage")
+        rotateImg(x, degrees)
+    })
+
+#' @export
+setMethod("mirrorImg", 
+    "LoadedSpatialImage", 
+    function(x, axis=c("h", "v")) {
+        axis <- match.arg(axis)
+        r <- imgRaster(x)
+        r <- .mirror(r, axis)
+        imgRaster(x) <- r
+        return(x)
+    })
+
+#' @export
+setMethod("mirrorImg", 
+    "SpatialImage", 
+    function(x, axis=c("h", "v")) {
+        x <- as(x, "LoadedSpatialImage")
+        mirrorImg(x, axis)
+    })

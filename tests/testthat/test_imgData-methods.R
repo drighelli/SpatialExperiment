@@ -1,5 +1,13 @@
 example(read10xVisium, echo = FALSE)
 
+test_that("getImg/imgRaster/Source w/o imgData return NULL", {
+    x <- spe
+    imgData(x) <- NULL
+    expect_null(getImg(x))
+    expect_null(imgRaster(x))
+    expect_null(imgSource(x))
+})
+
 # getImg -----------------------------------------------------------------------
 
 test_that("getImg,sample_id=image_id='foo' throws error", {
@@ -50,9 +58,30 @@ test_that("imgSource,sample_id=image_id=NULL returns character", {
     expect_identical(x, y)
 })
 
-test_that("imgSource,sample_id=image_id=TRUE returns character spector", {
+test_that("imgSource,sample_id=image_id=TRUE returns character vector", {
     x <- imgSource(spe, sample_id=TRUE, image_id=TRUE)
     y <- vapply(imgData(spe)$data, imgSource, character(1))
     expect_is(x, "character")
+    expect_identical(x, y)
+})
+
+# imgRaster --------------------------------------------------------------------
+
+test_that("imgRaster,sample_id=image_id='foo' throws error", {
+    expect_error(imgRaster(spe, sample_id='foo', image_id='foo'))
+})
+
+test_that("imgRaster,sample_id=image_id=NULL returns character", {
+    x <- imgRaster(spe, sample_id=NULL, image_id=NULL)
+    y <- imgRaster(imgData(spe)$data[[1]])
+    expect_is(x, "raster")
+    expect_identical(x, y)
+})
+
+test_that("imgRaster,sample_id=image_id=TRUE returns raster list", {
+    x <- imgRaster(spe, sample_id=TRUE, image_id=TRUE)
+    y <- lapply(imgData(spe)$data, imgRaster)
+    expect_is(x, "list")
+    expect_true(all(vapply(x, class, character(1)) == "raster"))
     expect_identical(x, y)
 })
