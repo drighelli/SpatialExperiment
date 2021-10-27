@@ -3,7 +3,7 @@ dir <- system.file(
     package="SpatialExperiment")
 
 sample_ids <- c("section1", "section2")
-samples <- file.path(dir, sample_ids)
+samples <- file.path(dir, sample_ids, "outs")
 
 test_that("data are read correctly", {
     x <- read10xVisium(samples, sample_ids,

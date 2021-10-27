@@ -141,7 +141,7 @@ test_that(".sce_to_spe()", {
 test_that("scaleFactors should be numeric, a named list or JSON file", {
     sce <- SingleCellExperiment(assays=list(counts=y), colData=cd)
     dir <- system.file(
-        file.path("extdata", "10xVisium", "section1", "spatial"),
+        file.path("extdata", "10xVisium", "section1", "outs", "spatial"),
         package="SpatialExperiment")
     sf_fn <- file.path(dir, "scalefactors_json.json")
     img_fn <- file.path(dir, "tissue_lowres_image.png")
