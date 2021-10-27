@@ -45,15 +45,20 @@ output directories for 10x Genomics Visium spatial gene expression data.
 \details{
 The constructor assumes data from each sample are located 
 in a single output directory as returned by Space Ranger, 
-thus having the following file organization:
+thus having the following file organization (where "raw/filtered" 
+refers to either "raw" or "filtered" to match the `data` argument.) 
+The base directory "outs/" from Space Ranger can either be included 
+manually in the paths provided in `samples`, or can be ignored; 
+if ignored it will be added automatically. The `.h5` files are 
+used if `type = "HDF5"`.
 
 sample \cr
 |—outs \cr
 · · |—raw/filtered_feature_bc_matrix.h5 \cr
 · · |—raw/filtered_feature_bc_matrix    \cr
-· · · · |—barcodes.tsv \cr
-· · · · |—features.tsv \cr
-· · · · |—matrix.mtx   \cr
+· · · · |—barcodes.tsv.gz \cr
+· · · · |—features.tsv.gz \cr
+· · · · |—matrix.mtx.gz   \cr
 · · |—spatial \cr
 · · · · |—scalefactors_json.json    \cr
 · · · · |—tissue_lowres_image.png   \cr
