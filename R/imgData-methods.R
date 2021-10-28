@@ -200,14 +200,13 @@ setMethod("rmvImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("imgSource", "SpatialExperiment", 
-    function(x, sample_id=NULL, image_id=NULL) {
+    function(x, path, sample_id=NULL, image_id=NULL) {
         spi <- getImg(x, sample_id, image_id)
         if (is.null(spi)) {
             NULL
-        } else if (is.list(spi)) {
-            vapply(spi, imgSource, character(1)) 
         } else {
-            imgSource(spi)
+            if (!is.list(spi)) spi <- list(spi)
+            vapply(spi, \(.) imgSource(., path), character(1)) 
         }
     })
 

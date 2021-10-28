@@ -13,7 +13,7 @@ setGeneric("imgRaster", function(x, ...) standardGeneric("imgRaster"))
 setGeneric("imgRaster<-", function(x, value) standardGeneric("imgRaster<-"))
 
 #' @export
-setGeneric("imgSource", function(x, ...) standardGeneric("imgSource"))
+setGeneric("imgSource", function(x, path=FALSE, ...) standardGeneric("imgSource"))
 
 #' @export
 setGeneric("imgSource<-", function(x, value) standardGeneric("imgSource<-"))

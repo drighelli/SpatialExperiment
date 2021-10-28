@@ -215,16 +215,36 @@ setMethod("imgRaster",
     })
 
 #' @export
-setMethod("imgSource", "LoadedSpatialImage", function(x) NA_character_)
+setMethod("imgSource", 
+    "LoadedSpatialImage", 
+    function(x, path) {
+        NA_character_
+    })
 
 #' @export
-setMethod("imgSource", "StoredSpatialImage", function(x) x@path)
+setMethod("imgSource", 
+    "StoredSpatialImage", 
+    function(x, path) {
+        x@path
+    })
 
 #' @export
-setMethod("imgSource", "RemoteSpatialImage", function(x) x@url)
+setMethod("imgSource", 
+    "RemoteSpatialImage", 
+    function(x, path) {
+        if (path) {
+            .remote_file_cache(x@url, cache=NULL)
+        } else {
+            x@url
+        }
+    })
 
 #' @export
-setMethod("dim", "SpatialImage", function(x) dim(imgRaster(x)))
+setMethod("dim", 
+    "SpatialImage", 
+    function(x) {
+        dim(imgRaster(x))
+    })
 
 # setters ----------------------------------------------------------------------
 

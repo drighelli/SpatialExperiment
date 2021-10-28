@@ -20,7 +20,7 @@
 
 \S4method{rmvImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{imgSource}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
+\S4method{imgSource}{SpatialExperiment}(x, path, sample_id = NULL, image_id = NULL)
 
 \S4method{imgRaster}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
