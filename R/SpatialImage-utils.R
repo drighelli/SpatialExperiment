@@ -47,3 +47,30 @@ image.cache$cached <- list()
     # but may possibly want to export
     image.cache$cached <- list()
 }
+
+# (counter-)clockwise 90 degree rotation
+.rotate <- function(x, degrees) {
+    # 'degrees' should be a single numeric divisible by 90
+    stopifnot(
+        length(degrees) == 1,
+        is.numeric(degrees), 
+        degrees %% 90 == 0)
+    s <- sign(degrees)
+    f <- ifelse(s == 1, 
+        \(x) t(apply(x, 2, rev)), # clockwise
+        \(x) apply(x, 1, rev))    # counter-clockwise
+    n <- abs(degrees / 90)
+    for (i in seq_len(n)) 
+        x <- f(x)
+    as.raster(x)
+}
+
+# flip over horizontal/vertical axis
+.mirror <- function(x, axis) {
+    x <- if (axis == "h") {
+        apply(x, 2, rev)
+    } else {
+        t(apply(x, 1, rev))
+    }
+    as.raster(x)
+}

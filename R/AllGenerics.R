@@ -27,6 +27,12 @@ setGeneric("addImg", function(x, ...) standardGeneric("addImg"))
 #' @export
 setGeneric("rmvImg", function(x, ...) standardGeneric("rmvImg"))
 
+#' @export
+setGeneric("rotateImg", function(x, ...) standardGeneric("rotateImg"))
+
+#' @export
+setGeneric("mirrorImg", function(x, ...) standardGeneric("mirrorImg"))
+
 # SpatialExperiment methods ----------------------------------------------------
 
 #' @export
