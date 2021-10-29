@@ -33,16 +33,16 @@
 #' used if `type = "HDF5"`.
 #' 
 #' sample \cr
-#' · |—outs \cr
-#' · · · |—raw/filtered_feature_bc_matrix.h5 \cr
-#' · · · |—raw/filtered_feature_bc_matrix    \cr
-#' · · · · · |—barcodes.tsv.gz \cr
-#' · · · · · |—features.tsv.gz \cr
-#' · · · · · |—matrix.mtx.gz   \cr
-#' · · · |—spatial \cr
-#' · · · · · |—scalefactors_json.json    \cr
-#' · · · · · |—tissue_lowres_image.png   \cr
-#' · · · · · |—tissue_positions_list.csv \cr
+#' · | — outs \cr
+#' · · | — raw/filtered_feature_bc_matrix.h5 \cr
+#' · · | — raw/filtered_feature_bc_matrix    \cr
+#' · · · | — barcodes.tsv.gz \cr
+#' · · · | — features.tsv.gz \cr
+#' · · · | — matrix.mtx.gz   \cr
+#' · · | — spatial \cr
+#' · · · | — scalefactors_json.json    \cr
+#' · · · | — tissue_lowres_image.png   \cr
+#' · · · | — tissue_positions_list.csv \cr
 #'
 #' @return a \code{\link{SpatialExperiment}} object
 #'

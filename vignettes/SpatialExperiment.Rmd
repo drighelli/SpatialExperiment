@@ -344,16 +344,16 @@ be added automatically. The `.h5` files are used if `type = "HDF5"`.
 
 ```{bash, eval = FALSE}
 sample
- . |—outs
- · · |—raw/filtered_feature_bc_matrix.h5
- · · |—raw/filtered_feature_bc_matrix
- · · · · |—barcodes.tsv.gz
- · · · · |—features.tsv.gz
- · · · · |—matrix.mtx.gz
- · · |—spatial
- · · · · |—scalefactors_json.json
- · · · · |—tissue_lowres_image.png
- · · · · |—tissue_positions_list.csv
+ . | — outs
+ · · | — raw/filtered_feature_bc_matrix.h5
+ · · | — raw/filtered_feature_bc_matrix
+ · · · | — barcodes.tsv.gz
+ · · · | — features.tsv.gz
+ · · · | — matrix.mtx.gz
+ · · | — spatial
+ · · · | — scalefactors_json.json
+ · · · | — tissue_lowres_image.png
+ · · · | — tissue_positions_list.csv
 ```
 
 Using `read10xVisium()`, the above code to construct the same SPE is reduced to:
