@@ -29,7 +29,7 @@
 #' refers to either "raw" or "filtered" to match the `data` argument.) 
 #' The base directory "outs/" from Space Ranger can either be included 
 #' manually in the paths provided in `samples`, or can be ignored; 
-#' if ignored it will be added automatically. The `.h5` files are 
+#' if ignored, it will be added automatically. The `.h5` files are 
 #' used if `type = "HDF5"`.
 #' 
 #' sample \cr

@@ -339,7 +339,7 @@ folders reflecting the default *Space Ranger* folder tree organization,
 as illustrated below (where "raw/filtered" refers to either "raw" or 
 "filtered" to match the `data` argument). Note that the base directory 
 "outs/" from Space Ranger can either be included manually in the paths 
-provided in the `samples` argument, or can be ignored; if ignored it will 
+provided in the `samples` argument, or can be ignored; if ignored, it will 
 be added automatically. The `.h5` files are used if `type = "HDF5"`.
 
 ```{bash, eval = FALSE}
