@@ -371,6 +371,17 @@ samples <- file.path(dir, sample_ids, "outs")
     images = "lowres", load = FALSE))
 ```
 
+Or alternatively, omitting the base directory `outs/` from Space Ranger:
+
+```{r}
+samples2 <- file.path(dir, sample_ids)
+
+(spe10x2 <- read10xVisium(samples2, sample_ids,
+    type = "sparse", data = "raw",
+    images = "lowres", load = FALSE))
+```
+
+
 ## Molecule-based
 
 To demonstrate how to accommodate molecule-based ST data 

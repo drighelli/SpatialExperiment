@@ -80,6 +80,12 @@ file.path(samples[1], "raw_feature_bc_matrix")
   type = "sparse", data = "raw", 
   images = "lowres", load = FALSE))
 
+# base directory 'outs/' from Space Ranger can also be omitted
+samples2 <- file.path(dir, sample_ids)
+(spe2 <- read10xVisium(samples2, sample_ids, 
+  type = "sparse", data = "raw", 
+  images = "lowres", load = FALSE))
+
 # tabulate number of spots mapped to tissue
 cd <- colData(spe, spatialData = TRUE)
 table(
