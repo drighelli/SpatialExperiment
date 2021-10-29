@@ -110,9 +110,8 @@ read10xVisium <- function(samples="",
     names(samples) <- sids
     
     # add "outs/" directory if not already included
-    if (!(all(basename(samples) == "outs"))) {
-        samples <- file.path(samples, "outs")
-    }
+    i <- basename(samples) != "outs"
+    samples[i] <- file.path(samples[i], "outs")
     
     # setup file paths
     fns <- paste0(
