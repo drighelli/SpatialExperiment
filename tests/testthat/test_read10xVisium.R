@@ -3,7 +3,7 @@ dir <- system.file(
     package="SpatialExperiment")
 
 sample_ids <- c("section1", "section2")
-samples <- file.path(dir, sample_ids)
+samples <- file.path(dir, sample_ids, "outs")
 
 test_that("data are read correctly", {
     x <- read10xVisium(samples, sample_ids,
@@ -56,4 +56,19 @@ test_that("'load=TRUE' returns 'LoadedSpatialImage's", {
         images="lowres", load=TRUE)
     expect_true(all(vapply(getImg(x, TRUE, TRUE), 
         function(.) is(., "LoadedSpatialImage"), logical(1))))
+})
+
+test_that("adding 'outs/' directory works correctly for one or more samples", {
+    samples2 <- samples3 <- file.path(dir, sample_ids)
+    samples3[1] <- file.path(samples3[1], "outs")
+    
+    x1 <- read10xVisium(samples, sample_ids, type = "sparse", 
+                        data = "raw", images = "lowres", load = FALSE)
+    x2 <- read10xVisium(samples2, sample_ids, type = "sparse", 
+                        data = "raw", images = "lowres", load = FALSE)
+    x3 <- read10xVisium(samples3, sample_ids, type = "sparse", 
+                        data = "raw", images = "lowres", load = FALSE)
+    
+    expect_identical(x1, x2)
+    expect_identical(x1, x3)
 })

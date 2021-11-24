@@ -117,7 +117,7 @@
 #'
 #' @examples
 #' path <- system.file(
-#'   "extdata", "10xVisium", "section1", "spatial", 
+#'   "extdata", "10xVisium", "section1", "outs", "spatial", 
 #'   "tissue_lowres_image.png", package="SpatialExperiment")
 #'
 #' spi <- SpatialImage(path)
