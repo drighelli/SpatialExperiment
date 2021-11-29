@@ -2,21 +2,30 @@
 #' @title SpatialExperiment coertion methods
 #' 
 #' @description 
-#' The \code{SpatialExperiment} class inherits from the 
-#' \code{SingleCellExperiment} class making necessary to coerce between these 
+#' The \code{SpatialExperiment} class inherits from the
+#' \code{SingleCellExperiment} class making it necessary to coerce between these
 #' classes.
-#' To do so, we designed two different methods the traditional \code{as} method
-#' and the \code{toSpatialExperiment} function (reccomended).
-#' The \code{as} method expects a \code{SingleCellExperiment} object with 
-#' already populated \code{int_colData} by two elements, the \code{spatialData}
-#' and the \code{spatialCoords}.
+#' To do so, we designed two different methods: the traditional \code{as} method
+#' and the \code{toSpatialExperiment} function (recommended).
+#' The \code{as} method checks if the \code{SingleCellExperiment} object has
+#' already populated \code{int_colData} with three elements,
+#' the \code{spatialData}, the \code{spatialCoords} and the \code{imgData}.
+#' Also it checks if the \code{colData} already has a \code{sample_id}.
+#' In case these checks pass the new \code{SpatialExperiment} will have the same
+#' values as the \code{SingleCellExperiment} passed object.
+#' Otherwise a \code{SpatialExperiment} with default values for these slots
+#' will be created.
 #' 
 #' The \code{toSpatialExperiment} expects a \code{SingleCellExperiment} object
-#' and additional arguments as explained in the related section of this 
-#' documentation.
+#' and additional arguments as explained in the related section of this
+#' documentation. In case the \code{SingleCellExperiment} object has already
+#' populated \code{int_colData} with \code{spatialData} and/or
+#' \code{spatialCoords} and/or \code{imgData} they will be respectively
+#' overwritten in case the arguments \code{spatialData}/\code{spatialDataNames} 
+#' and/or \code{spatialCoords}/\code{spatialCoordsNames} and/or \code{imgData} 
+#' are not \code{NULL}.
 #' 
-#' @param sce A \code{\link{SingleCellExperiment}} object with populated slots 
-#'     of the base class.
+#' @param sce A \code{\link{SingleCellExperiment}} object.
 #' @param sample_id A \code{character} sample identifier, which matches the
 #'   \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
 #'   be stored in a new column in \code{\link{colData}}, if not already present.
@@ -56,7 +65,7 @@
 #'   \code{imageSources}) containing unique image identifiers.
 #' @param loadImage Logical indicating whether to load image into memory.
 #'   Default = \code{FALSE}.
-#' 
+
 #' @aliases 
 #' coerce, SingleCellExperiment, SpatialExperiment-method
 #' toSpatialExperiment
@@ -78,18 +87,18 @@
 #'                     "barcode", "in_tissue", "array_row", "array_col",
 #'                     "pxl_row_in_fullres", "pxl_col_in_fullres"))
 #' 
-#' 
+#' (spe <- as(sce, "SpatialExperiment"))
 #' ## as method
 #' int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
 #' int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
 #' ## Coercing an sce without imgData
-#' spe <- as(sce, "SpatialExperiment")
+#' (spe <- as(sce, "SpatialExperiment"))
 #' ## Coercing an sce with imgData
 #' img <- readImgData(
 #'     path = file.path(dir, "spatial"),
 #'     sample_id="sample01")
 #' int_colData(sce)$imgData <- img
-#' spe <- as(sce, "SpatialExperiment")
+#' (spe <- as(sce, "SpatialExperiment"))
 #' 
 #' ## toSpatialExperiment method
 #' (spe <- toSpatialExperiment(sce,
@@ -104,22 +113,25 @@ setAs(
     from="SingleCellExperiment", 
     to="SpatialExperiment", 
     function(from) {
-        stopifnot( ( sum( c("spatialCoords", "spatialData") %in% 
-            names(int_colData(from))) == 2) )
-
-        ## Condition necessary because an SpE can also not have an imgData
-        if (!("imgData" %in% names(int_colData(from))))
-        {
-            warning("Coercing SingleCellExperiment object without \"imgData\"")
-            spe <- .sce_to_spe(from, 
-                spatialData=int_colData(from)$spatialData,
-                spatialCoords=int_colData(from)$spatialCoords)
-        } else {
-            spe <- .sce_to_spe(from, 
-                spatialData=int_colData(from)$spatialData,
-                spatialCoords=int_colData(from)$spatialCoords,
-                imgData=int_colData(from)$imgData)
+        spatialCoords <- spatialData <- imgData <- NULL
+        sample_id <- "sample01"
+        if ("spatialCoords" %in% names(int_colData(from))) {
+            spatialCoords <- int_colData(from)$spatialCoords
         }
+        if ("spatialData" %in% names(int_colData(from))) {
+            spatialData <- int_colData(from)$spatialData
+        }
+        if ("imgData" %in% names(int_colData(from))) {
+            imgData <- int_colData(from)$imgData
+        }
+        if ("sample_id" %in% colnames(colData(from))) {
+            sample_id <- unique(colData(from)$sample_id)
+        }
+        spe <- .sce_to_spe(from, 
+            sample_id=sample_id,
+            spatialData=spatialData,
+            spatialCoords=spatialCoords,
+            imgData=imgData)
         return(spe)
     }
 )
@@ -139,6 +151,20 @@ toSpatialExperiment <- function(sce,
     
     stopifnot(is(sce, "SingleCellExperiment"))
     
+    ## giving priority to passed arguments
+    if (all(is.null(spatialCoords), is.null(spatialCoordsNames),
+        "spatialCoords" %in% names(int_colData(sce))) ) {
+        spatialCoords <- int_colData(sce)$spatialCoords
+        spatialCoordsNames <- names(spatialCoords)
+    }
+    if (all(is.null(spatialData), is.null(spatialDataNames),
+        "spatialData" %in% names(int_colData(sce))) ) {
+        spatialData <- int_colData(sce)$spatialData
+    }
+    if (all( is.null(imgData),
+             "imgData" %in% names(int_colData(sce))) ) {
+        imgData <- int_colData(sce)$imgData
+    }
     spe <- .sce_to_spe(sce=sce,
                        sample_id=sample_id,
                        spatialDataNames=spatialDataNames,
@@ -150,6 +176,5 @@ toSpatialExperiment <- function(sce,
                        image_id=image_id,
                        loadImage=loadImage,
                        imgData=imgData)
-    
     return(spe)
 }

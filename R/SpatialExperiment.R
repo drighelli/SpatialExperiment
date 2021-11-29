@@ -271,13 +271,15 @@ SpatialExperiment <- function(...,
     msg <- function(.) message(sprintf(paste(                
         "both '%s' and '%sNames'  have been supplied; using '%s'.",
         "Set either to NULL to suppress this message"), ., ., .))
+        ## ^ this message 
+        ## is printed also in case the spatialCoords and CoordsNAmes are not 
+        ## both provided!! 
     
     if (!is.null(spatialCoordsNames)) {
-        stopifnot(
-            is.character(spatialCoordsNames),
+        stopifnot(is.character(spatialCoordsNames),
             all(spatialCoordsNames %in% names(colData(spe)))
             || all(spatialCoordsNames %in% names(spatialData)))
-        if (!is.null(spatialCoords)) 
+        if (!is.null(spatialCoords))
             msg("spatialCoords")
         if (all(spatialCoordsNames %in% names(colData(spe)))) {
             i <- spatialCoordsNames
