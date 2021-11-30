@@ -219,6 +219,7 @@ SpatialExperiment <- function(...,
         spatialCoords=spatialCoords,
         scaleFactors=scaleFactors,
         imageSources=imageSources,
+        image_id=image_id,
         loadImage=loadImage,
         imgData=imgData)
     return(spe)
@@ -272,7 +273,7 @@ SpatialExperiment <- function(...,
         "both '%s' and '%sNames'  have been supplied; using '%s'.",
         "Set either to NULL to suppress this message"), ., ., .))
         ## ^ this message 
-        ## is printed also in case the spatialCoords and CoordsNAmes are not 
+        ## is printed also in case the spatialCoords and CoordsNames are not 
         ## both provided!! 
     
     if (!is.null(spatialCoordsNames)) {

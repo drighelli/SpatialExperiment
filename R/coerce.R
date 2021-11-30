@@ -96,16 +96,16 @@
 #' ## Coercing an sce with imgData
 #' img <- readImgData(
 #'     path = file.path(dir, "spatial"),
-#'     sample_id="sample01")
+#'     sample_id = "sample01")
 #' int_colData(sce)$imgData <- img
 #' (spe <- as(sce, "SpatialExperiment"))
 #' 
 #' ## toSpatialExperiment method
 #' (spe <- toSpatialExperiment(sce,
 #'     imgData = img,
-#'     spatialData=DataFrame(xyz), 
-#'     spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
-#'     sample_id="sample01"))
+#'     spatialData = DataFrame(xyz), 
+#'     spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+#'     sample_id = "sample01"))
 NULL
 
 

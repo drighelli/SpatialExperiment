@@ -36,7 +36,7 @@ test_that("SingleCellExperiment TO SpatialExperiment case 1" ,{
 
 
 test_that("SingleCellExperiment TO SpatialExperiment case 2" ,{
-    # case 1: passing "spatial arguments" on simple sce
+    # case 2: passing "spatial arguments" on simple sce
     expect_s4_class(toSpatialExperiment(sce, imgData=img,
         spatialData=DataFrame(xyz),
         spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
@@ -44,7 +44,7 @@ test_that("SingleCellExperiment TO SpatialExperiment case 2" ,{
 })
 
 test_that("SingleCellExperiment TO SpatialExperiment case 3" ,{
-    # case 2: passing "spatial arguments" on populated sce
+    # case 3: passing "spatial arguments" on populated sce
     # giving priority to "spatial args"
     
     int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
