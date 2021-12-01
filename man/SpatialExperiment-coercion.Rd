@@ -8,8 +8,7 @@
 \alias{toSpatialExperiment}
 \title{SpatialExperiment coertion methods}
 \arguments{
-\item{sce}{A \code{\link{SingleCellExperiment}} object with populated slots 
-of the base class.}
+\item{sce}{A \code{\link{SingleCellExperiment}} object.}
 
 \item{sample_id}{A \code{character} sample identifier, which matches the
 \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
@@ -61,18 +60,28 @@ sources.}
 Default = \code{FALSE}.}
 }
 \description{
-The \code{SpatialExperiment} class inherits from the 
-\code{SingleCellExperiment} class making necessary to coerce between these 
+The \code{SpatialExperiment} class inherits from the
+\code{SingleCellExperiment} class making it necessary to coerce between these
 classes.
-To do so, we designed two different methods the traditional \code{as} method
-and the \code{toSpatialExperiment} function (reccomended).
-The \code{as} method expects a \code{SingleCellExperiment} object with 
-already populated \code{int_colData} by two elements, the \code{spatialData}
-and the \code{spatialCoords}.
+To do so, we designed two different methods: the traditional \code{as} method
+and the \code{toSpatialExperiment} function (recommended).
+The \code{as} method checks if the \code{SingleCellExperiment} object has
+already populated \code{int_colData} with three elements,
+the \code{spatialData}, the \code{spatialCoords} and the \code{imgData}.
+Also it checks if the \code{colData} already has a \code{sample_id}.
+In case these checks pass the new \code{SpatialExperiment} will have the same
+values as the \code{SingleCellExperiment} passed object.
+Otherwise a \code{SpatialExperiment} with default values for these slots
+will be created.
 
 The \code{toSpatialExperiment} expects a \code{SingleCellExperiment} object
-and additional arguments as explained in the related section of this 
-documentation.
+and additional arguments as explained in the related section of this
+documentation. In case the \code{SingleCellExperiment} object has already
+populated \code{int_colData} with \code{spatialData} and/or
+\code{spatialCoords} and/or \code{imgData} they will be respectively
+overwritten in case the arguments \code{spatialData}/\code{spatialDataNames} 
+and/or \code{spatialCoords}/\code{spatialCoordsNames} and/or \code{imgData} 
+are not \code{NULL}.
 }
 \examples{
 dir <- system.file(
@@ -91,23 +100,23 @@ xyz <- read.csv(fnm, header = FALSE,
                     "barcode", "in_tissue", "array_row", "array_col",
                     "pxl_row_in_fullres", "pxl_col_in_fullres"))
 
-
+(spe <- as(sce, "SpatialExperiment"))
 ## as method
 int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
 int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
 ## Coercing an sce without imgData
-spe <- as(sce, "SpatialExperiment")
+(spe <- as(sce, "SpatialExperiment"))
 ## Coercing an sce with imgData
 img <- readImgData(
     path = file.path(dir, "spatial"),
-    sample_id="sample01")
+    sample_id = "sample01")
 int_colData(sce)$imgData <- img
-spe <- as(sce, "SpatialExperiment")
+(spe <- as(sce, "SpatialExperiment"))
 
 ## toSpatialExperiment method
 (spe <- toSpatialExperiment(sce,
     imgData = img,
-    spatialData=DataFrame(xyz), 
-    spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
-    sample_id="sample01"))
+    spatialData = DataFrame(xyz), 
+    spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+    sample_id = "sample01"))
 }
