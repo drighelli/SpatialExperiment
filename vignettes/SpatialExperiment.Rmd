@@ -299,7 +299,7 @@ used to build the `SpatialExperiment` object, otherwise an error is returned.
 
 ```{r}
 dir <- system.file(
-   file.path("extdata", "10xVisium", "section1"),
+   file.path("extdata", "10xVisium", "section1", "outs"),
    package = "SpatialExperiment")
 
 # read in counts
@@ -335,20 +335,25 @@ rd <- S4Vectors::DataFrame(
 
 Alternatively, the `read10xVisium()` function facilitates the import of 
 *10x Genomics Visium* data to handle one or more samples organized in
-folders reflecting the default *Space Ranger* folder tree organization:
+folders reflecting the default *Space Ranger* folder tree organization, 
+as illustrated below (where "raw/filtered" refers to either "raw" or 
+"filtered" to match the `data` argument). Note that the base directory 
+"outs/" from Space Ranger can either be included manually in the paths 
+provided in the `samples` argument, or can be ignored; if ignored, it will 
+be added automatically. The `.h5` files are used if `type = "HDF5"`.
 
 ```{bash, eval = FALSE}
 sample
- . |—outs
- · · |—raw/filtered_feature_bc_matrix.h5
- · · |—raw/filtered_feature_bc_matrix
- · · · · |—barcodes.tsv
- · · · · |—features.tsv
- · · · · |—matrix.mtx
- · · |—spatial
- · · · · |—scalefactors_json.json
- · · · · |—tissue_lowres_image.png
- · · · · |—tissue_positions_list.csv
+ . | — outs
+ · · | — raw/filtered_feature_bc_matrix.h5
+ · · | — raw/filtered_feature_bc_matrix
+ · · · | — barcodes.tsv.gz
+ · · · | — features.tsv.gz
+ · · · | — matrix.mtx.gz
+ · · | — spatial
+ · · · | — scalefactors_json.json
+ · · · | — tissue_lowres_image.png
+ · · · | — tissue_positions_list.csv
 ```
 
 Using `read10xVisium()`, the above code to construct the same SPE is reduced to:
@@ -359,12 +364,23 @@ dir <- system.file(
     package = "SpatialExperiment")
 
 sample_ids <- c("section1", "section2")
-samples <- file.path(dir, sample_ids)
+samples <- file.path(dir, sample_ids, "outs")
 
 (spe10x <- read10xVisium(samples, sample_ids,
     type = "sparse", data = "raw",
     images = "lowres", load = FALSE))
 ```
+
+Or alternatively, omitting the base directory `outs/` from Space Ranger:
+
+```{r}
+samples2 <- file.path(dir, sample_ids)
+
+(spe10x2 <- read10xVisium(samples2, sample_ids,
+    type = "sparse", data = "raw",
+    images = "lowres", load = FALSE))
+```
+
 
 ## Molecule-based
 

@@ -34,7 +34,7 @@ and return as a valid \code{\link{imgData}} \code{DataFrame}.
 }
 \examples{
 dir <- system.file(
-  file.path("extdata", "10xVisium", "section1", "spatial"),
+  file.path("extdata", "10xVisium", "section1", "outs", "spatial"),
   package = "SpatialExperiment")
 
 # base directory contains
