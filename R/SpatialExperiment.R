@@ -344,7 +344,6 @@ SpatialExperiment <- function(...,
     return(spe)
 }
 
-## COMMENT: Is this the right place for this method?
 #' @importFrom rjson fromJSON
 .get_scaleFactor <- function(scaleFactors, imageSource=NULL) {
     
