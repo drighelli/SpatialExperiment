@@ -112,11 +112,9 @@ setAs(
     to="SpatialExperiment", 
     function(from) {
         spatialCoords <- spatialData <- imgData <- NULL
-        sample_id <- "sample01"
+        sample_id <- unique(from$sample_id)
+        if (is.null(sample_id)) sample_id <- "sample01"
         icd <- int_colData(from)
-        if ("sample_id" %in% colnames(colData(from))) {
-            sample_id <- unique(colData(from)$sample_id)
-        }
         spe <- .sce_to_spe(from, 
             sample_id=sample_id,
             spatialData=icd$spatialData,
