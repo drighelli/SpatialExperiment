@@ -83,12 +83,10 @@
 #' # read in spatial coordinates
 #' fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 #' xyz <- read.csv(fnm, header = FALSE,
-#'                 col.names = c(
-#'                     "barcode", "in_tissue", "array_row", "array_col",
-#'                     "pxl_row_in_fullres", "pxl_col_in_fullres"))
-#' 
-#' (spe <- as(sce, "SpatialExperiment"))
+#'     col.names = c("barcode", "in_tissue", "array_row", "array_col",
+#'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
 #' ## as method
+#' (spe <- as(sce, "SpatialExperiment"))
 #' int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
 #' int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
 #' ## Coercing an sce without imgData
@@ -115,23 +113,15 @@ setAs(
     function(from) {
         spatialCoords <- spatialData <- imgData <- NULL
         sample_id <- "sample01"
-        if ("spatialCoords" %in% names(int_colData(from))) {
-            spatialCoords <- int_colData(from)$spatialCoords
-        }
-        if ("spatialData" %in% names(int_colData(from))) {
-            spatialData <- int_colData(from)$spatialData
-        }
-        if ("imgData" %in% names(int_colData(from))) {
-            imgData <- int_colData(from)$imgData
-        }
+        icd <- int_colData(from)
         if ("sample_id" %in% colnames(colData(from))) {
             sample_id <- unique(colData(from)$sample_id)
         }
         spe <- .sce_to_spe(from, 
             sample_id=sample_id,
-            spatialData=spatialData,
-            spatialCoords=spatialCoords,
-            imgData=imgData)
+            spatialData=icd$spatialData,
+            spatialCoords=icd$spatialCoords,
+            imgData=icd$imgData)
         return(spe)
     }
 )
@@ -161,8 +151,7 @@ toSpatialExperiment <- function(sce,
         "spatialData" %in% names(int_colData(sce))) ) {
         spatialData <- int_colData(sce)$spatialData
     }
-    if (all( is.null(imgData),
-             "imgData" %in% names(int_colData(sce))) ) {
+    if (is.null(imgData)) {
         imgData <- int_colData(sce)$imgData
     }
     spe <- .sce_to_spe(sce=sce,

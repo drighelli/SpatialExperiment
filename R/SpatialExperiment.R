@@ -211,7 +211,7 @@ SpatialExperiment <- function(...,
     imgData=NULL) {
     
     sce <- SingleCellExperiment(...)
-    spe <- .sce_to_spe(sce=sce, ## what happened to the image_id?
+    spe <- .sce_to_spe(sce=sce, 
         sample_id=sample_id,
         spatialDataNames=spatialDataNames,
         spatialCoordsNames=spatialCoordsNames,
@@ -272,9 +272,6 @@ SpatialExperiment <- function(...,
     msg <- function(.) message(sprintf(paste(                
         "both '%s' and '%sNames'  have been supplied; using '%s'.",
         "Set either to NULL to suppress this message"), ., ., .))
-        ## ^ this message 
-        ## is printed also in case the spatialCoords and CoordsNames are not 
-        ## both provided!! 
     
     if (!is.null(spatialCoordsNames)) {
         stopifnot(is.character(spatialCoordsNames),
