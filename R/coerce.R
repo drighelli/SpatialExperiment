@@ -142,13 +142,11 @@ toSpatialExperiment <- function(sce,
     stopifnot(is(sce, "SingleCellExperiment"))
     
     ## giving priority to passed arguments
-    if (all(is.null(spatialCoords), is.null(spatialCoordsNames),
-        "spatialCoords" %in% names(int_colData(sce))) ) {
+    if (all(is.null(spatialCoords), is.null(spatialCoordsNames))) {
         spatialCoords <- int_colData(sce)$spatialCoords
         spatialCoordsNames <- names(spatialCoords)
     }
-    if (all(is.null(spatialData), is.null(spatialDataNames),
-        "spatialData" %in% names(int_colData(sce))) ) {
+    if (all(is.null(spatialData), is.null(spatialDataNames))) {
         spatialData <- int_colData(sce)$spatialData
     }
     if (is.null(imgData)) {
