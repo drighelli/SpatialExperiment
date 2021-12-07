@@ -44,6 +44,10 @@
 #'   A negative/positive value corresponds to counter-/clockwise rotation
 #' @param axis character string specifying whether to mirror 
 #'   horizontally (\code{"h"}) or vertically (\code{"v"})
+#' @param path logical; for \code{RemoteSpatialImage}s, TRUE 
+#'   returns the path to the image's cached file, and FALSE its URL. 
+#'   For \code{Stored/LoadedSpatialImage}s, a path/NA is returned, 
+#'   irrespective of \code{path}.
 #' 
 #' @return 
 #' \code{getImg()} returns a single or list of \code{SpatialImage}(s).
@@ -200,14 +204,13 @@ setMethod("rmvImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("imgSource", "SpatialExperiment", 
-    function(x, sample_id=NULL, image_id=NULL) {
+    function(x, sample_id=NULL, image_id=NULL, path=FALSE) {
         spi <- getImg(x, sample_id, image_id)
         if (is.null(spi)) {
             NULL
-        } else if (is.list(spi)) {
-            vapply(spi, imgSource, character(1)) 
         } else {
-            imgSource(spi)
+            if (!is.list(spi)) spi <- list(spi)
+            vapply(spi, \(.) imgSource(., path), character(1)) 
         }
     })
 

@@ -20,7 +20,7 @@
 
 \S4method{rmvImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{imgSource}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
+\S4method{imgSource}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, path = FALSE)
 
 \S4method{imgRaster}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
@@ -46,6 +46,11 @@ coordinates according to the image's resolution}
 \item{load}{logical; should the image(s) be 
 loaded into memory as a \code{raster} object?
 if \code{FALSE}, will store the path/URL instead}
+
+\item{path}{logical; for \code{RemoteSpatialImage}s, TRUE 
+returns the path to the image's cached file, and FALSE its URL. 
+For \code{Stored/LoadedSpatialImage}s, a path/NA is returned, 
+irrespective of \code{path}.}
 
 \item{degrees}{single numeric 
 in +/-[0,90,...,360] specifying how many degrees to rotate.

@@ -1,3 +1,27 @@
+# getters ----
+url <- "https://i.redd.it/3pw5uah7xo041.jpg"
+spi <- new("RemoteSpatialImage", url=url)
+    
+test_that("imgSource returns NA for LoadedSpI (irrespective of 'path')", {
+    x <- as(spi, "LoadedSpatialImage")
+    expect_true(is.na(imgSource(x, path=FALSE)))
+    expect_true(is.na(imgSource(x, path=TRUE)))
+})
+
+test_that("imgSource,path=FALSE/TRUE returns URL/path for RemoteSpI", {
+    expect_identical(imgSource(spi, path=FALSE), url)
+    x <- imgSource(spi, path=TRUE)
+    expect_is(x, "character")
+    expect_true(file.exists(x))
+})
+
+test_that("imgSource returns path for StoredSpI (irrespective of 'path')", {
+    x <- as(spi, "StoredSpatialImage")
+    expect_identical(
+        imgSource(x, path=FALSE),
+        imgSource(x, path=TRUE))
+})
+
 # utils ----
 .mockRaster <- function(n, m) {
     x <- runif(n*m)
