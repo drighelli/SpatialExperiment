@@ -111,7 +111,6 @@ setAs(
     from="SingleCellExperiment", 
     to="SpatialExperiment", 
     function(from) {
-        spatialCoords <- spatialData <- imgData <- NULL
         sample_id <- unique(from$sample_id)
         if (is.null(sample_id)) sample_id <- "sample01"
         icd <- int_colData(from)
@@ -126,23 +125,22 @@ setAs(
 
 #' @export
 toSpatialExperiment <- function(sce,
-                                sample_id="sample01", 
-                                spatialDataNames=NULL,
-                                spatialCoordsNames=NULL,
-                                spatialData=NULL,
-                                spatialCoords=NULL,
-                                scaleFactors=1,
-                                imageSources=NULL,
-                                image_id=NULL,
-                                loadImage=TRUE,
-                                imgData=NULL) {
+    sample_id="sample01", 
+    spatialDataNames=NULL,
+    spatialCoordsNames=NULL,
+    spatialData=NULL,
+    spatialCoords=NULL,
+    scaleFactors=1,
+    imageSources=NULL,
+    image_id=NULL,
+    loadImage=TRUE,
+    imgData=NULL) {
     
     stopifnot(is(sce, "SingleCellExperiment"))
     
     ## giving priority to passed arguments
     if (all(is.null(spatialCoords), is.null(spatialCoordsNames))) {
         spatialCoords <- int_colData(sce)$spatialCoords
-        spatialCoordsNames <- names(spatialCoords)
     }
     if (all(is.null(spatialData), is.null(spatialDataNames))) {
         spatialData <- int_colData(sce)$spatialData
@@ -151,15 +149,15 @@ toSpatialExperiment <- function(sce,
         imgData <- int_colData(sce)$imgData
     }
     spe <- .sce_to_spe(sce=sce,
-                       sample_id=sample_id,
-                       spatialDataNames=spatialDataNames,
-                       spatialCoordsNames=spatialCoordsNames,
-                       spatialData=spatialData,
-                       spatialCoords=spatialCoords,
-                       scaleFactors=scaleFactors,
-                       imageSources=imageSources,
-                       image_id=image_id,
-                       loadImage=loadImage,
-                       imgData=imgData)
+       sample_id=sample_id,
+       spatialDataNames=spatialDataNames,
+       spatialCoordsNames=spatialCoordsNames,
+       spatialData=spatialData,
+       spatialCoords=spatialCoords,
+       scaleFactors=scaleFactors,
+       imageSources=imageSources,
+       image_id=image_id,
+       loadImage=loadImage,
+       imgData=imgData)
     return(spe)
 }
