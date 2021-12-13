@@ -85,8 +85,8 @@ are not \code{NULL}.
 }
 \examples{
 dir <- system.file(
-file.path("extdata", "10xVisium", "section1"),
-package = "SpatialExperiment")
+file.path("extdata", "10xVisium", "section1", "outs"),
+    package = "SpatialExperiment")
 
 # read in counts
 fnm <- file.path(dir, "raw_feature_bc_matrix")
@@ -96,12 +96,10 @@ sce <- DropletUtils::read10xCounts(fnm)
 # read in spatial coordinates
 fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 xyz <- read.csv(fnm, header = FALSE,
-                col.names = c(
-                    "barcode", "in_tissue", "array_row", "array_col",
-                    "pxl_row_in_fullres", "pxl_col_in_fullres"))
-
-(spe <- as(sce, "SpatialExperiment"))
+    col.names = c("barcode", "in_tissue", "array_row", "array_col",
+    "pxl_row_in_fullres", "pxl_col_in_fullres"))
 ## as method
+(spe <- as(sce, "SpatialExperiment"))
 int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
 int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
 ## Coercing an sce without imgData

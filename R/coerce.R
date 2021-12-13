@@ -1,5 +1,5 @@
 #' @name SpatialExperiment-coercion
-#' @title SpatialExperiment coertion methods
+#' @title SpatialExperiment coercion methods
 #' 
 #' @description 
 #' The \code{SpatialExperiment} class inherits from the
@@ -72,7 +72,7 @@
 #' 
 #' @examples 
 #' dir <- system.file(
-#' file.path("extdata", "10xVisium", "section1", "outs"),
+#'     file.path("extdata", "10xVisium", "section1", "outs"),
 #'     package = "SpatialExperiment")
 #' 
 #' # read in counts
