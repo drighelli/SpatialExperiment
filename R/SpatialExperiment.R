@@ -269,9 +269,9 @@ SpatialExperiment <- function(...,
     #   we give an informative warning notifying the user
     #   that spatialData/CoordsNames will be used 
     
-    msg <- function(.) message(sprintf(paste(                
-        "both '%s' and '%sNames'  have been supplied; using '%s'.",
-        "Set either to NULL to suppress this message"), ., ., .))
+    msg <- function(.) message(sprintf(                
+        "Both '%s' and '%sNames'  have been supplied;\nusing '%s'. ", ., ., .),
+        "Set either to NULL to suppress this message.")
     
     if (!is.null(spatialCoordsNames)) {
         stopifnot(is.character(spatialCoordsNames),

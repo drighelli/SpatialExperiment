@@ -4,6 +4,7 @@
 # - NULL return first available entry
 # - character string returns matching entry(ies)
 .get_img_idx <- function(x, sample_id=NULL, image_id=NULL) {
+    # TODO: validity checks
     img <- imgData(x)
     if (is.character(sample_id) && is.character(image_id)) {
         sid <- img$sample_id == sample_id

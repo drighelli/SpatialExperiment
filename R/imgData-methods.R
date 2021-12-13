@@ -8,6 +8,8 @@
 #' rmvImg,SpatialExperiment-method
 #' imgRaster,SpatialExperiment-method
 #' imgSource,SpatialExperiment-method
+#' rotateImg,SpatialExperiment-method
+#' mirrorImg,SpatialExperiment-method
 #' 
 #' @description 
 #' The set of functions described below is designed to handle 
@@ -37,6 +39,15 @@
 #' @param load logical; should the image(s) be 
 #'   loaded into memory as a \code{raster} object?
 #'   if \code{FALSE}, will store the path/URL instead
+#' @param degrees single numeric 
+#'   in +/-[0,90,...,360] specifying how many degrees to rotate.
+#'   A negative/positive value corresponds to counter-/clockwise rotation
+#' @param axis character string specifying whether to mirror 
+#'   horizontally (\code{"h"}) or vertically (\code{"v"})
+#' @param path logical; for \code{RemoteSpatialImage}s, TRUE 
+#'   returns the path to the image's cached file, and FALSE its URL. 
+#'   For \code{Stored/LoadedSpatialImage}s, a path/NA is returned, 
+#'   irrespective of \code{path}.
 #' 
 #' @return 
 #' \code{getImg()} returns a single or list of \code{SpatialImage}(s).
@@ -50,6 +61,9 @@
 #' Depending on whether or not multiple entries are accessed,
 #' a character string or vector is returned by \code{imgSource()}, and a 
 #' single or list of \code{raster} object(s) is returned by \code{imgRaster()}.
+#' 
+#' \code{rotate/mirrorImg()} return a \code{Loaded\link{SpatialImage}}
+#' with modified a \code{raster} matrix.
 #'   
 #' @examples
 #' example(read10xVisium)
@@ -79,6 +93,33 @@
 #'   sample_id = "section1",
 #'   image_id = "pomeranian")
 #' plot(img)
+#' 
+#' ###################
+#' # transformations #
+#' ###################
+#' 
+#' # clockwise rotation
+#' spe1 <- rotateImg(spe, 
+#'   degrees = 90) # first image
+#'   
+#' spe2 <- rotateImg(spe, 
+#'   sample_id = TRUE,
+#'   image_id = TRUE, 
+#'   degrees = 90) # all images
+#' 
+#' par(mfrow = c(1, 3))
+#' plot(imgRaster(spe))
+#' plot(imgRaster(spe1))
+#' plot(imgRaster(spe2))
+#' 
+#' # horizontal/vertical mirroring
+#' spe1 <- mirrorImg(spe, axis = "h")
+#' spe2 <- mirrorImg(spe, axis = "v")
+#' 
+#' par(mfrow = c(1, 3))
+#' plot(imgRaster(spe))
+#' plot(imgRaster(spe1))
+#' plot(imgRaster(spe2))
 #'   
 #' @author Helena L. Crowell
 NULL
@@ -86,9 +127,11 @@ NULL
 # getImg -----------------------------------------------------------------------
 
 #' @rdname imgData-methods
+#' @importFrom S4Vectors isEmpty
 #' @export
 setMethod("getImg", "SpatialExperiment",
     function(x, sample_id=NULL, image_id=NULL) {
+        if (isEmpty(imgData(x))) return(NULL)
         spi <- imgData(x)$data
         idx <- .get_img_idx(x, sample_id, image_id)
         if (length(idx) == 1) spi[[idx]] else spi[idx]
@@ -161,12 +204,13 @@ setMethod("rmvImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("imgSource", "SpatialExperiment", 
-    function(x, sample_id=NULL, image_id=NULL) {
+    function(x, sample_id=NULL, image_id=NULL, path=FALSE) {
         spi <- getImg(x, sample_id, image_id)
-        if (is.list(spi)) {
-            vapply(spi, imgSource, character(1)) 
+        if (is.null(spi)) {
+            NULL
         } else {
-            imgSource(spi)
+            if (!is.list(spi)) spi <- list(spi)
+            vapply(spi, \(.) imgSource(., path), character(1)) 
         }
     })
 
@@ -175,9 +219,41 @@ setMethod("imgSource", "SpatialExperiment",
 setMethod("imgRaster", "SpatialExperiment", 
     function(x, sample_id=NULL, image_id=NULL) {
         spi <- getImg(x, sample_id, image_id)
-        if (is.list(spi)) {
+        if (is.null(spi)) {
+            NULL
+        } else if (is.list(spi)) {
             lapply(spi, imgRaster) 
         } else {
             imgRaster(spi)
         }
+    })
+
+# transformations --------------------------------------------------------------
+
+#' @rdname imgData-methods
+#' @export
+setMethod("rotateImg", "SpatialExperiment",
+    function(x, sample_id=NULL, image_id=NULL, degrees=90) {
+        old <- getImg(x, sample_id, image_id)
+        if (!is.null(old)) {
+            if (!is.list(old)) old <- list(old)
+            new <- lapply(old, rotateImg, degrees=degrees) 
+            idx <- .get_img_idx(x, sample_id, image_id)
+            imgData(x)$data[idx] <- new
+        }
+        return(x)
+    })
+
+#' @rdname imgData-methods
+#' @export
+setMethod("mirrorImg", "SpatialExperiment",
+    function(x, sample_id=NULL, image_id=NULL, axis=c("h", "v")) {
+        old <- getImg(x, sample_id, image_id)
+        if (!is.null(old)) {
+            if (!is.list(old)) old <- list(old)
+            new <- lapply(old, mirrorImg, axis=axis) 
+            idx <- .get_img_idx(x, sample_id, image_id)
+            imgData(x)$data[idx] <- new
+        }
+        return(x)
     })

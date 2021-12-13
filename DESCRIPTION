@@ -1,8 +1,8 @@
 Package: SpatialExperiment
 Type: Package
 Title: S4 Class for Spatial Experiments handling 
-Version: 1.3.4
-Date: 2021-08-23
+Version: 1.3.6
+Date: 2021-09-25
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"),
@@ -24,7 +24,7 @@ Encoding: UTF-8
 LazyData: false
 biocViews: 
     DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
-    Infrastructure, SingleCell, GeneExpression
+    Infrastructure, SingleCell, GeneExpression, Spatial
 Depends: methods, SingleCellExperiment
 Imports: 
     BiocFileCache, DropletUtils, rjson, magick, grDevices,

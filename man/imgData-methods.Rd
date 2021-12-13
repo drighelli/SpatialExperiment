@@ -10,6 +10,8 @@
 \alias{rmvImg,SpatialExperiment-method}
 \alias{imgRaster,SpatialExperiment-method}
 \alias{imgSource,SpatialExperiment-method}
+\alias{rotateImg,SpatialExperiment-method}
+\alias{mirrorImg,SpatialExperiment-method}
 \title{Methods for handling image-related data}
 \usage{
 \S4method{getImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
@@ -18,9 +20,13 @@
 
 \S4method{rmvImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{imgSource}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
+\S4method{imgSource}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, path = FALSE)
 
 \S4method{imgRaster}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
+
+\S4method{rotateImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, degrees = 90)
+
+\S4method{mirrorImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, axis = c("h", "v"))
 }
 \arguments{
 \item{x}{a \code{\link{SpatialExperiment}}}
@@ -40,6 +46,18 @@ coordinates according to the image's resolution}
 \item{load}{logical; should the image(s) be 
 loaded into memory as a \code{raster} object?
 if \code{FALSE}, will store the path/URL instead}
+
+\item{path}{logical; for \code{RemoteSpatialImage}s, TRUE 
+returns the path to the image's cached file, and FALSE its URL. 
+For \code{Stored/LoadedSpatialImage}s, a path/NA is returned, 
+irrespective of \code{path}.}
+
+\item{degrees}{single numeric 
+in +/-[0,90,...,360] specifying how many degrees to rotate.
+A negative/positive value corresponds to counter-/clockwise rotation}
+
+\item{axis}{character string specifying whether to mirror 
+horizontally (\code{"h"}) or vertically (\code{"v"})}
 }
 \value{
 \code{getImg()} returns a single or list of \code{SpatialImage}(s).
@@ -53,6 +71,9 @@ stored inside the \code{imgData}'s \code{data} field.
 Depending on whether or not multiple entries are accessed,
 a character string or vector is returned by \code{imgSource()}, and a 
 single or list of \code{raster} object(s) is returned by \code{imgRaster()}.
+
+\code{rotate/mirrorImg()} return a \code{Loaded\link{SpatialImage}}
+with modified a \code{raster} matrix.
 }
 \description{
 The set of functions described below is designed to handle 
@@ -96,6 +117,33 @@ img <- imgRaster(spe,
   sample_id = "section1",
   image_id = "pomeranian")
 plot(img)
+
+###################
+# transformations #
+###################
+
+# clockwise rotation
+spe1 <- rotateImg(spe, 
+  degrees = 90) # first image
+  
+spe2 <- rotateImg(spe, 
+  sample_id = TRUE,
+  image_id = TRUE, 
+  degrees = 90) # all images
+
+par(mfrow = c(1, 3))
+plot(imgRaster(spe))
+plot(imgRaster(spe1))
+plot(imgRaster(spe2))
+
+# horizontal/vertical mirroring
+spe1 <- mirrorImg(spe, axis = "h")
+spe2 <- mirrorImg(spe, axis = "v")
+
+par(mfrow = c(1, 3))
+plot(imgRaster(spe))
+plot(imgRaster(spe1))
+plot(imgRaster(spe2))
   
 }
 \author{

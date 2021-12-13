@@ -8,7 +8,7 @@
 test_that("colData", {
     # initialize mock SPE
     img <- system.file(
-        "extdata", "10xVisium", "section1", "spatial", 
+        "extdata", "10xVisium", "section1", "outs", "spatial", 
         "tissue_lowres_image.png", package="SpatialExperiment")
     spe <- SpatialExperiment(
         assays=diag(n <- 10),

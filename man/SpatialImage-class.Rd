@@ -22,6 +22,12 @@
 \alias{imgSource<-,RemoteSpatialImage,character-method}
 \alias{coerce,SpatialImage,LoadedSpatialImage-method}
 \alias{coerce,RemoteSpatialImage,StoredSpatialImage-method}
+\alias{rotateImg}
+\alias{rotateImg,SpatialImage-method}
+\alias{rotateImg,LoadedSpatialImage-method}
+\alias{mirrorImg}
+\alias{mirrorImg,SpatialImage-method}
+\alias{mirrorImg,LoadedSpatialImage-method}
 \title{The SpatialImage class}
 \description{
 The \code{SpatialImage} class hierarchy provides representations of images
@@ -87,6 +93,21 @@ modified by setting \code{options("SpatialExperiment.cache.size")}
 to some number of bytes, e.g., \code{2^32}.
 }
 
+\section{Transformations}{
+
+Two basic image transformations are currently 
+supported for any SpatialImage \code{x}, namely,
+\code{rotateImg(x, degrees)} for clockwise (\code{degrees > 0}) and 
+counter-clockwise (\code{degrees < 0}) rotation, and 
+\code{mirrorImg(x, axis)} for horizontal (\code{axis = "h"}) and 
+vertical (\code{axis = "v"}) mirroring.
+
+Note that, both \code{rotateImg()} and \code{mirrorImg()} operate
+on the \code{raster} matrix of the input \code{SpatialImage}. 
+Thus, any \code{SpatialImage} will automatically be coerced 
+into a \code{LoadedSpatialImage} upon rotation/mirroring.
+}
+
 \section{Other methods}{
 
 \code{dim(x)} will return an integer vector of length 2, 
@@ -103,7 +124,7 @@ will create a StoredSpatialImage pointing to the file cache location.
 
 \examples{
 path <- system.file(
-  "extdata", "10xVisium", "section1", "spatial", 
+  "extdata", "10xVisium", "section1", "outs", "spatial", 
   "tissue_lowres_image.png", package="SpatialExperiment")
 
 spi <- SpatialImage(path)
@@ -118,6 +139,29 @@ plot(as.raster(spi))
 # coercing to an explicitly in-memory raster
 spi <- as(spi, "LoadedSpatialImage")
 plot(as.raster(spi))
+
+###################
+# transformations #
+###################
+
+# (counter-)clockwise rotation
+spi1 <- rotateImg(spi, degrees = +90)
+spi2 <- rotateImg(spi, degrees = -90)
+
+par(mfrow = c(1, 3))
+plot(as.raster(spi))
+plot(as.raster(spi1))
+plot(as.raster(spi2))
+
+# horizontal/vertical mirroring
+spi1 <- mirrorImg(spi, axis = "h")
+spi2 <- mirrorImg(spi, axis = "v")
+
+par(mfrow = c(1, 3))
+plot(as.raster(spi))
+plot(as.raster(spi1))
+plot(as.raster(spi2))
+
 }
 \author{
 Aaron Lun
