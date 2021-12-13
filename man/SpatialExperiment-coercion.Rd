@@ -6,7 +6,7 @@
 \alias{SingleCellExperiment,}
 \alias{SpatialExperiment-method}
 \alias{toSpatialExperiment}
-\title{SpatialExperiment coertion methods}
+\title{SpatialExperiment coercion methods}
 \arguments{
 \item{sce}{A \code{\link{SingleCellExperiment}} object.}
 
@@ -85,7 +85,7 @@ are not \code{NULL}.
 }
 \examples{
 dir <- system.file(
-file.path("extdata", "10xVisium", "section1", "outs"),
+    file.path("extdata", "10xVisium", "section1", "outs"),
     package = "SpatialExperiment")
 
 # read in counts

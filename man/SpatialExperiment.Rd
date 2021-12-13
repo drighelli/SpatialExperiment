@@ -103,7 +103,7 @@ directly from Space Ranger output files.
 #########################################################
 
 dir <- system.file(
-    file.path("extdata", "10xVisium", "section1"),
+    file.path("extdata", "10xVisium", "section1", "outs"),
     package = "SpatialExperiment")
 
 # read in counts
