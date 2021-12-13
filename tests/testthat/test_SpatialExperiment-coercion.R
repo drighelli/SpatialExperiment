@@ -1,5 +1,5 @@
 dir <- system.file(
-    file.path("extdata", "10xVisium", "section1"),
+    file.path("extdata", "10xVisium", "section1", "outs"),
     package = "SpatialExperiment")
 fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 xyz <- read.csv(fnm, header = FALSE, col.names = c(
