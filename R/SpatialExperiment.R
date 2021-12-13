@@ -119,8 +119,8 @@
 #' #########################################################
 #' 
 #' dir <- system.file(
-#'   file.path("extdata", "10xVisium", "section1"),
-#'   package = "SpatialExperiment")
+#'     file.path("extdata", "10xVisium", "section1"),
+#'     package = "SpatialExperiment")
 #' 
 #' # read in counts
 #' fnm <- file.path(dir, "raw_feature_bc_matrix")
@@ -128,19 +128,19 @@
 #' 
 #' # read in image data
 #' img <- readImgData(
-#'   path = file.path(dir, "spatial"),
-#'   sample_id="foo")
+#'     path = file.path(dir, "spatial"),
+#'     sample_id="foo")
 #' 
 #' # read in spatial coordinates
 #' fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 #' xyz <- read.csv(fnm, header = FALSE,
-#'   col.names = c(
-#'     "barcode", "in_tissue", "array_row", "array_col",
-#'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+#'     col.names = c(
+#'         "barcode", "in_tissue", "array_row", "array_col",
+#'         "pxl_row_in_fullres", "pxl_col_in_fullres"))
 #'     
 #' # construct observation & feature metadata
 #' rd <- S4Vectors::DataFrame(
-#'   symbol = rowData(sce)$Symbol)
+#'     symbol = rowData(sce)$Symbol)
 #'   
 #' # construct 'SpatialExperiment'
 #' (spe <- SpatialExperiment(
