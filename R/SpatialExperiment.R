@@ -119,8 +119,8 @@
 #' #########################################################
 #' 
 #' dir <- system.file(
-#'   file.path("extdata", "10xVisium", "section1", "outs"),
-#'   package = "SpatialExperiment")
+#'     file.path("extdata", "10xVisium", "section1", "outs"),
+#'     package = "SpatialExperiment")
 #' 
 #' # read in counts
 #' fnm <- file.path(dir, "raw_feature_bc_matrix")
@@ -128,19 +128,19 @@
 #' 
 #' # read in image data
 #' img <- readImgData(
-#'   path = file.path(dir, "spatial"),
-#'   sample_id="foo")
+#'     path = file.path(dir, "spatial"),
+#'     sample_id="foo")
 #' 
 #' # read in spatial coordinates
 #' fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 #' xyz <- read.csv(fnm, header = FALSE,
-#'   col.names = c(
-#'     "barcode", "in_tissue", "array_row", "array_col",
-#'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
+#'     col.names = c(
+#'         "barcode", "in_tissue", "array_row", "array_col",
+#'         "pxl_row_in_fullres", "pxl_col_in_fullres"))
 #'     
 #' # construct observation & feature metadata
 #' rd <- S4Vectors::DataFrame(
-#'   symbol = rowData(sce)$Symbol)
+#'     symbol = rowData(sce)$Symbol)
 #'   
 #' # construct 'SpatialExperiment'
 #' (spe <- SpatialExperiment(
@@ -189,10 +189,10 @@
 #' y <- as.matrix(unclass(y))
 #' 
 #' # construct SpatialExperiment
-#' spe_mol <- SpatialExperiment(
+#' (spe_mol <- SpatialExperiment(
 #'     assays = list(
 #'         counts = y, 
-#'         molecules = mol))
+#'         molecules = mol)))
 NULL
 
 #' @importFrom S4Vectors DataFrame
@@ -211,7 +211,7 @@ SpatialExperiment <- function(...,
     imgData=NULL) {
     
     sce <- SingleCellExperiment(...)
-    spe <- .sce_to_spe(sce=sce,
+    spe <- .sce_to_spe(sce=sce, 
         sample_id=sample_id,
         spatialDataNames=spatialDataNames,
         spatialCoordsNames=spatialCoordsNames,
@@ -219,6 +219,7 @@ SpatialExperiment <- function(...,
         spatialCoords=spatialCoords,
         scaleFactors=scaleFactors,
         imageSources=imageSources,
+        image_id=image_id,
         loadImage=loadImage,
         imgData=imgData)
     return(spe)
@@ -273,11 +274,10 @@ SpatialExperiment <- function(...,
         "Set either to NULL to suppress this message.")
     
     if (!is.null(spatialCoordsNames)) {
-        stopifnot(
-            is.character(spatialCoordsNames),
+        stopifnot(is.character(spatialCoordsNames),
             all(spatialCoordsNames %in% names(colData(spe)))
             || all(spatialCoordsNames %in% names(spatialData)))
-        if (!is.null(spatialCoords)) 
+        if (!is.null(spatialCoords))
             msg("spatialCoords")
         if (all(spatialCoordsNames %in% names(colData(spe)))) {
             i <- spatialCoordsNames
@@ -343,11 +343,6 @@ SpatialExperiment <- function(...,
     }
     return(spe)
 }
-
-setAs(
-    from="SingleCellExperiment", 
-    to="SpatialExperiment", 
-    function(from) .sce_to_spe(from, sample_id=NULL))
 
 #' @importFrom rjson fromJSON
 .get_scaleFactor <- function(scaleFactors, imageSource=NULL) {
