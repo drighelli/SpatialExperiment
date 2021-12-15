@@ -1,4 +1,4 @@
-changes in version 1.3.7 (2021-12-15)
+changes in version 1.5.1 (2021-12-15)
 + improved coercion methods from SingleCellExperiment to SpatialExperiment
 + add new methods for image rotation/mirroring
 + add path argument to imgSource()
