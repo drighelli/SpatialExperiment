@@ -34,23 +34,17 @@ test_that("colData", {
     expect_error(validObject(tmp))
 })
 
-test_that("SpatialData", {
+test_that("SpatialDataNames", {
     # initialize mock SPE
     spe <- SpatialExperiment(
         assays=diag(n <- 10),
         colData=DataFrame(a=seq(n), b=seq(n)))
-    # invalid replacements
-    foo <- list(NA, 1, "c", vector("list", ncol(spe)))
-    for (. in foo) {
-        int_colData(spe)$spatialData <- .
-        expect_error(validObject(spe)) 
-    }
     # valid replacements
-    foo <- list(DataFrame(seq(ncol(spe))))
-    for (. in foo) {
-        int_colData(spe)$spatialData <- .
-        expect_true(validObject(spe)) 
-    }
+    int_metadata(spe)$spatialDataNames <- "a"
+    expect_true(validObject(spe)) 
+    # invalid replacements
+    int_metadata(spe)$spatialDataNames <- "c"
+    expect_error(validObject(spe)) 
 })
 
 test_that("spatialCoords", {

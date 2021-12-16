@@ -1,33 +1,17 @@
 example(read10xVisium, echo = FALSE)
 
-test_that("spatialData(),spatialCoords=FALSE", {
-    spd <- spatialData(spe, spatialCoords=FALSE)
+test_that("spatialData()", {
+    spd <- spatialData(spe)
     expect_is(spd, "DFrame")
-    expect_identical(spd, int_colData(spe)$spatialData)
-})
-
-test_that("spatialData(),spatialCoords=TRUE", {
-    spd <- spatialData(spe, spatialCoords=TRUE)
-    expect_is(spd, "DFrame")
-    expect_identical(spd, cbind(
-        int_colData(spe)$spatialData, 
-        spatialCoords(spe)))
+    expect_identical(spd, colData(spe)[spatialDataNames(spe)])
 })
 
 test_that("spatialData(),NULL", {
     tmp <- spe; spatialData(tmp) <- NULL
-    spd <- spatialData(tmp, spatialCoords=TRUE)
-    expect_identical(as.matrix(spd), spatialCoords(tmp))
-    spd <- spatialData(tmp, spatialCoords=FALSE)
-    expect_equal(dim(spd), c(ncol(spe), 0))
-    expect_identical(spd, int_colData(tmp)$spatialData)
-})
-
-test_that("spatialData<-,NULL", {
-    tmp <- spe; spatialData(tmp) <- NULL
-    spd <- spatialData(tmp, spatialCoords=FALSE)
+    spd <- spatialData(tmp)
     expect_equal(dim(spd), c(ncol(spe), 0))
     expect_identical(spatialDataNames(tmp), character())
+    expect_identical(spd, colData(tmp)[spatialDataNames(tmp)])
 })
 
 test_that("spatialData<-,ANY", {
@@ -35,6 +19,30 @@ test_that("spatialData<-,ANY", {
     expect_error(spatialData(spe) <- mat)
     df <- data.frame(mat)
     expect_error(spatialData(spe) <- mat)
+})
+
+test_that("spatialDataNames()", {
+    expect_identical(
+        spatialDataNames(spe), 
+        int_metadata(spe)$spatialDataNames)
+})
+
+test_that("spatialDataNames()<-,character", {
+    # invalid replacement (anything not in colData)
+    expect_error(spatialDataNames(spe) <- "peter_pan")
+    # valid replacement (anything in colData)
+    i <- spatialDataNames(spe) <- sample(names(colData(spe)), 2)
+    expect_identical(int_metadata(spe)$spatialDataNames, i)
+})
+
+test_that("spatialDataNames()<-,NULL", {
+    cd <- colData(spe)
+    old <- spatialDataNames(spe)
+    spatialDataNames(spe) <- NULL
+    new <- spatialDataNames(spe)
+    # colData shouldn't be affected
+    expect_identical(colData(spe), cd)
+    expect_identical(new, character(0))
 })
 
 test_that("spatialCoordsNames()", {
