@@ -30,7 +30,7 @@
 #' idx <- sample(ncol(spe), 10)
 #' sub <- spe[, idx]
 #' dim(sub)
-#' spatialData(sub, spatialCoords = TRUE)
+#' spatialData(sub)
 NULL
 
 # we overwrite the default subsetting method

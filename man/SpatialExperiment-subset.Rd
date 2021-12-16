@@ -36,5 +36,5 @@ set.seed(123)
 idx <- sample(ncol(spe), 10)
 sub <- spe[, idx]
 dim(sub)
-spatialData(sub, spatialCoords = TRUE)
+spatialData(sub)
 }
