@@ -25,7 +25,7 @@ Encoding: UTF-8
 LazyData: false
 biocViews: 
     DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
-    Infrastructure, SingleCell, GeneExpression, Spatial
+    Infrastructure, SingleCell, Transcriptomics, GeneExpression, Spatial
 Depends: methods, SingleCellExperiment
 Imports: 
     BiocFileCache, DropletUtils, rjson, magick, grDevices,
