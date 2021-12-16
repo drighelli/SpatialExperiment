@@ -316,8 +316,6 @@ SpatialExperiment <- function(...,
             is(spatialData, "DFrame"),
             nrow(spatialData) == ncol(spe))
         spatialData(spe) <- spatialData
-        # colData(spe) <- cbind(colData(spe), spatialData)
-        # spatialDataNames(spe) <- names(spatialData)
     } else {
         spatialData(spe) <- NULL
     }
