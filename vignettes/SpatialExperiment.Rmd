@@ -29,13 +29,13 @@ The `SpatialExperiment` class is designed to represent spatially
 resolved transcriptomics (ST) data. It inherits from the
 `SingleCellExperiment` class and is used in the same manner. 
 In addition, the class supports storage of spatial information
-via `spatialData` and `spatialCoords`, and storage of
+via `spatialData(Names)` and `spatialCoords`, and storage of
 images via `imgData`.
 
 For demonstration of the general class structure, we load an example 
 `SpatialExperiment` (abbreviated as SPE) object (variable `spe`):
 
-```{r}
+```{r message = FALSE}
 library(SpatialExperiment)
 example(read10xVisium, echo = FALSE)
 spe
@@ -46,31 +46,27 @@ spe
 In addition to observation metadata stored inside the `colData` slot of 
 a `SingleCellExperiment`, the `SpatialExperiment` class can accommodate: 
 
-- `spatialData`, a `DataFrame` containing spatial metadata  
-(e.g. whether or not an observation was mapped to tissue)
 - `spatialCoords`, a numeric matrix of spatial coordinates (e.g. `x` and `y`)
+- `spatialDataNames`, a character vector specifying the `colData` subset containing  
+spatial metadata (e.g. whether or not an observation was mapped to tissue)
 
-Both `spatialData` and `spatialCoords` are stored 
-separately inside the `int_colData` slot.
+`spatialCoords` are stored inside the `int_colData`, 
+whereas `spatialDataNames` are stored inside the `int_metadata`.
 
-Note that the `colData`, `spatialData`, and `spatialCoords` slots follow
-a hierarchical structure where `colData` > `spatialData` > `spatialCoords`. 
-Here, each accessor function allows joint accession of the target slot, and (optionally) 
-any slot(s) that precedes it.
+`spatialCoords` are directly accessible via the corresponding accessor:
 
-Specifically, the following commands are supported 
-that may be used to access specific subsets of (spatial) metadata 
-associated with each column (observation, e.g. spots or cells) in a SPE:
+```{r}
+head(spatialCoords(spe))
+```
 
-```{r results = "hide"}
-spatialCoords(spe)
+The `colData` subset specified by `spatialDataNames`
+may be retrieved directly via the `spatialData` accessor:
 
+```{r}
 spatialData(spe)
-spatialData(spe, spatialCoords = TRUE)
-
-colData(spe, spatialData = TRUE)
-colData(spe, spatialCoords = TRUE)
-colData(spe, spatialData = TRUE, spatialCoords = TRUE)
+identical(
+  spatialData(spe),
+  colData(spe)[spatialDataNames(spe)])
 ```
 
 ## `imgData`
