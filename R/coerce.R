@@ -149,15 +149,15 @@ toSpatialExperiment <- function(sce,
         imgData <- int_colData(sce)$imgData
     }
     spe <- .sce_to_spe(sce=sce,
-       sample_id=sample_id,
-       spatialDataNames=spatialDataNames,
-       spatialCoordsNames=spatialCoordsNames,
-       spatialData=spatialData,
-       spatialCoords=spatialCoords,
-       scaleFactors=scaleFactors,
-       imageSources=imageSources,
-       image_id=image_id,
-       loadImage=loadImage,
-       imgData=imgData)
+        sample_id = sample_id,
+        spatialDataNames = spatialDataNames,
+        spatialCoordsNames = spatialCoordsNames,
+        spatialData = spatialData,
+        spatialCoords = spatialCoords,
+        scaleFactors = scaleFactors,
+        imageSources = imageSources,
+        image_id = image_id,
+        loadImage = loadImage,
+        imgData = imgData)
     return(spe)
 }
