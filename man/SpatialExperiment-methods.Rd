@@ -18,6 +18,7 @@
 \alias{spatialData<-,SpatialExperiment,NULL-method}
 \alias{spatialDataNames,SpatialExperiment-method}
 \alias{spatialDataNames<-,SpatialExperiment,character-method}
+\alias{spatialDataNames<-,SpatialExperiment,NULL-method}
 \alias{spatialCoords,SpatialExperiment-method}
 \alias{spatialCoords<-,SpatialExperiment,matrix-method}
 \alias{spatialCoords<-,SpatialExperiment,NULL-method}
@@ -30,7 +31,7 @@
 \alias{imgData<-,SpatialExperiment,NULL-method}
 \title{Methods for spatial attributes}
 \usage{
-\S4method{spatialData}{SpatialExperiment}(x, spatialCoords = FALSE)
+\S4method{spatialData}{SpatialExperiment}(x)
 
 \S4method{spatialData}{SpatialExperiment,DFrame}(x) <- value
 
@@ -39,6 +40,8 @@
 \S4method{spatialDataNames}{SpatialExperiment}(x)
 
 \S4method{spatialDataNames}{SpatialExperiment,character}(x) <- value
+
+\S4method{spatialDataNames}{SpatialExperiment,`NULL`}(x) <- value
 
 \S4method{spatialCoords}{SpatialExperiment}(x)
 
@@ -63,10 +66,6 @@
 \arguments{
 \item{x}{A \code{\link{SpatialExperiment}} object.}
 
-\item{spatialCoords}{Logical specifying whether to include columns from
-\code{spatialCoords} in the output \code{\link{DataFrame}} from
-\code{spatialData}. Default = \code{FALSE}.}
-
 \item{value}{Replacement value for replacement methods.}
 
 \item{sample_id}{Logical value or character vector specifying sample
@@ -74,10 +73,6 @@ identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
 
 \item{image_id}{Logical value or character vector specifying image
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
-
-\item{spatialData}{Logical specifying whether to include columns from
-\code{spatialData} in the output \code{\link{DataFrame}} from
-\code{colData}. Default = \code{FALSE}}
 }
 \value{
 Return value varies depending on method, as described below.
@@ -91,61 +86,62 @@ Spatial attributes include \code{spatialData}, \code{spatialCoords},
 \details{
 Additional details for each type of data attribute are provided below.
 
-\code{\link{spatialData}} and \code{\link{spatialCoords}} are distinguished
-as follows: \code{spatialData} is a \code{DataFrame} containing all the data
-associated with the spatial information (optionally including spatial
-coordinates from \code{spatialCoords}), while \code{spatialCoords} is a
-numeric matrix containing only the defined spatial coordinates (e.g. columns
-\code{x} and \code{y}).
+\code{\link{spatialData}} and \code{\link{spatialCoords}} are distinguished 
+as follows: \code{spatialData} is a \code{colData} subset: a \code{DataFrame} 
+containing all the data associated with the spatial information, 
+while \code{spatialCoords} is a numeric matrix containing only 
+the defined spatial coordinates (e.g. columns \code{x} and \code{y}).
 }
 \section{spatialData and spatialCoords methods}{
 
 \describe{
-\item{\code{spatialData(x)}: }{The \code{spatialData} getter provides the 
-optional argument \code{spatialCoords}, which can be used to include the 
-columns of spatial coordinates (\code{spatialCoords}) in the output 
-\code{DataFrame}.}
-\item{\code{spatialData(x) <- value}: }{The \code{spatialData} setter
-expects a \code{DataFrame}. If the input does not contain an \code{in_tissue} 
-column, this will be included with a default value of \code{1}.}
-\item{\code{spatialCoords(x)}: }{Getter for numeric matrix of spatial
-coordinates.}
-\item{\code{spatialCoords(x) <- value}: }{Setter for numeric matrix of
-spatial coordinates.}
+\item{\code{spatialData(x) <- value}: }{
+  The \code{spatialData} setter expects a \code{DataFrame}. 
+  If the input does not contain an \code{in_tissue} column, 
+  this will be included with a default value of \code{1}.}
+\item{\code{spatialCoords(x)}: }{
+  Getter for numeric matrix of spatial coordinates.}
+\item{\code{spatialCoords(x) <- value}: }{
+  Setter for numeric matrix of spatial coordinates.}
 }
 }
 
 \section{spatialDataNames and spatialCoordsNames methods}{
 
 \describe{
-\item{\code{spatialDataNames(x)}: }{Returns the column names of the
-\code{spatialData} \code{DataFrame}.}
-\item{\code{spatialDataNames(x) <- value}: }{Setter to replace column names
-in the \code{spatialData} \code{DataFrame}.}
-\item{\code{spatialCoordsNames(x)}: }{Returns the defined names of the
-spatial coordinates (e.g. \code{c("x", "y")}).}
-\item{\code{spatialCoordsNames(x) <- value}: }{Setter to define the names of
-the spatial coordinate columns.}
+\item{\code{spatialDataNames(x)}: }{
+  Returns the names of the \code{colData} associated with the 
+  spatial information, which are stored in the \code{int_metadata}.}
+\item{\code{spatialDataNames(x) <- value}: }{
+  Setter to replace column names
+  in the \code{spatialData} \code{DataFrame}.}
+\item{\code{spatialCoordsNames(x)}: }{
+  Returns the defined names of the
+  spatial coordinates (e.g. \code{c("x", "y")}).}
+\item{\code{spatialCoordsNames(x) <- value}: }{
+  Setter to define the names of the spatial coordinate columns.}
 }
 }
 
 \section{imgData methods}{
 
 \describe{
-\item{\code{imgData(x)}: }{Getter to return the \code{imgData} \code{DataFrame}.}
-\item{\code{imgData(x) <- value}: }{Setter to provide a \code{DataFrame}
-object as \code{imgData} of the \code{SpatialExperiment} object.}
+\item{\code{imgData(x)}: }{
+  Getter to return the \code{imgData} \code{DataFrame}.}
+\item{\code{imgData(x) <- value}: }{
+  Setter to provide a \code{DataFrame} object as 
+  \code{imgData} of the \code{SpatialExperiment} object.}
 }
 }
 
 \section{Other methods}{
 
 \describe{
-\item{\code{scaleFactors(x, sample_id, image_id)}: }{Getter to return the
-scale factors associated with the \code{sample_id}(s) and \code{image_id}(s)
-provided. This is related to the stored image(s) in the
-\code{SpatialExperiment} \code{imgData} structure. See argument descriptions
-for further details.}
+\item{\code{scaleFactors(x, sample_id, image_id)}: }{
+  Getter to return the scale factors associated with the 
+  \code{sample_id}(s) and \code{image_id}(s) provided. 
+  This is related to the stored image(s) in the \code{SpatialExperiment} 
+  \code{imgData} structure. See argument descriptions for further details.}
 }
 }
 
@@ -163,9 +159,6 @@ spdata <- spatialData(spe)
 spdata$array_col <- spdata$array_row
 spatialData(spe) <- spdata
 
-# return additional columns for spatialData
-spatialData(spe, spatialCoords=TRUE)
-
 # change spatial coordinate names
 spatialCoordsNames(spe)
 spatialCoordsNames(spe) <- c("x", "y")
@@ -176,9 +169,8 @@ imgData(spe)
 scaleFactors(spe)
 
 # tabulate number of spots mapped to tissue
-cd <- colData(spe, spatialData = TRUE)
+cd <- colData(spe)
 table(
   in_tissue = cd$in_tissue, 
   sample_id = cd$sample_id)
-
 }
