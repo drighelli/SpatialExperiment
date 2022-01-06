@@ -11,7 +11,7 @@
 #' resolved transcriptomics (ST) data. It inherits from the
 #' \code{\link{SingleCellExperiment}} class and is used in the same manner. In
 #' addition, the class supports storage of spatial information via
-#' \code{\link{spatialCoords}}, and storage of
+#' \code{\link{spatialCoords}} and storage of
 #' images via \code{\link{imgData}}.
 #' 
 #' @param ... Arguments passed to the \code{\link{SingleCellExperiment}}
@@ -29,11 +29,11 @@
 #'   have been retained for backward compatibility but may be removed in the
 #'   future.)
 #' @param spatialCoordsNames A \code{character} vector of column names from
-#'   \code{\link{colData}} or \code{\link{spatialData}} containing spatial
-#'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
-#'   Alternatively, the \code{spatialCoords} argument may be provided. If both
-#'   are provided, \code{spatialCoordsNames} is given precedence, and a warning
-#'   is returned. Default = \code{c("x", "y")}.
+#'   \code{\link{colData}} containing spatial coordinates, which will be
+#'   accessible with \code{\link{spatialCoords}}. Alternatively, the
+#'   \code{spatialCoords} argument may be provided. If both are provided,
+#'   \code{spatialCoordsNames} is given precedence, and a warning is returned.
+#'   Default = \code{c("x", "y")}.
 #' @param spatialData (Deprecated) A \code{\link{DataFrame}} containing columns
 #'   to store in \code{\link{spatialData}}, which must contain at least the
 #'   columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
@@ -72,9 +72,9 @@
 #' \code{BumpyMatrix}-formatted \code{assay} named \code{\link{molecules}}.
 #' 
 #' The additional arguments in the constructor documented above (e.g.
-#' \code{spatialData}, \code{spatialCoords}, \code{imgData}, and others)
-#' represent the main extensions to the \code{\link{SingleCellExperiment}}
-#' class to store associated spatial and imaging information for ST data.
+#' \code{spatialCoords}, \code{imgData}, and others) represent the extensions to
+#' the \code{\link{SingleCellExperiment}} class to store associated spatial and
+#' imaging information for ST data.
 #' 
 #' The constructor expects \code{colData} to contain a column named
 #' \code{sample_id}. If this is not present, it will assign the value from the
