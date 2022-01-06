@@ -11,7 +11,7 @@
 #' resolved transcriptomics (ST) data. It inherits from the
 #' \code{\link{SingleCellExperiment}} class and is used in the same manner. In
 #' addition, the class supports storage of spatial information via
-#' \code{\link{spatialData}} and \code{\link{spatialCoords}}, and storage of
+#' \code{\link{spatialCoords}}, and storage of
 #' images via \code{\link{imgData}}.
 #' 
 #' @param ... Arguments passed to the \code{\link{SingleCellExperiment}}
@@ -20,22 +20,28 @@
 #'   \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
 #'   be stored in a new column in \code{\link{colData}}, if not already present.
 #'   Default = \code{sample01}.
-#' @param spatialDataNames A \code{character} vector of column names from
-#'   \code{\link{colData}} to include in \code{\link{spatialData}}.
+#' @param spatialDataNames (Deprecated) A \code{character} vector of column
+#'   names from \code{\link{colData}} to include in \code{\link{spatialData}}.
 #'   Alternatively, the \code{spatialData} argument may be provided. If both are
 #'   provided, \code{spatialDataNames} is given precedence, and a warning is
-#'   returned.
+#'   returned. (Note: \code{spatialData} has been deprecated; \code{colData} and
+#'   \code{spatialCoords} should be used for all columns instead. The arguments
+#'   have been retained for backward compatibility but may be removed in the
+#'   future.)
 #' @param spatialCoordsNames A \code{character} vector of column names from
 #'   \code{\link{colData}} or \code{\link{spatialData}} containing spatial
 #'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
 #'   Alternatively, the \code{spatialCoords} argument may be provided. If both
 #'   are provided, \code{spatialCoordsNames} is given precedence, and a warning
 #'   is returned. Default = \code{c("x", "y")}.
-#' @param spatialData A \code{\link{DataFrame}} containing columns to store in
-#'   \code{\link{spatialData}}, which must contain at least the columns of
-#'   spatial coordinates. Alternatively, \code{spatialDataNames} may be
-#'   provided. If both are provided, \code{spatialDataNames} is given
-#'   precedence, and a warning is returned.
+#' @param spatialData (Deprecated) A \code{\link{DataFrame}} containing columns
+#'   to store in \code{\link{spatialData}}, which must contain at least the
+#'   columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
+#'   be provided. If both are provided, \code{spatialDataNames} is given
+#'   precedence, and a warning is returned. (Note: \code{spatialData} has been
+#'   deprecated; \code{colData} and \code{spatialCoords} should be used for all
+#'   columns instead. The arguments have been retained for backward
+#'   compatibility but may be removed in the future.)
 #' @param spatialCoords A numeric matrix containing columns of spatial
 #'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
 #'   Alternatively, \code{spatialCoordsNames} may be provided. If both are

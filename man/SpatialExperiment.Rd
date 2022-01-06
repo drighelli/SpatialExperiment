@@ -14,11 +14,14 @@ constructor to fill the slots of the base class.}
 be stored in a new column in \code{\link{colData}}, if not already present.
 Default = \code{sample01}.}
 
-\item{spatialDataNames}{A \code{character} vector of column names from
-\code{\link{colData}} to include in \code{\link{spatialData}}.
+\item{spatialDataNames}{(Deprecated) A \code{character} vector of column
+names from \code{\link{colData}} to include in \code{\link{spatialData}}.
 Alternatively, the \code{spatialData} argument may be provided. If both are
 provided, \code{spatialDataNames} is given precedence, and a warning is
-returned.}
+returned. (Note: \code{spatialData} has been deprecated; \code{colData} and
+\code{spatialCoords} should be used for all columns instead. The arguments
+have been retained for backward compatibility but may be removed in the
+future.)}
 
 \item{spatialCoordsNames}{A \code{character} vector of column names from
 \code{\link{colData}} or \code{\link{spatialData}} containing spatial
@@ -27,11 +30,14 @@ Alternatively, the \code{spatialCoords} argument may be provided. If both
 are provided, \code{spatialCoordsNames} is given precedence, and a warning
 is returned. Default = \code{c("x", "y")}.}
 
-\item{spatialData}{A \code{\link{DataFrame}} containing columns to store in
-\code{\link{spatialData}}, which must contain at least the columns of
-spatial coordinates. Alternatively, \code{spatialDataNames} may be
-provided. If both are provided, \code{spatialDataNames} is given
-precedence, and a warning is returned.}
+\item{spatialData}{(Deprecated) A \code{\link{DataFrame}} containing columns
+to store in \code{\link{spatialData}}, which must contain at least the
+columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
+be provided. If both are provided, \code{spatialDataNames} is given
+precedence, and a warning is returned. (Note: \code{spatialData} has been
+deprecated; \code{colData} and \code{spatialCoords} should be used for all
+columns instead. The arguments have been retained for backward
+compatibility but may be removed in the future.)}
 
 \item{spatialCoords}{A numeric matrix containing columns of spatial
 coordinates, which will be accessible with \code{\link{spatialCoords}}.
@@ -66,7 +72,7 @@ The \code{SpatialExperiment} class is designed to represent spatially
 resolved transcriptomics (ST) data. It inherits from the
 \code{\link{SingleCellExperiment}} class and is used in the same manner. In
 addition, the class supports storage of spatial information via
-\code{\link{spatialData}} and \code{\link{spatialCoords}}, and storage of
+\code{\link{spatialCoords}}, and storage of
 images via \code{\link{imgData}}.
 }
 \details{
