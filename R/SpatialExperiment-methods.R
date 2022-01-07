@@ -116,7 +116,11 @@ NULL
 #' @export
 setMethod("spatialData", 
     "SpatialExperiment",
-    function(x) colData(x)[spatialDataNames(x)])
+    function(x) {
+        .msg_spatialData()
+        colData(x)[spatialDataNames(x)]
+    }
+)
 
 #' @rdname SpatialExperiment-methods
 #' @importFrom SummarizedExperiment colData colData<-
@@ -124,6 +128,7 @@ setMethod("spatialData",
 setReplaceMethod("spatialData", 
     c("SpatialExperiment", "DFrame"),
     function(x, value) {
+        .msg_spatialData()
         stopifnot(nrow(value) == ncol(x))
         out <- colData(x)
         old <- names(out)
@@ -145,7 +150,11 @@ setReplaceMethod("spatialData",
 #' @export
 setReplaceMethod("spatialData", 
     c("SpatialExperiment", "NULL"),
-    function(x, value) `spatialDataNames<-`(x, value))
+    function(x, value) {
+        .msg_spatialData()
+        `spatialDataNames<-`(x, value)
+    }
+)
 
 # spatialDataNames -------------------------------------------------------------
 
@@ -154,7 +163,11 @@ setReplaceMethod("spatialData",
 #' @export
 setMethod("spatialDataNames", 
     "SpatialExperiment", 
-    function(x) int_metadata(x)$spatialDataNames)
+    function(x) {
+        .msg_spatialData()
+        int_metadata(x)$spatialDataNames
+    }
+)
 
 #' @rdname SpatialExperiment-methods
 #' @importFrom SummarizedExperiment colData
@@ -163,6 +176,7 @@ setMethod("spatialDataNames",
 setReplaceMethod("spatialDataNames", 
     c("SpatialExperiment", "character"),
     function(x, value) {
+        .msg_spatialData()
         stopifnot(value %in% names(colData(x)))
         int_metadata(x)$spatialDataNames <- value
         return(x)
@@ -174,6 +188,7 @@ setReplaceMethod("spatialDataNames",
 setReplaceMethod("spatialDataNames",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
+        .msg_spatialData()
         value <- character()
         `spatialDataNames<-`(x, value)
     }
@@ -254,3 +269,12 @@ setMethod("scaleFactors",
         imgData(x)$scaleFactor[idx]
     }
 )
+
+# utils ------------------------------------------------------------------------
+
+# message for deprecation of spatialData/Names
+.msg_spatialData <- function() {
+    message(paste0(
+        "Note: spatialData and spatialDataNames have been deprecated; all ", 
+        "columns should be stored in colData and spatialCoords instead"))
+}
