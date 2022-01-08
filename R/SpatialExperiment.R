@@ -265,10 +265,6 @@ SpatialExperiment <- function(...,
         sample_id <- unique(sce$sample_id)
     }
     
-    if (!is.null(spatialDataNames) | !is.null(spatialData)) {
-        .msg_spatialData()
-    }
-    
     spe <- new("SpatialExperiment", sce)
 
     # in the following code chunk, we give precedence 

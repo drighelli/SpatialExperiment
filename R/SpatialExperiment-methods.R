@@ -117,7 +117,6 @@ NULL
 setMethod("spatialData", 
     "SpatialExperiment",
     function(x) {
-        .msg_spatialData()
         colData(x)[spatialDataNames(x)]
     }
 )
@@ -128,7 +127,6 @@ setMethod("spatialData",
 setReplaceMethod("spatialData", 
     c("SpatialExperiment", "DFrame"),
     function(x, value) {
-        .msg_spatialData()
         stopifnot(nrow(value) == ncol(x))
         out <- colData(x)
         old <- names(out)
@@ -151,7 +149,6 @@ setReplaceMethod("spatialData",
 setReplaceMethod("spatialData", 
     c("SpatialExperiment", "NULL"),
     function(x, value) {
-        .msg_spatialData()
         `spatialDataNames<-`(x, value)
     }
 )
@@ -188,7 +185,6 @@ setReplaceMethod("spatialDataNames",
 setReplaceMethod("spatialDataNames",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
-        .msg_spatialData()
         value <- character()
         `spatialDataNames<-`(x, value)
     }
