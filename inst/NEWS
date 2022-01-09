@@ -1,3 +1,6 @@
+changes in version 1.5.2 (2022-01-09)
++ relocate and deprecate spatialData/Names
+
 changes in version 1.5.1 (2021-12-15)
 + improved coercion methods from SingleCellExperiment to SpatialExperiment
 + add new methods for image rotation/mirroring
