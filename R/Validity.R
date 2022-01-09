@@ -15,9 +15,7 @@
 
 .spatialData_validity <- function(x, msg=NULL) {
     y <- colData(x)[int_metadata(x)$spatialDataNames]
-    if (is.null(y)) {
-        msg <- c(msg, "no 'spatialData' field in 'int_colData'")
-    } else if (!is(y, "DFrame")) {
+    if (!is.null(y) && !is(y, "DFrame")) {
         msg <- c(msg, paste(
             "'spatialData' field in 'int_colData'",
             "should be a 'DFrame'"))
@@ -87,7 +85,7 @@
     msg <- NULL
     msg <- .colData_validity(object, msg)
     msg <- .imgData_validity(object, msg)
-    #msg <- .spatialData_validity(object, msg)
+    msg <- .spatialData_validity(object, msg)
     msg <- .spatialCoords_validity(object, msg)
     #msg <- .spatialDataNames_validity(object, msg)
     if (length(msg)) return(msg)
