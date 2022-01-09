@@ -14,30 +14,12 @@ constructor to fill the slots of the base class.}
 be stored in a new column in \code{\link{colData}}, if not already present.
 Default = \code{sample01}.}
 
-\item{spatialDataNames}{(Deprecated) A \code{character} vector of column
-names from \code{\link{colData}} to include in \code{\link{spatialData}}.
-Alternatively, the \code{spatialData} argument may be provided. If both are
-provided, \code{spatialDataNames} is given precedence, and a warning is
-returned. (Note: \code{spatialData} has been deprecated; \code{colData} and
-\code{spatialCoords} should be used for all columns instead. The arguments
-have been retained for backward compatibility but may be removed in the
-future.)}
-
 \item{spatialCoordsNames}{A \code{character} vector of column names from
 \code{\link{colData}} containing spatial coordinates, which will be
 accessible with \code{\link{spatialCoords}}. Alternatively, the
 \code{spatialCoords} argument may be provided. If both are provided,
 \code{spatialCoordsNames} is given precedence, and a warning is returned.
 Default = \code{c("x", "y")}.}
-
-\item{spatialData}{(Deprecated) A \code{\link{DataFrame}} containing columns
-to store in \code{\link{spatialData}}, which must contain at least the
-columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
-be provided. If both are provided, \code{spatialDataNames} is given
-precedence, and a warning is returned. (Note: \code{spatialData} has been
-deprecated; \code{colData} and \code{spatialCoords} should be used for all
-columns instead. The arguments have been retained for backward
-compatibility but may be removed in the future.)}
 
 \item{spatialCoords}{A numeric matrix containing columns of spatial
 coordinates, which will be accessible with \code{\link{spatialCoords}}.
@@ -63,6 +45,24 @@ sources.}
 
 \item{loadImage}{Logical indicating whether to load image into memory.
 Default = \code{FALSE}.}
+
+\item{spatialDataNames}{(Deprecated) A \code{character} vector of column
+names from \code{\link{colData}} to include in \code{\link{spatialData}}.
+Alternatively, the \code{spatialData} argument may be provided. If both are
+provided, \code{spatialDataNames} is given precedence, and a warning is
+returned. (Note: \code{spatialData} and \code{spatialDataNames} have been
+deprecated; \code{colData} and \code{spatialCoords} should be used for all
+columns. The arguments have been retained for backward compatibility but
+may be removed in the future.)}
+
+\item{spatialData}{(Deprecated) A \code{\link{DataFrame}} containing columns
+to store in \code{\link{spatialData}}, which must contain at least the
+columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
+be provided. If both are provided, \code{spatialDataNames} is given
+precedence, and a warning is returned. (Note: \code{spatialData} and
+\code{spatialDataNames} have been deprecated; \code{colData} and
+\code{spatialCoords} should be used for all columns. The arguments have
+been retained for backward compatibility but may be removed in the future.)}
 }
 \value{
 A \code{SpatialExperiment} object.
@@ -72,8 +72,7 @@ The \code{SpatialExperiment} class is designed to represent spatially
 resolved transcriptomics (ST) data. It inherits from the
 \code{\link{SingleCellExperiment}} class and is used in the same manner. In
 addition, the class supports storage of spatial information via
-\code{\link{spatialCoords}} and storage of
-images via \code{\link{imgData}}.
+\code{\link{spatialCoords}} and storage of images via \code{\link{imgData}}.
 }
 \details{
 In this class, rows represent genes, and columns represent spots (for
@@ -135,10 +134,11 @@ rd <- S4Vectors::DataFrame(
 # construct 'SpatialExperiment'
 (spe <- SpatialExperiment(
     assays = list(counts = assay(sce)),
-    colData = colData(sce), rowData = rd, imgData = img,
-    spatialData=DataFrame(xyz), 
-    spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"),
-    sample_id="foo"))
+    rowData = rd,
+    colData = DataFrame(xyz),
+    spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+    imgData = img,
+    sample_id = "foo"))
     
 #############################################################
 # Example 2: Spot-based ST (10x Visium) using 'read10xVisium'
@@ -161,7 +161,7 @@ gs <- paste0("gene", seq(ng))
 cs <- paste0("cell", seq(nc))
 gene <- sample(gs, n, TRUE)
 cell <- sample(cs, n, TRUE)
-# construct data.frame of molecule coodinates
+# construct data.frame of molecule coordinates
 df <- data.frame(gene, cell, x, y)
 
 # (assure gene & cell are factor so that
@@ -186,7 +186,6 @@ y <- as.matrix(unclass(y))
 }
 \seealso{
 \code{?"\link{SpatialExperiment-methods}"}, which includes:
-\code{\link{spatialData}}, \code{\link{spatialDataNames}},
 \code{\link{spatialCoords}}, \code{\link{spatialCoordsNames}},
 \code{\link{imgData}}, \code{\link{scaleFactors}}
 

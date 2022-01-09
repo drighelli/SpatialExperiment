@@ -87,7 +87,7 @@
     msg <- NULL
     msg <- .colData_validity(object, msg)
     msg <- .imgData_validity(object, msg)
-    msg <- .spatialData_validity(object, msg)
+    #msg <- .spatialData_validity(object, msg)
     msg <- .spatialCoords_validity(object, msg)
     #msg <- .spatialDataNames_validity(object, msg)
     if (length(msg)) return(msg)

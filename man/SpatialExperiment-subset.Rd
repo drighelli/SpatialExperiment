@@ -16,9 +16,9 @@ a \code{\link{SpatialExperiment}} object
 }
 \description{
 The subsetting method for \code{\link{SpatialExperiment}} objects ensures
-that spatial data attributes (\code{\link{spatialData}},
-\code{\link{spatialCoords}}, \code{\link{imgData}}) are subsetted correctly
-to match rows and columns with the remainder of the object.
+that spatial data attributes (\code{\link{spatialCoords}} and
+\code{\link{imgData}}) are subsetted correctly to match rows and columns with
+the remainder of the object.
 }
 \section{subset}{
 
@@ -36,5 +36,6 @@ set.seed(123)
 idx <- sample(ncol(spe), 10)
 sub <- spe[, idx]
 dim(sub)
-spatialData(sub)
+colData(sub)
+spatialCoords(sub)
 }

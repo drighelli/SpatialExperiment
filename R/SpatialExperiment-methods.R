@@ -13,8 +13,8 @@
 #' @description
 #' The \code{\link{SpatialExperiment}} class provides a family of methods to get
 #' and set spatial data attributes in \code{\link{SpatialExperiment}} objects.
-#' Spatial attributes include \code{spatialData}, \code{spatialCoords},
-#' \code{imgData}, and \code{scaleFactors}.
+#' Spatial attributes include \code{spatialCoords}, \code{imgData}, and
+#' \code{scaleFactors}.
 #' 
 #' @param x A \code{\link{SpatialExperiment}} object.
 #' @param value Replacement value for replacement methods.
@@ -26,11 +26,13 @@
 #' @details
 #' Additional details for each type of data attribute are provided below.
 #' 
-#' \code{\link{spatialData}} and \code{\link{spatialCoords}} are distinguished 
-#' as follows: \code{spatialData} is a \code{colData} subset: a \code{DataFrame} 
-#' containing all the data associated with the spatial information, 
-#' while \code{spatialCoords} is a numeric matrix containing only 
-#' the defined spatial coordinates (e.g. columns \code{x} and \code{y}).
+#' Note: \code{\link{spatialData}} and \code{\link{spatialDataNames}}
+#' (previously used to store a subset of columns from \code{\link{colData}})
+#' have been deprecated. All columns should be stored in either
+#' \code{\link{spatialCoords}} (numeric matrix containing spatial coordinates)
+#' or \code{\link{colData}} (all other columns). The
+#' \code{spatialData}/\code{spatialDataNames} functionality has been retained
+#' for backward compatibility but may be removed in the future.
 #' 
 #' @section spatialData and spatialCoords methods:
 #' \describe{
@@ -82,16 +84,8 @@
 #' @examples
 #' example(read10xVisium)
 #' 
-#' # spatialData returns a DataFrame
-#' spatialData(spe)
-#' 
 #' # spatialCoords returns a numeric matrix
 #' head(spatialCoords(spe))
-#' 
-#' # spatialData replacement method
-#' spdata <- spatialData(spe)
-#' spdata$array_col <- spdata$array_row
-#' spatialData(spe) <- spdata
 #' 
 #' # change spatial coordinate names
 #' spatialCoordsNames(spe)
@@ -117,7 +111,7 @@ NULL
 setMethod("spatialData", 
     "SpatialExperiment",
     function(x) {
-        colData(x)[spatialDataNames(x)]
+      colData(x)[spatialDataNames(x)]
     }
 )
 
@@ -173,7 +167,6 @@ setMethod("spatialDataNames",
 setReplaceMethod("spatialDataNames", 
     c("SpatialExperiment", "character"),
     function(x, value) {
-        .msg_spatialData()
         stopifnot(value %in% names(colData(x)))
         int_metadata(x)$spatialDataNames <- value
         return(x)
@@ -272,5 +265,5 @@ setMethod("scaleFactors",
 .msg_spatialData <- function() {
     message(paste0(
         "Note: spatialData and spatialDataNames have been deprecated; all ", 
-        "columns should be stored in colData and spatialCoords instead"))
+        "columns should be stored in colData and spatialCoords"))
 }

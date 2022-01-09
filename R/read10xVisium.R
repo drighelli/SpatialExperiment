@@ -7,7 +7,7 @@
 #' output directories for 10x Genomics Visium spatial gene expression data.
 #' 
 #' @param samples a character vector specifying one or more directories, 
-#'   each corresponding to a 10x Genomics Visium sample (see details);
+#'   each corresponding to a 10x Genomics Visium sample (see Details);
 #'   if provided, names will be used as sample identifiers
 #' @param sample_id character string specifying unique sample identifiers,
 #'   one for each directory specified via \code{samples}; 
@@ -71,7 +71,7 @@
 #'   images = "lowres", load = FALSE))
 #' 
 #' # tabulate number of spots mapped to tissue
-#' cd <- colData(spe, spatialData = TRUE)
+#' cd <- colData(spe)
 #' table(
 #'   in_tissue = cd$in_tissue, 
 #'   sample_id = cd$sample_id)
@@ -170,7 +170,7 @@ read10xVisium <- function(samples="",
             assays=assays(sce),
             rowData=DataFrame(symbol=rowData(sce)$Symbol),
             sample_id=sids[i],
-            spatialData=DataFrame(spd),
+            colData=DataFrame(spd),
             spatialCoordsNames=c("pxl_col_in_fullres", "pxl_row_in_fullres"))
     }) 
     spe <- do.call(cbind, spel)
