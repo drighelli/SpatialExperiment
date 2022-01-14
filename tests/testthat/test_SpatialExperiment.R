@@ -155,3 +155,11 @@ test_that("scaleFactors should be numeric, a named list or JSON file", {
         scaleFactors=list(tissue_lowres_scalef=1)))
 })
 
+test_that("deprecated spatialData/Names returns message", {
+    expect_message(spatialData(spe))
+    expect_message(spatialDataNames(spe))
+    expect_message(SpatialExperiment(spatialData = DataFrame()))
+    cd <- DataFrame(x = numeric(), y = numeric())
+    expect_message(SpatialExperiment(colData = cd, spatialDataNames = names(cd)))
+})
+

@@ -29,48 +29,35 @@ The `SpatialExperiment` class is designed to represent spatially
 resolved transcriptomics (ST) data. It inherits from the
 `SingleCellExperiment` class and is used in the same manner. 
 In addition, the class supports storage of spatial information
-via `spatialData` and `spatialCoords`, and storage of
-images via `imgData`.
+via `spatialCoords` and storage of images via `imgData`.
 
 For demonstration of the general class structure, we load an example 
 `SpatialExperiment` (abbreviated as SPE) object (variable `spe`):
 
-```{r}
+```{r message = FALSE}
 library(SpatialExperiment)
 example(read10xVisium, echo = FALSE)
 spe
 ```
 
-## `spatialData` \& `-Coords`
+## `spatialCoords`
 
 In addition to observation metadata stored inside the `colData` slot of 
 a `SingleCellExperiment`, the `SpatialExperiment` class can accommodate: 
 
-- `spatialData`, a `DataFrame` containing spatial metadata  
-(e.g. whether or not an observation was mapped to tissue)
 - `spatialCoords`, a numeric matrix of spatial coordinates (e.g. `x` and `y`)
 
-Both `spatialData` and `spatialCoords` are stored 
-separately inside the `int_colData` slot.
+`spatialCoords` are stored inside the `int_colData`, and are directly 
+accessible via the corresponding accessor:
 
-Note that the `colData`, `spatialData`, and `spatialCoords` slots follow
-a hierarchical structure where `colData` > `spatialData` > `spatialCoords`. 
-Here, each accessor function allows joint accession of the target slot, and (optionally) 
-any slot(s) that precedes it.
+```{r}
+head(spatialCoords(spe))
+```
 
-Specifically, the following commands are supported 
-that may be used to access specific subsets of (spatial) metadata 
-associated with each column (observation, e.g. spots or cells) in a SPE:
+The corresponding column names can be also accessed with `spatialCoordsNames`:
 
-```{r results = "hide"}
-spatialCoords(spe)
-
-spatialData(spe)
-spatialData(spe, spatialCoords = TRUE)
-
-colData(spe, spatialData = TRUE)
-colData(spe, spatialCoords = TRUE)
-colData(spe, spatialData = TRUE, spatialCoords = TRUE)
+```{r}
+spatialCoordsNames(spe)
 ```
 
 ## `imgData`
@@ -182,18 +169,13 @@ to give maximum flexibility to the user.
 
 In particular, these include: 
 
-- `spatialData`, a `DataFrame` with all the data 
-associated with the spatial information (optionally 
-including spatial coordinates to use as `spatialCoords`)
 - `spatialCoords`, a numeric `matrix` containing spatial coordinates
-- `spatialDataNames`, a character vector specifying  
-which `colData` fields correspond to spatial metadata
 - `spatialCoordsNames`, a character vector specifying which  
-`colData` or `spatialData` fields correspond to spatial coordinates
+`colData` fields correspond to spatial coordinates
 
-Both `spatialData` and `SpatialCoords` can be supplied directly via `colData`
-by specifying the column names that correspond to metadata and spatial coordinates, 
-respectively, via `spatialDataNames` and `spatialCoordsNames`:
+`spatialCoords` can be supplied directly via `colData`
+by specifying the column names that correspond to spatial coordinates 
+via `spatialCoordsNames`:
 
 ```{r}
 n <- length(z <- letters)
@@ -203,67 +185,44 @@ cd <- DataFrame(x = seq(n), y = seq(n), z)
 spe1 <- SpatialExperiment(
     assay = y, 
     colData = cd, 
-    spatialDataNames = "z", 
     spatialCoordsNames = c("x", "y"))
 ```
 
-Alternatively, `spatialData` and `spatialCoords` may be supplied separately
-directly as a `DataFrame` and `matrix`, e.g.:
+Alternatively, `spatialCoords` may be supplied separately
+directly as a `matrix`, e.g.:
 
 ```{r}
 xy <- as.matrix(cd[, c("x", "y")])
 
 spe2 <- SpatialExperiment(
     assay = y, 
-    spatialData = cd["z"],
+    colData = cd["z"], 
     spatialCoords = xy)
 ```
 
-Or, one of `spatialData` or `spatialCoords` can be supplied, while the other may be 
-extracted from the input `colData` according to `spatialData` or `spatialCoordsNames`: 
-
-```{r}
-spe3 <- SpatialExperiment(
-    assay = y, 
-    colData = cd[-3], 
-    spatialData = cd["z"],
-    spatialCoordsNames = c("x", "y"))
-
-spe4 <- SpatialExperiment(
-    assay = y, 
-    colData = cd[-c(1, 2)], 
-    spatialCoords = xy,
-    spatialDataNames = "z")
-```
-
-Importantly, all of the above `SpatialExperiment()` function calls 
+Importantly, both of the above `SpatialExperiment()` function calls 
 lead to construction of the exact same object:
 
 ```{r}
-all(identical(spe1, spe2), 
-    identical(spe1, spe3), 
-    identical(spe1, spe4), 
-    identical(spe2, spe3), 
-    identical(spe2, spe4), 
-    identical(spe3, spe4))
+identical(spe1, spe2)
 ```
 
-Finally, all of `spatialData/Coords(Names)` are optional. I.e., 
+Finally, `spatialCoords(Names)` are optional, i.e., 
 we can construct a SPE using only a subset of the above arguments:
 
 ```{r}
 spe <- SpatialExperiment(
-    assays = y, 
-    spatialCoords = xy)
-isEmpty(spatialData(spe))
+    assays = y)
+isEmpty(spatialCoords(spe))
 ```
 
-In general, `spatialData/CoordsNames` take precedence over `spatialData/Coords`,
+In general, `spatialCoordsNames` takes precedence over `spatialCoords`,
 i.e., if both are supplied, the latter will be ignored. In other words,
-`spatialData/Coords` are preferentially extracted from the `DataFrame`s
-provided via `spatial/colData`. E.g., in the following function call, 
+`spatialCoords` are preferentially extracted from the `DataFrame`
+provided via `colData`. E.g., in the following function call, 
 `spatialCoords` will be ignored, and xy-coordinates are instead extracted
-from the input `colData` according to the specified `spatialCoordsNames`:
+from the input `colData` according to the specified `spatialCoordsNames`. 
+In this case, a message is also provided:
 
 ```{r results = "hide"}
 n <- 10; m <- 20
@@ -286,7 +245,7 @@ platforms providing images, it is possible to store the image information
 in the dedicated `imgData` structure.
 
 Also, the `SpatialExperiment` class stores a `sample_id` value in the
-`spatialData` structure, which is possible to set with the `sample_id` 
+`colData` structure, which is possible to set with the `sample_id` 
 argument (default is "sample_01").
 
 Here we show how to load the default *Space Ranger* data files from a 
@@ -326,10 +285,9 @@ rd <- S4Vectors::DataFrame(
 (spe <- SpatialExperiment(
     assays = list(counts = assay(sce)),
     rowData = rd, 
-    colData = colData(sce), 
-    imgData = img,
-    spatialData = DataFrame(xyz),
+    colData = DataFrame(xyz), 
     spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+    imgData = img,
     sample_id = "foo"))
 ```
 
@@ -471,8 +429,8 @@ sub <- spe10x[, spe10x$sample_id == "section1"]
 Or to retain only observations that map to tissue via:
 
 ```{r}
-sub <- spe10x[, spatialData(spe10x)$in_tissue]
-sum(spatialData(spe10x)$in_tissue) == ncol(sub)
+sub <- spe10x[, colData(spe10x)$in_tissue]
+sum(colData(spe10x)$in_tissue) == ncol(sub)
 ```
 
 ## Combining samples

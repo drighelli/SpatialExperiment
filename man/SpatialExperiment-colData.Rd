@@ -37,9 +37,6 @@ retained. In addition, checks are performed against the \code{sample_id}s in
 \examples{
 example(read10xVisium)
 
-# return additional columns for colData
-head(colData(spe, spatialData = TRUE, spatialCoords = TRUE))
-
 # empty replacement retains sample identifiers
 colData(spe) <- NULL
 names(colData(spe))

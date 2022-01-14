@@ -26,9 +26,6 @@
 #' @examples
 #' example(read10xVisium)
 #' 
-#' # return additional columns for colData
-#' head(colData(spe, spatialData = TRUE, spatialCoords = TRUE))
-#' 
 #' # empty replacement retains sample identifiers
 #' colData(spe) <- NULL
 #' names(colData(spe))
@@ -52,23 +49,6 @@
 #' tmp$sample_id <- new[idx]
 #' table(spe$sample_id, tmp$sample_id)
 NULL
-
-setMethod("colData", 
-    "SpatialExperiment",
-    function(x, spatialData = FALSE, spatialCoords = FALSE) {
-        stopifnot(
-            is.logical(spatialData), length(spatialData) == 1,            
-            is.logical(spatialCoords), length(spatialCoords) == 1)
-        out <- callNextMethod()
-        if (spatialData) {
-            out <- cbind(out, spatialData(x))
-        }
-        if (spatialCoords) {
-            out <- cbind(out, spatialCoords(x))
-        }
-        return(out)
-    }
-)
 
 # the following overwrites 'SummarizedExperiment's 'colData' 
 # replacement method to assure the 'SpatialExperiment' remains valid
@@ -109,16 +89,6 @@ setReplaceMethod("colData",
             # if none provided, retain original sample_id field
             value$sample_id <- old$sample_id
         }
-
-        # # protect spatialData from being replaced
-        # spd <- spatialData(x, 
-        #     spatialCoords=FALSE, 
-        #     colData=FALSE)
-        # ## restoring spatialData if not any spatialDataNames is in the new value
-        # if (!all(spatialDataNames(x) %in% colnames(value))) {
-        #     value <- cbind(value, spd)
-        # }
-        
         BiocGenerics:::replaceSlots(x, colData=value, check=FALSE)
     }
 )
@@ -129,6 +99,7 @@ setReplaceMethod("colData",
 setReplaceMethod("colData",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
+        spatialDataNames(x) <- NULL
         value <- colData(x)["sample_id"]
         colData(x) <- value
         return(x)

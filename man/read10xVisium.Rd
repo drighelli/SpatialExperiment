@@ -15,7 +15,7 @@ read10xVisium(
 }
 \arguments{
 \item{samples}{a character vector specifying one or more directories, 
-each corresponding to a 10x Genomics Visium sample (see details);
+each corresponding to a 10x Genomics Visium sample (see Details);
 if provided, names will be used as sample identifiers}
 
 \item{sample_id}{character string specifying unique sample identifiers,
@@ -87,7 +87,7 @@ samples2 <- file.path(dir, sample_ids)
   images = "lowres", load = FALSE))
 
 # tabulate number of spots mapped to tissue
-cd <- colData(spe, spatialData = TRUE)
+cd <- colData(spe)
 table(
   in_tissue = cd$in_tissue, 
   sample_id = cd$sample_id)

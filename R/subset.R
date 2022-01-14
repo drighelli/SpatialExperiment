@@ -6,9 +6,9 @@
 #' 
 #' @description
 #' The subsetting method for \code{\link{SpatialExperiment}} objects ensures
-#' that spatial data attributes (\code{\link{spatialData}},
-#' \code{\link{spatialCoords}}, \code{\link{imgData}}) are subsetted correctly
-#' to match rows and columns with the remainder of the object.
+#' that spatial data attributes (\code{\link{spatialCoords}} and
+#' \code{\link{imgData}}) are subsetted correctly to match rows and columns with
+#' the remainder of the object.
 #' 
 #' @section subset:
 #' \describe{
@@ -30,7 +30,8 @@
 #' idx <- sample(ncol(spe), 10)
 #' sub <- spe[, idx]
 #' dim(sub)
-#' spatialData(sub, spatialCoords = TRUE)
+#' colData(sub)
+#' spatialCoords(sub)
 NULL
 
 # we overwrite the default subsetting method

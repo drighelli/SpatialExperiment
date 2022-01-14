@@ -6,6 +6,7 @@ test_that("colData()<-NULL retains only sample_id", {
     colData(tmp) <- NULL
     expect_null(tmp$foo)
     expect_identical(tmp$sample_id, spe$sample_id)
+    expect_identical(spatialDataNames(tmp), character())
 })
 
 test_that("valid colData<- without sample_id field protects sample_id", {
@@ -41,18 +42,4 @@ test_that("valid sample_id<- updates imgData", {
             tmp[, tmp$sample_id == new[i]])
     i <- match(imgData(spe)$sample_id, old)
     expect_identical(imgData(tmp)$sample_id, new[i])
-})
-
-test_that("no duplicated columns from spatialData when adding new columns to colData", {
-    colnames_old <- colnames(colData(spe))
-    colData(spe)$testing <- 1
-    expect_equal(colnames(colData(spe)), c(colnames_old, "testing"))
-})
-
-test_that("colData > spatialData > spatialCoords hierarchy", {
-    expect_identical(cbind(colData(spe), spatialData(spe), spatialCoords(spe)), 
-                     colData(spe, spatialData = TRUE, spatialCoords = TRUE))
-    expect_identical(cbind(spatialData(spe), spatialCoords(spe)), 
-                     spatialData(spe, spatialCoords = TRUE))
-    
 })

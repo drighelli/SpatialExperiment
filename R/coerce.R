@@ -8,19 +8,19 @@
 #' To do so, we designed two different methods: the traditional \code{as} method
 #' and the \code{toSpatialExperiment} function (recommended).
 #' The \code{as} method checks if the \code{SingleCellExperiment} object has
-#' already populated \code{int_colData} with three elements,
-#' the \code{spatialData}, the \code{spatialCoords} and the \code{imgData}.
-#' Also it checks if the \code{colData} already has a \code{sample_id}.
+#' already populated \code{int_colData} with three elements:
+#' \code{spatialData}, \code{spatialCoords}, and \code{imgData}.
+#' It also checks if \code{colData} already contains a \code{sample_id}.
 #' In case these checks pass the new \code{SpatialExperiment} will have the same
 #' values as the \code{SingleCellExperiment} passed object.
 #' Otherwise a \code{SpatialExperiment} with default values for these slots
 #' will be created.
 #' 
-#' The \code{toSpatialExperiment} expects a \code{SingleCellExperiment} object
+#' The \code{toSpatialExperiment} method expects a \code{SingleCellExperiment} object
 #' and additional arguments as explained in the related section of this
 #' documentation. In case the \code{SingleCellExperiment} object has already
 #' populated \code{int_colData} with \code{spatialData} and/or
-#' \code{spatialCoords} and/or \code{imgData} they will be respectively
+#' \code{spatialCoords} and/or \code{imgData}, these will be respectively
 #' overwritten in case the arguments \code{spatialData}/\code{spatialDataNames} 
 #' and/or \code{spatialCoords}/\code{spatialCoordsNames} and/or \code{imgData} 
 #' are not \code{NULL}.
@@ -30,22 +30,12 @@
 #'   \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
 #'   be stored in a new column in \code{\link{colData}}, if not already present.
 #'   Default = \code{sample01}.
-#' @param spatialDataNames A \code{character} vector of column names from
-#'   \code{\link{colData}} to include in \code{\link{spatialData}}.
-#'   Alternatively, the \code{spatialData} argument may be provided. If both are
-#'   provided, \code{spatialDataNames} is given precedence, and a warning is
-#'   returned.
 #' @param spatialCoordsNames A \code{character} vector of column names from
-#'   \code{\link{colData}} or \code{\link{spatialData}} containing spatial
-#'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
-#'   Alternatively, the \code{spatialCoords} argument may be provided. If both
-#'   are provided, \code{spatialCoordsNames} is given precedence, and a warning
-#'   is returned. Default = \code{c("x", "y")}.
-#' @param spatialData A \code{\link{DataFrame}} containing columns to store in
-#'   \code{\link{spatialData}}, which must contain at least the columns of
-#'   spatial coordinates. Alternatively, \code{spatialDataNames} may be
-#'   provided. If both are provided, \code{spatialDataNames} is given
-#'   precedence, and a warning is returned.
+#'   \code{\link{colData}} containing spatial coordinates, which will be
+#'   accessible with \code{\link{spatialCoords}}. Alternatively, the
+#'   \code{spatialCoords} argument may be provided. If both are provided,
+#'   \code{spatialCoordsNames} is given precedence, and a warning is returned.
+#'   Default = \code{c("x", "y")}.
 #' @param spatialCoords A numeric matrix containing columns of spatial
 #'   coordinates, which will be accessible with \code{\link{spatialCoords}}.
 #'   Alternatively, \code{spatialCoordsNames} may be provided. If both are
@@ -65,6 +55,22 @@
 #'   \code{imageSources}) containing unique image identifiers.
 #' @param loadImage Logical indicating whether to load image into memory.
 #'   Default = \code{FALSE}.
+#' @param spatialDataNames (Deprecated) A \code{character} vector of column
+#'   names from \code{\link{colData}} to include in \code{\link{spatialData}}.
+#'   Alternatively, the \code{spatialData} argument may be provided. If both are
+#'   provided, \code{spatialDataNames} is given precedence, and a warning is
+#'   returned. (Note: \code{spatialData} and \code{spatialDataNames} have been
+#'   deprecated; \code{colData} and \code{spatialCoords} should be used for all
+#'   columns. The arguments have been retained for backward compatibility but
+#'   may be removed in the future.)
+#' @param spatialData (Deprecated) A \code{\link{DataFrame}} containing columns
+#'   to store in \code{\link{spatialData}}, which must contain at least the
+#'   columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
+#'   be provided. If both are provided, \code{spatialDataNames} is given
+#'   precedence, and a warning is returned. (Note: \code{spatialData} and
+#'   \code{spatialDataNames} have been deprecated; \code{colData} and
+#'   \code{spatialCoords} should be used for all columns. The arguments have
+#'   been retained for backward compatibility but may be removed in the future.)
 
 #' @aliases 
 #' coerce, SingleCellExperiment, SpatialExperiment-method
@@ -79,29 +85,34 @@
 #' fnm <- file.path(dir, "raw_feature_bc_matrix")
 #' sce <- DropletUtils::read10xCounts(fnm)
 #' 
-#' 
 #' # read in spatial coordinates
 #' fnm <- file.path(dir, "spatial", "tissue_positions_list.csv")
 #' xyz <- read.csv(fnm, header = FALSE,
 #'     col.names = c("barcode", "in_tissue", "array_row", "array_col",
 #'     "pxl_row_in_fullres", "pxl_col_in_fullres"))
-#' ## as method
-#' (spe <- as(sce, "SpatialExperiment"))
-#' int_colData(sce)$spatialData <- DataFrame(xyz[,c(1:4)])
-#' int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
-#' ## Coercing an sce without imgData
-#' (spe <- as(sce, "SpatialExperiment"))
-#' ## Coercing an sce with imgData
+#' 
+#' # read in image data
 #' img <- readImgData(
 #'     path = file.path(dir, "spatial"),
 #'     sample_id = "sample01")
+#' 
+#' ## as method
+#' (spe <- as(sce, "SpatialExperiment"))
+#' 
+#' colData(sce) <- DataFrame(xyz[,c(1:4)])
+#' int_colData(sce)$spatialCoords <- as.matrix(xyz[,c(5,6)])
+#' 
+#' ## Coercing an sce without imgData
+#' (spe <- as(sce, "SpatialExperiment"))
+#' 
+#' ## Coercing an sce with imgData
 #' int_colData(sce)$imgData <- img
 #' (spe <- as(sce, "SpatialExperiment"))
 #' 
 #' ## toSpatialExperiment method
+#' colData(sce) <- DataFrame(xyz)
 #' (spe <- toSpatialExperiment(sce,
 #'     imgData = img,
-#'     spatialData = DataFrame(xyz), 
 #'     spatialCoordsNames = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
 #'     sample_id = "sample01"))
 NULL
@@ -116,9 +127,9 @@ setAs(
         icd <- int_colData(from)
         spe <- .sce_to_spe(from, 
             sample_id=sample_id,
-            spatialData=icd$spatialData,
             spatialCoords=icd$spatialCoords,
-            imgData=icd$imgData)
+            imgData=icd$imgData,
+            spatialData=icd$spatialData)
         return(spe)
     }
 )
@@ -126,15 +137,15 @@ setAs(
 #' @export
 toSpatialExperiment <- function(sce,
     sample_id="sample01", 
-    spatialDataNames=NULL,
     spatialCoordsNames=NULL,
-    spatialData=NULL,
     spatialCoords=NULL,
     scaleFactors=1,
     imageSources=NULL,
     image_id=NULL,
     loadImage=TRUE,
-    imgData=NULL) {
+    imgData=NULL,
+    spatialDataNames=NULL,
+    spatialData=NULL) {
     
     stopifnot(is(sce, "SingleCellExperiment"))
     
@@ -149,15 +160,15 @@ toSpatialExperiment <- function(sce,
         imgData <- int_colData(sce)$imgData
     }
     spe <- .sce_to_spe(sce=sce,
-       sample_id=sample_id,
-       spatialDataNames=spatialDataNames,
-       spatialCoordsNames=spatialCoordsNames,
-       spatialData=spatialData,
-       spatialCoords=spatialCoords,
-       scaleFactors=scaleFactors,
-       imageSources=imageSources,
-       image_id=image_id,
-       loadImage=loadImage,
-       imgData=imgData)
+        sample_id = sample_id,
+        spatialCoordsNames = spatialCoordsNames,
+        spatialCoords = spatialCoords,
+        scaleFactors = scaleFactors,
+        imageSources = imageSources,
+        image_id = image_id,
+        loadImage = loadImage,
+        imgData = imgData,
+        spatialDataNames = spatialDataNames,
+        spatialData = spatialData)
     return(spe)
 }

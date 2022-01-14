@@ -71,7 +71,7 @@ spe <- cbind(spe1, spe2)
 imgData(spe)
 
 # tabulate number of spots mapped to tissue
-cd <- colData(spe, spatialData = TRUE)
+cd <- colData(spe)
 table(
   in_tissue = cd$in_tissue, 
   sample_id = cd$sample_id)
