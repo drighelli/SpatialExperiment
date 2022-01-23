@@ -43,7 +43,9 @@ remotes::install_github("drighelli/SpatialExperiment")
 
 In version 1.5.2 (2022-01-09) the `spatialData` slot was deprecated, with columns previously stored in `spatialData` now recommended to be stored in `colData`. The `spatialCoords` slot (`x` and `y` coordinates) is unchanged. Existing objects are backward-compatible (and a console message is returned if `spatialData` is still used), however we recommend re-building existing objects to move the contents of `spatialData` to `colData` to ensure longer-term compatibility with any future updates.
 
-**To use version 1.5.2 or later (as of January 2022), please follow the installation instructions for the development version above.** (These updates will be available in the release version from mid-April 2022 onwards, following the Bioconductor release schedule.)
+**To use version 1.5.2 or later (as of January 2022), please follow the installation instructions for the development version above.**
+
+(These updates will also be available in the release version from mid-April 2022 onwards, following the Bioconductor release schedule.)
 
 
 ## Citation
