@@ -269,6 +269,7 @@ setMethod("scaleFactors",
 # message for deprecation of spatialData/Names
 .msg_spatialData <- function() {
     message(paste0(
-        "Note: spatialData and spatialDataNames have been deprecated; all ", 
-        "columns should be stored in colData and spatialCoords"))
+        "Note: the use of spatialData/spatialDataNames has been deprecated in ", 
+        "SPE version 1.5.2 onwards. All columns should now be stored in ", 
+        "colData and spatialCoords instead."))
 }
