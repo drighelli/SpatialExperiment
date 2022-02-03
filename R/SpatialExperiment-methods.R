@@ -107,11 +107,16 @@ NULL
 
 #' @rdname SpatialExperiment-methods
 #' @importFrom SummarizedExperiment colData
+#' @importFrom SingleCellExperiment int_colData
 #' @export
-setMethod("spatialData", 
+setMethod("spatialData",
     "SpatialExperiment",
     function(x) {
-      colData(x)[spatialDataNames(x)]
+        spd <- colData(x)[spatialDataNames(x)]
+        if (ncol(spd) == 0 & !is.null(int_colData(x)$spatialData)) {
+            spd <- int_colData(x)$spatialData
+        }
+        spd
     }
 )
 
