@@ -45,6 +45,13 @@ test_that("spatialDataNames()<-,NULL", {
     expect_identical(new, character(0))
 })
 
+test_that("spatialData accessor backward compatibility SPE version < 1.5.2", {
+    int_colData(spe)$spatialData <- colData(spe)[, "in_tissue", drop = FALSE]
+    spd <- spatialData(spe)
+    expect_equal(ncol(spd), 1)
+    expect_equal(colnames(spd), "in_tissue")
+})
+
 test_that("spatialCoordsNames()", {
     expect_identical(
         spatialCoordsNames(spe), 
