@@ -270,6 +270,6 @@ setMethod("scaleFactors",
 .msg_spatialData <- function() {
     message(paste0(
         "Note: the use of spatialData/spatialDataNames has been deprecated in ", 
-        "SPE version 1.5.2 onwards. All columns should now be stored in ", 
-        "colData and spatialCoords instead."))
+        "SpatialExperiment version 1.5.2 onwards. All columns should now be ", 
+        "stored in colData and spatialCoords instead."))
 }
