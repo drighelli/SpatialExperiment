@@ -67,8 +67,9 @@
             paste(sQuote(nms), collapse = ", ")))
     
     is_list <- is.list(df$data)
-    all_sis <- all(vapply(df$data, is, class2="SpatialImage", logical(1)))
-    if (!(is_list && all_sis))
+    is_vsi <- \(.) is(., "VirtualSpatialImage")
+    all_vsi <- all(vapply(df$data, is_vsi, logical(1)))
+    if (!(is_list && all_vsi))
         msg <- c(msg, paste(
             "'data' field in 'int_metadata' field 'imgData'",
             "should be a list of 'SpatialImage' objects"))

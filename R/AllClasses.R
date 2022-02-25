@@ -5,20 +5,20 @@ setClass("SpatialExperiment",
     contains="SingleCellExperiment")
 
 #' @export
-setClass("SpatialImage", 
+setClass("VirtualSpatialImage", 
     contains="VIRTUAL")
 
 #' @export
 setClass("LoadedSpatialImage", 
-    contains="SpatialImage", 
+    contains="VirtualSpatialImage", 
     slots=c(image="ANY"))
 
 #' @export
 setClass("StoredSpatialImage", 
-    contains="SpatialImage", 
+    contains="VirtualSpatialImage", 
     slots=c(path="character"))
 
 #' @export
 setClass("RemoteSpatialImage", 
-    contains="SpatialImage", 
+    contains="VirtualSpatialImage", 
     slots=c(url="character"))

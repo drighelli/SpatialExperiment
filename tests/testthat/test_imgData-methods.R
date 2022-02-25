@@ -14,14 +14,14 @@ test_that("getImg,sample_id=image_id='foo' throws error", {
     expect_error(getImg(spe, sample_id='foo', image_id='foo'))
 })
 
-test_that("getImg,sample_id=image_id=NULL returns a 'SpatialImage'", {
+test_that("getImg,sample_id=image_id=NULL returns a 'VirtualSpatialImage'", {
     x <- getImg(spe, sample_id=NULL, image_id=NULL)
     y <- imgData(spe)$data[[1]]
-    expect_is(x, "SpatialImage")
+    expect_is(x, "VirtualSpatialImage")
     expect_identical(x, y)
 })
 
-test_that("getImg,sample_id=image_id=TRUE returns a list of 'SpatialImage's", {
+test_that("getImg,sample_id=image_id=TRUE returns a list", {
     x <- getImg(spe, sample_id=TRUE, image_id=TRUE)
     y <- imgData(spe)$data
     expect_is(x, "list")
