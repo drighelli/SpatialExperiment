@@ -3,10 +3,11 @@
 \name{SpatialImage-class}
 \alias{SpatialImage-class}
 \alias{SpatialImage}
+\alias{VirtualSpatialImage-class}
 \alias{LoadedSpatialImage-class}
 \alias{StoredSpatialImage-class}
 \alias{RemoteSpatialImage-class}
-\alias{dim,SpatialImage-method}
+\alias{dim,VirtualSpatialImage-method}
 \alias{imgRaster}
 \alias{imgRaster,LoadedSpatialImage-method}
 \alias{imgRaster,StoredSpatialImage-method}
@@ -20,15 +21,15 @@
 \alias{imgSource<-}
 \alias{imgSource<-,StoredSpatialImage,character-method}
 \alias{imgSource<-,RemoteSpatialImage,character-method}
-\alias{coerce,SpatialImage,LoadedSpatialImage-method}
+\alias{coerce,VirtualSpatialImage,LoadedSpatialImage-method}
 \alias{coerce,RemoteSpatialImage,StoredSpatialImage-method}
 \alias{rotateImg}
-\alias{rotateImg,SpatialImage-method}
+\alias{rotateImg,VirtualSpatialImage-method}
 \alias{rotateImg,LoadedSpatialImage-method}
 \alias{mirrorImg}
-\alias{mirrorImg,SpatialImage-method}
+\alias{mirrorImg,VirtualSpatialImage-method}
 \alias{mirrorImg,LoadedSpatialImage-method}
-\title{The SpatialImage class}
+\title{The \code{SpatialImage} class}
 \description{
 The \code{SpatialImage} class hierarchy provides representations of images
 from a variety of sources. It is used by the \linkS4class{SpatialExperiment}
@@ -36,18 +37,18 @@ class to manage the loading of images across multiple studies.
 }
 \section{Constructor}{
 
-\code{SpatialImage(x, is.url)} will return a SpatialImage object.
+\code{SpatialImage(x, is.url)} will return a \code{SpatialImage} object.
 The class of the object depends on the type of \code{x}:
 \itemize{
-\item If \code{x} is a raster object, a LoadedSpatialImage is returned.
-  This represents an image that is fully realized into memory, 
+\item If \code{x} is a raster object, a \code{LoadedSpatialImage} is 
+  returned. This represents an image that is fully realized into memory, 
   where the raster representation is stored inside the output object.
 \item If \code{x} is a string and \code{is.url=TRUE} or it starts with 
   \code{"http://"}, \code{"http://"} or \code{"ftp://"}, 
-  a RemoteSpatialImage is returned. This represents an image 
+  a \code{RemoteSpatialImage} is returned. This represents an image 
   that is remotely hosted and retrieved only on request.
 \item If \code{x} is a string and \code{is.url=TRUE} or it does not 
-  start with a URL-like prefix, a StoredSpatialImage is returned.
+  start with a URL-like prefix, a \code{StoredSpatialImage} is returned.
   This represents an image that is stored in a local file 
   and is loaded into memory only on request.
 }
@@ -55,17 +56,17 @@ The class of the object depends on the type of \code{x}:
 
 \section{Getting the raster image}{
 
-For a SpatialImage object \code{x}, \code{imgRaster(x, ...)} 
+For a \code{SpatialImage} object \code{x}, \code{imgRaster(x, ...)} 
 will return a raster object (see \code{?\link{as.raster}}).
 This is effectively a matrix of RGB colors for each pixel in the image.
 
-For a StoredSpatialImage object \code{x}, additional arguments 
+For a \code{StoredSpatialImage} object \code{x}, additional arguments 
 in \code{...} are passed to \code{\link{image_read}}.
 This controls how the image is read into memory.
 
-For a RemoteSpatialImage object \code{x}, the image file is first
-downloaded before the raster is returned. Here, \code{...} may contain
-an extra \code{cache} argument, which should be a BiocFileCache object 
+For a \code{RemoteSpatialImage} object \code{x}, the image file is first
+downloaded before the raster is returned. Here, \code{...} may contain an
+extra \code{cache} argument, which should be a \code{BiocFileCache} object 
 (from the \pkg{BiocFileCache} package) specifying the file cache location. 
 The default location is determined by 
 \code{options("SpatialExperiment.remote.cache.path")},
@@ -77,7 +78,7 @@ Any further named arguments in \code{...} are passed to \code{image_read}.
 
 \section{In-memory caching}{
 
-For StoredSpatialImage and RemoteSpatialImage objects, 
+For \code{StoredSpatialImage} and \code{RemoteSpatialImage} objects, 
 loading the image with \code{imgRaster} will automatically 
 store the loaded raster object in an in-memory cache.
 Any subsequent \code{imgRaster} call will retrieve the raster 
@@ -96,7 +97,7 @@ to some number of bytes, e.g., \code{2^32}.
 \section{Transformations}{
 
 Two basic image transformations are currently 
-supported for any SpatialImage \code{x}, namely,
+supported for any \code{SpatialImage} \code{x}, namely,
 \code{rotateImg(x, degrees)} for clockwise (\code{degrees > 0}) and 
 counter-clockwise (\code{degrees < 0}) rotation, and 
 \code{mirrorImg(x, axis)} for horizontal (\code{axis = "h"}) and 
@@ -115,11 +116,11 @@ containing the width and height of the image in pixels.
 Note that this calls \code{imgRaster} under the hood and thus 
 may interact with the file and memory caches as described above.
 
-For any SpatialImage \code{x}, \code{as(x, "LoadedSpatialImage")} 
-will create a LoadedSpatialImage containing an in-memory raster object.
+For any \code{SpatialImage x}, \code{as(x, "LoadedSpatialImage")} will
+create a \code{LoadedSpatialImage} containing an in-memory raster object.
 
-For a RemoteSpatialImage \code{x}, \code{as(x, "StoredSpatialImage")} 
-will create a StoredSpatialImage pointing to the file cache location.
+For a \code{RemoteSpatialImage x}, \code{as(x, "StoredSpatialImage")} will
+create a \code{StoredSpatialImage} pointing to the file cache location.
 }
 
 \examples{

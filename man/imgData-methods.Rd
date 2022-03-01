@@ -66,9 +66,9 @@ horizontally (\code{"h"}) or vertically (\code{"v"})}
 with modified \code{imgData}; specifically, they create/remove 
 an image entry (row) in the \code{imgData} \code{DataFrame}.
 
-\code{imgRaster/Source()} access relevant data in the \code{SpatialImage}(s)
-stored inside the \code{imgData}'s \code{data} field. 
-Depending on whether or not multiple entries are accessed,
+\code{imgRaster/Source()} access relevant data in the 
+\code{SpatialImage}(s) stored inside the \code{imgData}'s \code{data} 
+field. Depending on whether or not multiple entries are accessed,
 a character string or vector is returned by \code{imgSource()}, and a 
 single or list of \code{raster} object(s) is returned by \code{imgRaster()}.
 

@@ -12,7 +12,7 @@ test_that("data are read correctly", {
     
     expect_is(x, "SpatialExperiment")
     expect_true(all(vapply(getImg(x, TRUE, TRUE), 
-        function(.) is(., "SpatialImage"), logical(1))))
+        function(.) is(., "VirtualSpatialImage"), logical(1))))
     
     cnms <- c(
         "barcode", "in_tissue", "array_row", "array_col", 

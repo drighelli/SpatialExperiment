@@ -2,10 +2,10 @@
 % Please edit documentation in R/show.R
 \name{SpatialImage-misc}
 \alias{SpatialImage-misc}
-\alias{show,SpatialImage-method}
-\title{Miscellaneous SpatialImage methods}
+\alias{show,VirtualSpatialImage-method}
+\title{Miscellaneous \code{SpatialImage} methods}
 \usage{
-\S4method{show}{SpatialImage}(object)
+\S4method{show}{VirtualSpatialImage}(object)
 }
 \arguments{
 \item{object}{a \code{SpatialImage} object}

@@ -34,7 +34,7 @@ setMethod("show", "SpatialExperiment", .spe_show)
 # SpatialImage show method -----------------------------------------------------
 
 #' @name SpatialImage-misc
-#' @title Miscellaneous SpatialImage methods
+#' @title Miscellaneous \code{SpatialImage} methods
 #' 
 #' @description
 #' Miscellaneous methods for the \code{\link{SpatialImage}} class that do not
@@ -48,10 +48,8 @@ setMethod("show", "SpatialExperiment", .spe_show)
 NULL
 
 .spi_show <- function(object) {
-    # dim <- paste(dim(object), collapse=" x ")
-    dim <- as.character(dim(object))
-    str <- paste0(dim[2], " x ", dim[1], " (width x height) ", 
-                  class(object), "\n")
+    dim <- paste(rev(dim(object)), collapse=" x ")
+    str <- paste0(dim, " (width x height) ", class(object), "\n")
     cat(str)
     str <- imgSource(object)
     if (!is.na(str)) {
@@ -65,4 +63,4 @@ NULL
 }
 
 #' @rdname SpatialImage-misc
-setMethod("show", "SpatialImage", .spi_show)
+setMethod("show", "VirtualSpatialImage", .spi_show)

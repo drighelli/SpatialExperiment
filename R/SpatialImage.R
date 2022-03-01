@@ -1,13 +1,13 @@
 #' @name SpatialImage-class
-#' @title The SpatialImage class
+#' @title The \code{SpatialImage} class
 #' 
 #' @aliases
 #' SpatialImage
-#' SpatialImage-class
+#' VirtualSpatialImage-class
 #' LoadedSpatialImage-class
 #' StoredSpatialImage-class
 #' RemoteSpatialImage-class
-#' dim,SpatialImage-method
+#' dim,VirtualSpatialImage-method
 #' imgRaster 
 #' imgRaster,LoadedSpatialImage-method
 #' imgRaster,StoredSpatialImage-method
@@ -21,13 +21,13 @@
 #' imgSource<-
 #' imgSource<-,StoredSpatialImage,character-method
 #' imgSource<-,RemoteSpatialImage,character-method
-#' coerce,SpatialImage,LoadedSpatialImage-method
+#' coerce,VirtualSpatialImage,LoadedSpatialImage-method
 #' coerce,RemoteSpatialImage,StoredSpatialImage-method
 #' rotateImg
-#' rotateImg,SpatialImage-method
+#' rotateImg,VirtualSpatialImage-method
 #' rotateImg,LoadedSpatialImage-method
 #' mirrorImg
-#' mirrorImg,SpatialImage-method
+#' mirrorImg,VirtualSpatialImage-method
 #' mirrorImg,LoadedSpatialImage-method
 #' 
 #' @description 
@@ -36,34 +36,34 @@
 #' class to manage the loading of images across multiple studies.
 #' 
 #' @section Constructor:
-#' \code{SpatialImage(x, is.url)} will return a SpatialImage object.
+#' \code{SpatialImage(x, is.url)} will return a \code{SpatialImage} object.
 #' The class of the object depends on the type of \code{x}:
 #' \itemize{
-#' \item If \code{x} is a raster object, a LoadedSpatialImage is returned.
-#'   This represents an image that is fully realized into memory, 
+#' \item If \code{x} is a raster object, a \code{LoadedSpatialImage} is 
+#'   returned. This represents an image that is fully realized into memory, 
 #'   where the raster representation is stored inside the output object.
 #' \item If \code{x} is a string and \code{is.url=TRUE} or it starts with 
 #'   \code{"http://"}, \code{"http://"} or \code{"ftp://"}, 
-#'   a RemoteSpatialImage is returned. This represents an image 
+#'   a \code{RemoteSpatialImage} is returned. This represents an image 
 #'   that is remotely hosted and retrieved only on request.
 #' \item If \code{x} is a string and \code{is.url=TRUE} or it does not 
-#'   start with a URL-like prefix, a StoredSpatialImage is returned.
+#'   start with a URL-like prefix, a \code{StoredSpatialImage} is returned.
 #'   This represents an image that is stored in a local file 
 #'   and is loaded into memory only on request.
 #' }
 #'
 #' @section Getting the raster image:
-#' For a SpatialImage object \code{x}, \code{imgRaster(x, ...)} 
+#' For a \code{SpatialImage} object \code{x}, \code{imgRaster(x, ...)} 
 #' will return a raster object (see \code{?\link{as.raster}}).
 #' This is effectively a matrix of RGB colors for each pixel in the image.
 #'
-#' For a StoredSpatialImage object \code{x}, additional arguments 
+#' For a \code{StoredSpatialImage} object \code{x}, additional arguments 
 #' in \code{...} are passed to \code{\link{image_read}}.
 #' This controls how the image is read into memory.
 #'
-#' For a RemoteSpatialImage object \code{x}, the image file is first
-#' downloaded before the raster is returned. Here, \code{...} may contain
-#' an extra \code{cache} argument, which should be a BiocFileCache object 
+#' For a \code{RemoteSpatialImage} object \code{x}, the image file is first
+#' downloaded before the raster is returned. Here, \code{...} may contain an
+#' extra \code{cache} argument, which should be a \code{BiocFileCache} object 
 #' (from the \pkg{BiocFileCache} package) specifying the file cache location. 
 #' The default location is determined by 
 #' \code{options("SpatialExperiment.remote.cache.path")},
@@ -73,7 +73,7 @@
 #' \code{as.raster(x, ...)} is the same as \code{imgRaster(x, ...)}.
 #'
 #' @section In-memory caching:
-#' For StoredSpatialImage and RemoteSpatialImage objects, 
+#' For \code{StoredSpatialImage} and \code{RemoteSpatialImage} objects, 
 #' loading the image with \code{imgRaster} will automatically 
 #' store the loaded raster object in an in-memory cache.
 #' Any subsequent \code{imgRaster} call will retrieve the raster 
@@ -90,7 +90,7 @@
 #' 
 #' @section Transformations:
 #' Two basic image transformations are currently 
-#' supported for any SpatialImage \code{x}, namely,
+#' supported for any \code{SpatialImage} \code{x}, namely,
 #' \code{rotateImg(x, degrees)} for clockwise (\code{degrees > 0}) and 
 #' counter-clockwise (\code{degrees < 0}) rotation, and 
 #' \code{mirrorImg(x, axis)} for horizontal (\code{axis = "h"}) and 
@@ -107,11 +107,11 @@
 #' Note that this calls \code{imgRaster} under the hood and thus 
 #' may interact with the file and memory caches as described above.
 #'
-#' For any SpatialImage \code{x}, \code{as(x, "LoadedSpatialImage")} 
-#' will create a LoadedSpatialImage containing an in-memory raster object.
+#' For any \code{SpatialImage x}, \code{as(x, "LoadedSpatialImage")} will
+#' create a \code{LoadedSpatialImage} containing an in-memory raster object.
 #'
-#' For a RemoteSpatialImage \code{x}, \code{as(x, "StoredSpatialImage")} 
-#' will create a StoredSpatialImage pointing to the file cache location.
+#' For a \code{RemoteSpatialImage x}, \code{as(x, "StoredSpatialImage")} will
+#' create a \code{StoredSpatialImage} pointing to the file cache location.
 #'
 #' @author Aaron Lun
 #'
@@ -160,7 +160,7 @@ NULL
 #' @importFrom grDevices is.raster
 #' @export
 SpatialImage <- function(x, is.url=NULL) {
-    if (is(x, "SpatialImage")) {
+    if (is(x, "VirtualSpatialImage")) {
         x
     } else if (is.raster(x)) {
         new("LoadedSpatialImage", image=x)
@@ -241,7 +241,7 @@ setMethod("imgSource",
 
 #' @export
 setMethod("dim", 
-    "SpatialImage", 
+    "VirtualSpatialImage", 
     function(x) {
         dim(imgRaster(x))
     })
@@ -277,10 +277,10 @@ setReplaceMethod("imgSource",
 # coercion ---------------------------------------------------------------------
 
 #' @export
-#' @method as.raster SpatialImage
-as.raster.SpatialImage <- function(x, ...) imgRaster(x, ...)
+#' @method as.raster VirtualSpatialImage
+as.raster.VirtualSpatialImage <- function(x, ...) imgRaster(x, ...)
 
-setAs("SpatialImage", 
+setAs("VirtualSpatialImage", 
     "LoadedSpatialImage", 
     function(from) {
         img <- imgRaster(from)
@@ -310,7 +310,7 @@ setMethod("rotateImg",
 
 #' @export
 setMethod("rotateImg", 
-    "SpatialImage", 
+    "VirtualSpatialImage", 
     function(x, degrees=90) {
         x <- as(x, "LoadedSpatialImage")
         rotateImg(x, degrees)
@@ -329,7 +329,7 @@ setMethod("mirrorImg",
 
 #' @export
 setMethod("mirrorImg", 
-    "SpatialImage", 
+    "VirtualSpatialImage", 
     function(x, axis=c("h", "v")) {
         x <- as(x, "LoadedSpatialImage")
         mirrorImg(x, axis)

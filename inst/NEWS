@@ -1,3 +1,6 @@
+changes in version 1.5.3 (2022-02-28)
++ rename SpatialImage class to VirtualSpatialImage
+
 changes in version 1.5.2 (2022-01-09)
 + relocate and deprecate spatialData/Names
 

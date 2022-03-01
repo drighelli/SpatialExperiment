@@ -1,35 +1,52 @@
 Package: SpatialExperiment
-Type: Package
+Version: 1.5.3
 Title: S4 Class for Spatially Resolved Transcriptomics Data
-Version: 1.5.2
-Date: 2022-01-09
-Authors@R: c(
-    person("Dario", "Righelli", role=c("aut", "cre"), 
-        email="dario.righelli@gmail.com"),
-        person("Davide", "Risso", role=c("aut"), 
-        email="risso.davide@gmail.com"),
-        person("Helena L.", "Crowell", role=c("aut"), 
-        email="helena.crowell@uzh.ch"),
-        person("Lukas M.", "Weber", role=c("aut"), 
-        email="lukas.weber.edu@gmail.com")
-        )
 Description: Defines an S4 class for storing data from spatially resolved 
     transcriptomics (ST) experiments. The class extends SingleCellExperiment to 
     support storage and retrieval of additional information from spot-based and 
     molecule-based ST platforms, including spatial coordinates, images, and 
     image metadata. A specialized constructor function is included for data 
     from the 10x Genomics Visium platform.
-License: GPL-3
+Authors@R: c(
+    person("Dario", "Righelli", role=c("aut", "cre"), 
+        email="dario.righelli@gmail.com"), 
+        person("Davide", "Risso", role=c("aut"), 
+        email="risso.davide@gmail.com"), 
+        person("Helena L.", "Crowell", role=c("aut"), 
+        email="helena.crowell@uzh.ch"), 
+        person("Lukas M.", "Weber", role=c("aut"), 
+        email="lukas.weber.edu@gmail.com"))
+URL: https://github.com/drighelli/SpatialExperiment
 BugReports: https://github.com/drighelli/SpatialExperiment/issues
+License: GPL-3
 Encoding: UTF-8
-LazyData: false
 biocViews: 
-    DataRepresentation, DataImport, ImmunoOncology, DataRepresentation,
-    Infrastructure, SingleCell, Transcriptomics, GeneExpression, Spatial
-Depends: methods, SingleCellExperiment
+    DataRepresentation, 
+    DataImport, 
+    Infrastructure, 
+    ImmunoOncology, 
+    GeneExpression, 
+    Transcriptomics, 
+    SingleCell, 
+    Spatial
+Depends: 
+    methods, 
+    SingleCellExperiment
 Imports: 
-    BiocFileCache, DropletUtils, rjson, magick, grDevices,
-    S4Vectors, SummarizedExperiment, BiocGenerics, utils
-Suggests: knitr, rmarkdown, testthat, BiocStyle, BumpyMatrix
+    rjson, 
+    grDevices, 
+    magick, 
+    utils, 
+    S4Vectors, 
+    SummarizedExperiment, 
+    DropletUtils, 
+    BiocGenerics, 
+    BiocFileCache
+Suggests: 
+    knitr, 
+    rmarkdown, 
+    testthat, 
+    BiocStyle, 
+    BumpyMatrix
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
