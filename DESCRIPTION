@@ -10,11 +10,11 @@ Description: Defines an S4 class for storing data from spatially resolved
 Authors@R: c(
     person("Dario", "Righelli", role=c("aut", "cre"), 
         email="dario.righelli@gmail.com"), 
-        person("Davide", "Risso", role=c("aut"), 
+    person("Davide", "Risso", role=c("aut"), 
         email="risso.davide@gmail.com"), 
-        person("Helena L.", "Crowell", role=c("aut"), 
+    person("Helena L.", "Crowell", role=c("aut"), 
         email="helena.crowell@uzh.ch"), 
-        person("Lukas M.", "Weber", role=c("aut"), 
+    person("Lukas M.", "Weber", role=c("aut"), 
         email="lukas.weber.edu@gmail.com"))
 URL: https://github.com/drighelli/SpatialExperiment
 BugReports: https://github.com/drighelli/SpatialExperiment/issues
