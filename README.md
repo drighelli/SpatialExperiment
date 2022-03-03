@@ -4,7 +4,7 @@
 
 The `SpatialExperiment` package is available from [Bioconductor](https://bioconductor.org/packages/SpatialExperiment).
 
-A vignette containing examples and documentation is available from [Bioconductor](https://bioconductor.org/packages/SpatialExperiment), and additional details are provided in our [preprint](https://www.biorxiv.org/content/10.1101/2021.01.27.428431v2).
+A vignette containing examples and documentation is available from [Bioconductor](https://bioconductor.org/packages/SpatialExperiment), and additional details are provided in our [preprint](https://www.biorxiv.org/content/10.1101/2021.01.27.428431v3).
 
 
 ## Installation
@@ -50,5 +50,5 @@ In version 1.5.2 (2022-01-09) the `spatialData` slot was deprecated, with column
 
 ## Citation
 
-Righell D.\*, Weber L.M.\*, Crowell H.L.\*, Pardo B., Collado-Torres L., Ghazanfar S., Lun A.T.L., Hicks S.C.<sup>+</sup>, and Risso D.<sup>+</sup> (2021), *SpatialExperiment: infrastructure for spatially resolved transcriptomics data in R using Bioconductor*, [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.01.27.428431v2).
+Righell D.\*, Weber L.M.\*, Crowell H.L.\*, Pardo B., Collado-Torres L., Ghazanfar S., Lun A.T.L., Hicks S.C.<sup>+</sup>, and Risso D.<sup>+</sup> (2021), *SpatialExperiment: infrastructure for spatially resolved transcriptomics data in R using Bioconductor*, [bioRxiv](https://www.biorxiv.org/content/10.1101/2021.01.27.428431v3).
 
