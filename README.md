@@ -8,7 +8,7 @@ A vignette containing examples and documentation is available from [Bioconductor
 
 The following schematic illustrates the `SpatialExperiment` class structure.
 
-<img src="vignettes/SPE.png" width="600"/>
+<img src="vignettes/SPE.png" width="800"/>
 
 
 ## Installation
