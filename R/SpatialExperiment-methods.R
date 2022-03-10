@@ -111,7 +111,7 @@ NULL
 setMethod("spatialData", 
     "SpatialExperiment",
     function(x) {
-      colData(x)[spatialDataNames(x)]
+        colData(x)[spatialDataNames(x)]
     }
 )
 

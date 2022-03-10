@@ -1,6 +1,6 @@
 ---
 title: "Introduction to the SpatialExperiment class"
-author: "Dario Righelli, Helena L. Crowell"
+author: "Dario Righelli, Helena L. Crowell, Lukas M. Weber"
 date: "`r format(Sys.Date(), '%b %d, %Y')`"
 output:
     BiocStyle::html_document:
@@ -23,13 +23,39 @@ editor_options:
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
 ```
 
+
 # Class structure
 
-The `SpatialExperiment` class is designed to represent spatially
-resolved transcriptomics (ST) data. It inherits from the
-`SingleCellExperiment` class and is used in the same manner. 
-In addition, the class supports storage of spatial information
-via `spatialCoords` and storage of images via `imgData`.
+## Introduction
+
+The `SpatialExperiment` class is an R/Bioconductor S4 class for storing 
+data from spatially resolved transcriptomics (ST) experiments. The class 
+extends the `SingleCellExperiment` class for single-cell data to support 
+storage and retrieval of additional information from spot-based and 
+molecule-based ST platforms, including spatial coordinates, images, and 
+image metadata. A specialized constructor function is included for data 
+from the 10x Genomics Visium platform.
+
+The following schematic illustrates the `SpatialExperiment` class 
+structure.
+
+```{r, echo=FALSE, out.width = "100%", fig.cap="Overview of the SpatialExperiment class structure."}
+knitr::include_graphics("SPE.png")
+```
+
+As shown, an object consists of: (i) `assays` containing expression counts, 
+(ii) `rowData` containing information on features, i.e. genes, (iii) 
+`colData` containing information on spots or cells, including nonspatial 
+and spatial metadata, (iv) `spatialCoords` containing spatial coordinates, 
+and (v) `imgData` containing image data. For spot-based ST data (e.g. 10x 
+Genomics Visium), a single `assay` named `counts` is used. For molecule-based 
+ST data (e.g. seqFISH), two `assays` named `counts` and `molecules` can be used.
+
+Additional details on the class structure are provided in our 
+[preprint](https://www.biorxiv.org/content/10.1101/2021.01.27.428431v3).
+
+
+## Load data
 
 For demonstration of the general class structure, we load an example 
 `SpatialExperiment` (abbreviated as SPE) object (variable `spe`):
@@ -40,10 +66,11 @@ example(read10xVisium, echo = FALSE)
 spe
 ```
 
+
 ## `spatialCoords`
 
-In addition to observation metadata stored inside the `colData` slot of 
-a `SingleCellExperiment`, the `SpatialExperiment` class can accommodate: 
+In addition to observation metadata stored inside the `colData` slot, 
+the `SpatialExperiment` class stores spatial coordinates as:
 
 - `spatialCoords`, a numeric matrix of spatial coordinates (e.g. `x` and `y`)
 
@@ -54,11 +81,12 @@ accessible via the corresponding accessor:
 head(spatialCoords(spe))
 ```
 
-The corresponding column names can be also accessed with `spatialCoordsNames`:
+The corresponding column names can be also accessed with `spatialCoordsNames()`:
 
 ```{r}
 spatialCoordsNames(spe)
 ```
+
 
 ## `imgData`
 
@@ -81,6 +109,7 @@ the image data stored within the object:
 ```{r}
 imgData(spe)
 ```
+
 
 ### The `SpatialImage` class
 
@@ -115,9 +144,10 @@ accessed via the `imgRaster()` and `imgSource()` accessors:
 plot(imgRaster(spe))
 ```
 
+
 ### Adding or removing images
 
-Images entries may be added or removed from a `SpatialExperiment`'s 
+Image entries may be added or removed from a `SpatialExperiment`'s 
 `imgData` `DataFrame` using `addImg()` and `rmvImg()`, respectively.
 
 Besides a path or URL to source the image from and a numeric scale factor, 
@@ -160,6 +190,7 @@ code chunk; the image is now completely gone from the `imgData`:
 imgData(spe <- rmvImg(spe, "section1", "pomeranian"))
 ```
 
+
 # Object construction
 
 ## Manually
@@ -173,9 +204,9 @@ In particular, these include:
 - `spatialCoordsNames`, a character vector specifying which  
 `colData` fields correspond to spatial coordinates
 
-`spatialCoords` can be supplied directly via `colData`
+`spatialCoords` can be supplied via `colData`
 by specifying the column names that correspond to spatial coordinates 
-via `spatialCoordsNames`:
+with `spatialCoordsNames`:
 
 ```{r}
 n <- length(z <- letters)
@@ -189,7 +220,7 @@ spe1 <- SpatialExperiment(
 ```
 
 Alternatively, `spatialCoords` may be supplied separately
-directly as a `matrix`, e.g.:
+as a `matrix`, e.g.:
 
 ```{r}
 xy <- as.matrix(cd[, c("x", "y")])
@@ -237,6 +268,7 @@ SpatialExperiment(
     spatialCoordsNames = c("x", "y"),
     spatialCoords = xy)
 ```
+
 
 ## Spot-based
 
@@ -350,9 +382,9 @@ where each row corresponds to a molecule, and columns specify the
 xy-positions as well as which gene/cell the molecule has been assigned to: 
 
 ```{r message = FALSE, warning = FALSE}
-n <- 1e3 # number of molecules
-ng <- 50 # number of genes
-nc <- 20 # number of cells
+n <- 1e3  # number of molecules
+ng <- 50  # number of genes
+nc <- 20  # number of cells
 # sample xy-coordinates in [0, 1]
 x <- runif(n)
 y <- runif(n)
@@ -388,7 +420,7 @@ slots:
 
 - The `counts` assay stores the number of molecules per gene and cell  
 (equivalent to transcript counts in spot-based data)
-- The `molecules` assay holds the spatial molecule positions (xy-coordinates)spe
+- The `molecules` assay holds the spatial molecule positions (xy-coordinates)
 
 Each entry in the `molecules` assay is a `DFrame` that contains the positions 
 of all molecules from a given gene that have been assigned to a given cell. 
@@ -413,6 +445,7 @@ using the dedicated `molecules()` accessor:
 molecules(spe)
 ```
 
+
 # Common operations
 
 ## Subsetting
@@ -432,6 +465,7 @@ Or to retain only observations that map to tissue via:
 sub <- spe10x[, colData(spe10x)$in_tissue]
 sum(colData(spe10x)$in_tissue) == ncol(sub)
 ```
+
 
 ## Combining samples
 
@@ -460,6 +494,7 @@ spe2$sample_id <- paste(spe2$sample_id, "B", sep = ".")
 spe3 <- cbind(spe1, spe2)
 ```
 
+
 ## Sample ID replacement
 
 In particular, when trying to replace the `sample_id`(s) of a `SpatialExperiment`
@@ -486,6 +521,7 @@ spe$sample_id <- NULL
 identical(tmp, spe$sample_id)
 ```
 
+
 ## Image transformations
 
 Both the `SpatialImage` (SpI) and `SpatialExperiment` (SpE) class currently support 
@@ -499,6 +535,7 @@ whether to mirror horizontally (`"h"`) or vertically (`"v"`).
 
 Here, we apply various transformations using both a SpI (`spi`) and SpE (`spe`)
 as input, and compare the resulting images to the original:
+
 
 ### Rotation
 
@@ -530,6 +567,7 @@ plot(imgRaster(spe10x, sid, iid))
 plot(imgRaster(tmp, sid, iid))
 ```
 
+
 ### Mirroring
 
 ```{r}
@@ -560,8 +598,10 @@ plot(imgRaster(spe10x, sid, iid))
 plot(imgRaster(tmp, sid, iid))
 ```
 
+
 # Session Info {.smaller}
 
 ```{r tidy = TRUE}
 sessionInfo()
 ```
+
