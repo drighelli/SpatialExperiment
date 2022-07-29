@@ -123,7 +123,9 @@ read10xVisium <- function(samples="",
     # otherwise things will fail & give unhelpful error messages
     
     dir <- file.path(samples, "spatial")
-    xyz <- file.path(dir, "tissue_positions_list.csv")
+    xyz <- paste0("tissue_positions", c("", "_list"), ".csv")
+    xyz <- file.path(dir, xyz)
+    xyz <- xyz[file.exists(xyz)]
     sfs <- file.path(dir, "scalefactors_json.json")
     names(xyz) <- names(sfs) <- sids
     
@@ -186,7 +188,9 @@ read10xVisium <- function(samples="",
         "pxl_row_in_fullres", "pxl_col_in_fullres")
     df <- lapply(seq_along(x), function(i) 
     {
-        df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
+        df <- read.csv(x[i], 
+            header=!grepl("list", x[i]), 
+            row.names=1, col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep="_")
         if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
         df
