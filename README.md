@@ -1,5 +1,7 @@
 # SpatialExperiment
 
+[![R build status](https://github.com/drighelli/SpatialExperiment/workflows/R-CMD-check/badge.svg)](https://github.com/drighelli/SpatialExperiment/actions)
+
 `SpatialExperiment` is an R/Bioconductor S4 class for storing data from spatially resolved transcriptomics (ST) experiments. The class extends the `SingleCellExperiment` class for single-cell data to support storage and retrieval of additional information from spot-based and molecule-based ST platforms, including spatial coordinates, images, and image metadata. A specialized constructor function is included for data from the 10x Genomics Visium platform.
 
 The `SpatialExperiment` package is available from [Bioconductor](https://bioconductor.org/packages/SpatialExperiment).
