@@ -30,7 +30,8 @@
 #' The base directory "outs/" from Space Ranger can either be included 
 #' manually in the paths provided in `samples`, or can be ignored; 
 #' if ignored, it will be added automatically. The `.h5` files are 
-#' used if `type = "HDF5"`.
+#' used if `type = "HDF5"`. (Note that `tissue_positions.csv` was 
+#' renamed in Space Ranger v2.0.0.)
 #' 
 #' sample \cr
 #' · | — outs \cr
@@ -42,7 +43,7 @@
 #' · · | — spatial \cr
 #' · · · | — scalefactors_json.json    \cr
 #' · · · | — tissue_lowres_image.png   \cr
-#' · · · | — tissue_positions_list.csv \cr
+#' · · · | — tissue_positions.csv \cr
 #'
 #' @return a \code{\link{SpatialExperiment}} object
 #'

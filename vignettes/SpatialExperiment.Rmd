@@ -330,7 +330,8 @@ as illustrated below (where "raw/filtered" refers to either "raw" or
 "filtered" to match the `data` argument). Note that the base directory 
 "outs/" from Space Ranger can either be included manually in the paths 
 provided in the `samples` argument, or can be ignored; if ignored, it will 
-be added automatically. The `.h5` files are used if `type = "HDF5"`.
+be added automatically. The `.h5` files are used if `type = "HDF5"`. (Note 
+that `tissue_positions.csv` was renamed in Space Ranger v2.0.0.)
 
 ```{bash, eval = FALSE}
 sample
@@ -343,7 +344,7 @@ sample
  · · | — spatial
  · · · | — scalefactors_json.json
  · · · | — tissue_lowres_image.png
- · · · | — tissue_positions_list.csv
+ · · · | — tissue_positions.csv
 ```
 
 Using `read10xVisium()`, the above code to construct the same SPE is reduced to:
