@@ -1,3 +1,13 @@
+# dim ----
+
+test_that("dim,Stored-/LoadedSpatialImage is instant", {
+    src <- system.file(
+        "extdata", "10xVisium", "section1", "outs", "spatial", 
+        "tissue_lowres_image.png", package="SpatialExperiment")
+    spi <- as(SpatialImage(src), "LoadedSpatialImage")
+    expect_lt(mean(replicate(10, system.time(dim(spi), FALSE)[[3]])), 1e-4)
+})
+
 # getters ----
 url <- "https://i.redd.it/3pw5uah7xo041.jpg"
 spi <- new("RemoteSpatialImage", url=url)
