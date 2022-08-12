@@ -1,7 +1,6 @@
 # dim ----
 
 test_that("dim,Stored-/LoadedSpatialImage is instant", {
-    devtools::document(); devtools::load_all()
     src <- system.file(
         "extdata", "10xVisium", "section1", "outs", "spatial", 
         "tissue_lowres_image.png", package="SpatialExperiment")
