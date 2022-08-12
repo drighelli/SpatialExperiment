@@ -8,6 +8,7 @@
 #' StoredSpatialImage-class
 #' RemoteSpatialImage-class
 #' dim,VirtualSpatialImage-method
+#' dim,StoredSpatialImage-method
 #' imgRaster 
 #' imgRaster,LoadedSpatialImage-method
 #' imgRaster,StoredSpatialImage-method
