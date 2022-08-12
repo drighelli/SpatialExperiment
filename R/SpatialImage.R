@@ -240,8 +240,8 @@ setMethod("imgSource",
     })
 
 #' @export
-setMethod("dim", 
-    "VirtualSpatialImage", 
+setMethod("dim",
+    "VirtualSpatialImage",
     function(x) {
         dim(imgRaster(x))
     })
@@ -251,7 +251,8 @@ setMethod("dim",
 setMethod("dim",
     "StoredSpatialImage",
     function(x) {
-        src <- normalizePath(imgPath(x))
+        src <- imgSource(x)
+        src <- normalizePath(src)
         src <- paste0("file://", src)
         img <- .get_from_cache(src, NULL)
         if (!is.null(img)) return(dim(img))
@@ -273,7 +274,7 @@ setReplaceMethod("imgRaster",
 #' @export
 setReplaceMethod("imgSource", 
     c("StoredSpatialImage", "character"), 
-    function(x, value) { 
+    function(x, value) {
         .path_validity(value)
         x@path <- value
         return(x) 
