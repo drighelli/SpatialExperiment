@@ -267,3 +267,15 @@ setMethod("scaleFactors",
         "Note: spatialData and spatialDataNames have been deprecated; all ", 
         "columns should be stored in colData and spatialCoords"))
 }
+
+#' @export
+#' @importFrom utils .DollarNames
+.DollarNames.SpatialExperiment <- function(x, pattern = "")
+    grep(pattern, names(colData(x)), value = TRUE)
+
+#' @rdname SpatialExperiment-methods
+#' @aliases $,SpatialExperiment-method
+#' @exportMethod $
+setMethod("$", "SpatialExperiment", function(x, name) {
+    colData(x)[[name]]
+})

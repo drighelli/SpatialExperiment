@@ -26,6 +26,7 @@
 \alias{spatialCoordsNames<-,SpatialExperiment,character-method}
 \alias{spatialCoordsNames<-,SpatialExperiment,NULL-method}
 \alias{scaleFactors,SpatialExperiment-method}
+\alias{$,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
 \alias{imgData<-,SpatialExperiment,DataFrame-method}
 \alias{imgData<-,SpatialExperiment,NULL-method}
@@ -56,6 +57,8 @@
 \S4method{spatialCoordsNames}{SpatialExperiment,`NULL`}(x) <- value
 
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
+
+\S4method{$}{SpatialExperiment}(x, name)
 
 \S4method{imgData}{SpatialExperiment}(x)
 
