@@ -77,7 +77,7 @@ identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
 \item{image_id}{Logical value or character vector specifying image
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
 
-\item{name}{The name of the \code{colData} column to extract}
+\item{name}{The name of the \code{colData} column to extract.}
 }
 \value{
 Return value varies depending on method, as described below.
