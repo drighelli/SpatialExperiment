@@ -22,6 +22,7 @@
 #'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).
 #' @param image_id Logical value or character vector specifying image
 #'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).
+#' @param name The name of the \code{colData} column to extract
 #' 
 #' @details
 #' Additional details for each type of data attribute are provided below.
