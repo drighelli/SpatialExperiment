@@ -26,6 +26,7 @@
 \alias{spatialCoordsNames<-,SpatialExperiment,character-method}
 \alias{spatialCoordsNames<-,SpatialExperiment,NULL-method}
 \alias{scaleFactors,SpatialExperiment-method}
+\alias{$,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
 \alias{imgData<-,SpatialExperiment,DataFrame-method}
 \alias{imgData<-,SpatialExperiment,NULL-method}
@@ -57,6 +58,8 @@
 
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
 
+\S4method{$}{SpatialExperiment}(x, name)
+
 \S4method{imgData}{SpatialExperiment}(x)
 
 \S4method{imgData}{SpatialExperiment,DataFrame}(x) <- value
@@ -73,6 +76,8 @@ identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
 
 \item{image_id}{Logical value or character vector specifying image
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
+
+\item{name}{The name of the \code{colData} column to extract.}
 }
 \value{
 Return value varies depending on method, as described below.
