@@ -5,8 +5,9 @@ setClass("SpatialExperiment",
     contains="SingleCellExperiment")
 
 #' @export
+#' @importClassesFrom S4Vectors Annotated
 setClass("VirtualSpatialImage", 
-    contains="VIRTUAL")
+    contains=c("VIRTUAL", "Annotated"))
 
 #' @export
 setClass("LoadedSpatialImage", 
