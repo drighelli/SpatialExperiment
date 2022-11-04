@@ -19,9 +19,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - { os: ubuntu-latest, r: '4.2', bioc: '3.16', cont: "bioconductor/bioconductor_docker:RELEASE_3_16", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
-        - { os: windows-latest, r: '4.2', bioc: '3.16'}
-        - { os: macOS-latest, r: '4.2', bioc: '3.16'}
+        - { os: ubuntu-latest, r: 'devel', bioc: 'devel', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+        #- { os: windows-latest, r: 'devel', bioc: 'devel'}
+        #- { os: macOS-latest, r: 'devel', bioc: 'devel'}
+        #- { os: ubuntu-latest, r: '4.2', bioc: '3.16', cont: "bioconductor/bioconductor_docker:RELEASE_3_16", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+        #- { os: windows-latest, r: '4.2', bioc: '3.16'}
+        #- { os: macOS-latest, r: '4.2', bioc: '3.16'}
         #- { os: ubuntu-latest, r: '4.2', bioc: 'devel', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
         #- { os: windows-latest, r: '4.2', bioc: 'devel'}
         #- { os: macOS-latest, r: '4.2', bioc: 'devel'}
