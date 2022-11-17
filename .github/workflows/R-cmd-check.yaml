@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.image }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.bioc }} - ${{ matrix.config.image }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.bioc }} - ${{ matrix.config.image }})
 
     strategy:
       fail-fast: false
