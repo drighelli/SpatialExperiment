@@ -58,7 +58,7 @@ NULL
             ss <- split(ss, ceiling(seq_along(ss)/80))
             str <- paste(lapply(ss, paste, collapse=""), collapse="\n  ")
         }
-        cat("imgSource(): \n ", str, "\n")
+        cat("imgSource():\n ", str, "\n")
     }
 }
 
