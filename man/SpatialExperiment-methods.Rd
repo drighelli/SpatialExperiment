@@ -74,6 +74,13 @@ identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
 
 \item{image_id}{Logical value or character vector specifying image
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
+
+\item{withDimnames}{Logical value indicating whether dimnames of the
+\code{spatialExperiment} should be applied or checked against.
+If \code{withDimnames=TRUE}, non-\code{NULL} \code{rownames(value)} 
+are checked against \code{colnames(x)}, and an error occurs if these
+don't match. Else, discrepancies in rownames are ignored.
+(see also \code{\link[SingleCellExperiment]{reducedDims}})}
 }
 \value{
 Return value varies depending on method, as described below.
