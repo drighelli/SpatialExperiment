@@ -183,69 +183,6 @@ setReplaceMethod("spatialDataNames",
     }
 )
 
-# spatialCoords ----------------------------------------------------------------
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData<-
-#' @export
-setMethod("spatialCoords", 
-    "SpatialExperiment",
-    function(x) int_colData(x)$spatialCoords)
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData<-
-#' @export
-setReplaceMethod("spatialCoords", 
-    c("SpatialExperiment", "matrix"),
-    function(x, value) {
-        stopifnot(
-            is.numeric(value),
-            nrow(value) == ncol(x))
-        int_colData(x)$spatialCoords <- value
-        return(x)
-    }
-)
-
-#' @rdname SpatialExperiment-methods
-#' @export
-setReplaceMethod("spatialCoords", 
-    c("SpatialExperiment", "NULL"),
-    function(x, value) {
-        value <- matrix(numeric(), ncol(x), 0)
-        `spatialCoords<-`(x, value)
-    }
-)
-
-# spatialCoordsNames -----------------------------------------------------------
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData
-#' @export
-setMethod("spatialCoordsNames", 
-    "SpatialExperiment", 
-    function(x) colnames(int_colData(x)$spatialCoords))
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData<-
-#' @export
-setReplaceMethod("spatialCoordsNames", 
-    c("SpatialExperiment", "character"), 
-    function(x, value) {
-        colnames(int_colData(x)$spatialCoords) <- value
-        return(x)
-    }
-)
-
-#' @rdname SpatialExperiment-methods
-#' @export
-setReplaceMethod("spatialCoordsNames", 
-    c("SpatialExperiment", "NULL"), 
-    function(x, value) {
-        value <- character()
-        `spatialCoordsNames<-`(x, value)
-    }
-)
-
 # scaleFactors -----------------------------------------------------------------
 
 #' @rdname SpatialExperiment-methods
