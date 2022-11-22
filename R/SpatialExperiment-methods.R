@@ -28,6 +28,7 @@
 #'   are checked against \code{colnames(x)}, and an error occurs if these
 #'   don't match. Else, discrepancies in rownames are ignored.
 #'   (see also \code{\link[SingleCellExperiment]{reducedDims}})
+#' @param name The name of the \code{colData} column to extract.
 #' 
 #' @details
 #' Additional details for each type of data attribute are provided below.
@@ -210,3 +211,15 @@ setMethod("scaleFactors",
         "Note: spatialData and spatialDataNames have been deprecated; all ", 
         "columns should be stored in colData and spatialCoords"))
 }
+
+#' @export
+#' @importFrom utils .DollarNames
+.DollarNames.SpatialExperiment <- function(x, pattern = "")
+    grep(pattern, names(colData(x)), value = TRUE)
+
+#' @rdname SpatialExperiment-methods
+#' @aliases $,SpatialExperiment-method
+#' @exportMethod $
+setMethod("$", "SpatialExperiment", function(x, name) {
+    colData(x)[[name]]
+})

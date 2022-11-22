@@ -13,12 +13,13 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.image }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }} - ${{ matrix.config.bioc }} - ${{ matrix.config.image }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.bioc }} - ${{ matrix.config.image }})
 
     strategy:
       fail-fast: false
       matrix:
         config:
+        #- { os: ubuntu-latest, r: 'devel', bioc: 'devel', cont: "bioconductor/bioconductor_docker:devel", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
         - { os: ubuntu-latest, bioc: 'devel'}
         - { os: windows-latest, r: 'devel', bioc: 'devel'}
         - { os: macOS-latest, r: 'devel', bioc: 'devel'}

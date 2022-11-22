@@ -21,6 +21,7 @@
 \alias{spatialDataNames<-,SpatialExperiment,character-method}
 \alias{spatialDataNames<-,SpatialExperiment,NULL-method}
 \alias{scaleFactors,SpatialExperiment-method}
+\alias{$,SpatialExperiment-method}
 \alias{imgData,SpatialExperiment-method}
 \alias{imgData<-,SpatialExperiment,DataFrame-method}
 \alias{imgData<-,SpatialExperiment,NULL-method}
@@ -45,6 +46,8 @@
 \S4method{spatialDataNames}{SpatialExperiment,`NULL`}(x) <- value
 
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
+
+\S4method{$}{SpatialExperiment}(x, name)
 
 \S4method{imgData}{SpatialExperiment}(x)
 
@@ -74,6 +77,8 @@ identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
 
 \item{image_id}{Logical value or character vector specifying image
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
+
+\item{name}{The name of the \code{colData} column to extract.}
 
 \item{withDimnames}{Logical value indicating whether dimnames of the
 \code{spatialExperiment} should be applied or checked against.
