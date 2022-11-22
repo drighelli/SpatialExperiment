@@ -1,5 +1,5 @@
 Package: SpatialExperiment
-Version: 1.7.2
+Version: 1.9.4
 Title: S4 Class for Spatially Resolved Transcriptomics Data
 Description: Defines an S4 class for storing data from spatially resolved 
     transcriptomics (ST) experiments. The class extends SingleCellExperiment to 
