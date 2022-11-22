@@ -8,6 +8,7 @@
 #' StoredSpatialImage-class
 #' RemoteSpatialImage-class
 #' dim,VirtualSpatialImage-method
+#' dim,StoredSpatialImage-method
 #' imgRaster 
 #' imgRaster,LoadedSpatialImage-method
 #' imgRaster,StoredSpatialImage-method
@@ -217,21 +218,21 @@ setMethod("imgRaster",
 #' @export
 setMethod("imgSource", 
     "LoadedSpatialImage", 
-    function(x, path) {
+    function(x, path=FALSE) {
         NA_character_
     })
 
 #' @export
 setMethod("imgSource", 
     "StoredSpatialImage", 
-    function(x, path) {
+    function(x, path=FALSE) {
         x@path
     })
 
 #' @export
 setMethod("imgSource", 
     "RemoteSpatialImage", 
-    function(x, path) {
+    function(x, path=FALSE) {
         if (path) {
             .remote_file_cache(x@url, cache=NULL)
         } else {
@@ -240,10 +241,25 @@ setMethod("imgSource",
     })
 
 #' @export
-setMethod("dim", 
-    "VirtualSpatialImage", 
+setMethod("dim",
+    "VirtualSpatialImage",
     function(x) {
         dim(imgRaster(x))
+    })
+
+#' @export
+#' @importFrom magick image_read image_info
+setMethod("dim",
+    "StoredSpatialImage",
+    function(x) {
+        src <- imgSource(x)
+        src <- normalizePath(src)
+        src <- paste0("file://", src)
+        img <- .get_from_cache(src, NULL)
+        if (!is.null(img)) return(dim(img))
+        img <- image_read(src)
+        tib <- image_info(img)
+        c(tib$height, tib$width)
     })
 
 # setters ----------------------------------------------------------------------
@@ -259,7 +275,7 @@ setReplaceMethod("imgRaster",
 #' @export
 setReplaceMethod("imgSource", 
     c("StoredSpatialImage", "character"), 
-    function(x, value) { 
+    function(x, value) {
         .path_validity(value)
         x@path <- value
         return(x) 
