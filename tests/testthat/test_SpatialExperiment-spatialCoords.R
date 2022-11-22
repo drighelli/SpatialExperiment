@@ -23,9 +23,6 @@ test_that("spatialCoordsNames<-,NULL", {
 })
 
 test_that("spatialCoords<-,matrix", {
-    # no 'rownames(value)' passes
-    rownames(xyz) <- NULL
-    expect_silent(spatialCoords(spe) <- xyz)
     # shuffle coordinates
     xyz <- spatialCoords(spe)
     xyz <- xyz[sample(ncol(spe)), ]
@@ -33,4 +30,7 @@ test_that("spatialCoords<-,matrix", {
     expect_error(spatialCoords(spe) <- xyz)
     # but passes with 'withDimnames=FALSE'
     expect_silent(spatialCoords(spe, withDimnames=FALSE) <- xyz)
+    # no 'rownames(value)' passes
+    rownames(xyz) <- NULL
+    expect_silent(spatialCoords(spe) <- xyz)
 })
