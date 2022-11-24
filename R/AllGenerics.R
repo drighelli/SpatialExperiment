@@ -48,10 +48,10 @@ setGeneric("spatialDataNames", function(x) standardGeneric("spatialDataNames"))
 setGeneric("spatialDataNames<-", function(x, value) standardGeneric("spatialDataNames<-"))
 
 #' @export
-setGeneric("spatialCoords", function(x, withDimnames=TRUE, ...) standardGeneric("spatialCoords"))
+setGeneric("spatialCoords", function(x, ...) standardGeneric("spatialCoords"))
 
 #' @export
-setGeneric("spatialCoords<-", function(x, value, withDimnames=TRUE) standardGeneric("spatialCoords<-"))
+setGeneric("spatialCoords<-", function(x, ..., value) standardGeneric("spatialCoords<-"))
 
 #' @export
 setGeneric("spatialCoordsNames", function(x) standardGeneric("spatialCoordsNames"))

@@ -29,6 +29,7 @@
 #'   don't match. Else, discrepancies in rownames are ignored.
 #'   (see also \code{\link[SingleCellExperiment]{reducedDims}})
 #' @param name The name of the \code{colData} column to extract.
+#' @param ... Further arguments passed to and from other methods.
 #' 
 #' @details
 #' Additional details for each type of data attribute are provided below.

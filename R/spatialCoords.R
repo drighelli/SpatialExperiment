@@ -6,7 +6,7 @@
 #' @export
 setMethod("spatialCoords", 
     "SpatialExperiment",
-    function(x, withDimnames=TRUE) {
+    function(x, withDimnames=TRUE, ...) {
         out <- int_colData(x)$spatialCoords
         if (withDimnames) 
             rownames(out) <- colnames(x)
@@ -18,7 +18,7 @@ setMethod("spatialCoords",
 #' @export
 setReplaceMethod("spatialCoords", 
     c("SpatialExperiment", "matrix"),
-    function(x, value, withDimnames=TRUE) {
+    function(x, withDimnames=TRUE, ..., value) {
         stopifnot(
             is.numeric(value),
             nrow(value) == ncol(x))
@@ -39,9 +39,10 @@ setReplaceMethod("spatialCoords",
 #' @export
 setReplaceMethod("spatialCoords", 
     c("SpatialExperiment", "NULL"),
-    function(x, value, withDimnames=TRUE) {
-        value <- matrix(numeric(), ncol(x), 0)
-        `spatialCoords<-`(x, value)
+    function(x, withDimnames=TRUE, ..., value) {
+        `spatialCoords<-`(x, 
+            withDimnames=withDimnames, ..., 
+            value=matrix(numeric(), ncol(x), 0))
     }
 )
 
