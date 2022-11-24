@@ -55,11 +55,11 @@
 
 \S4method{imgData}{SpatialExperiment,`NULL`}(x) <- value
 
-\S4method{spatialCoords}{SpatialExperiment}(x, withDimnames = TRUE)
+\S4method{spatialCoords}{SpatialExperiment}(x, withDimnames = TRUE, ...)
 
-\S4method{spatialCoords}{SpatialExperiment,matrix}(x, withDimnames = TRUE) <- value
+\S4method{spatialCoords}{SpatialExperiment,matrix}(x, withDimnames = TRUE, ...) <- value
 
-\S4method{spatialCoords}{SpatialExperiment,`NULL`}(x, withDimnames = TRUE) <- value
+\S4method{spatialCoords}{SpatialExperiment,`NULL`}(x, withDimnames = TRUE, ...) <- value
 
 \S4method{spatialCoordsNames}{SpatialExperiment}(x)
 
@@ -86,6 +86,8 @@ If \code{withDimnames=TRUE}, non-\code{NULL} \code{rownames(value)}
 are checked against \code{colnames(x)}, and an error occurs if these
 don't match. Else, discrepancies in rownames are ignored.
 (see also \code{\link[SingleCellExperiment]{reducedDims}})}
+
+\item{...}{Further arguments passed to and from other methods.}
 }
 \value{
 Return value varies depending on method, as described below.
