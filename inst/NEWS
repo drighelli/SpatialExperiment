@@ -1,3 +1,9 @@
+changes in version 1.9.4 (2022-11-24)
++ avoid duplicated colnames when cbinding SPEs
++ read10xVisium keeps original barcodes as colData
++ added withDimnames argument for spatialCoords/<-
+  (analogous to SCE's reducedDim(s)/<-)
+
 changes in version 1.7.2 (2022-10-07)
 + support for seeing colData names with $ in RStudio
 
