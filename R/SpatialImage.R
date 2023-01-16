@@ -254,7 +254,7 @@ setMethod("dim",
     function(x) {
         src <- imgSource(x)
         src <- normalizePath(src)
-        # src <- paste0("file://", src)
+        src <- paste0("file://", src)
         img <- .get_from_cache(src, NULL)
         if (!is.null(img)) return(dim(img))
         img <- image_read(src)
