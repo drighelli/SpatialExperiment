@@ -6,7 +6,6 @@ test_that("dim,Stored-/LoadedSpatialImage is instant", {
         "tissue_lowres_image.png", package="SpatialExperiment")
     spi <- SpatialImage(src)
     src <- normalizePath(src)
-    src <- paste0("file://", src)
     # dim,VirtualSPI affects cache
     selectMethod("dim", "VirtualSpatialImage")(spi)
     expect_true(!is.null(image.cache$cached[[src]]))
