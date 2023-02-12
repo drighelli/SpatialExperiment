@@ -195,9 +195,7 @@ setMethod("imgRaster",
             on.exit(image_destroy(img))
             as.raster(img)
         }        
-        # adding file:// to protect against the hypothetical
-        # case where a file is named after a URL
-        .get_from_cache(paste0("file://", path), FUN)
+        .get_from_cache(path, FUN)
     })
 
 #' @export
@@ -254,7 +252,6 @@ setMethod("dim",
     function(x) {
         src <- imgSource(x)
         src <- normalizePath(src)
-        src <- paste0("file://", src)
         img <- .get_from_cache(src, NULL)
         if (!is.null(img)) return(dim(img))
         img <- image_read(src)
