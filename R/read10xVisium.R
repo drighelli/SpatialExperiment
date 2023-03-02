@@ -125,7 +125,7 @@ read10xVisium <- function(samples="",
     
     dir <- file.path(samples, "spatial")
     xyz <- file.path(
-        rep(dir, each = length(sids)), 
+        rep(dir, each = 2), 
         sprintf(
             "tissue_positions%s.csv", 
             rep(c("", "_list"), length(sids))))
