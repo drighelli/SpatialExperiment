@@ -1,3 +1,7 @@
+changes in version 1.9.5 (2023-03-02)
++ bugfix for tissue positions read in incorrect order with read10xVisium() in 
+  datasets with multiple samples (bug introduced in version 1.7.1)
+
 changes in version 1.7.2 (2022-10-07)
 + support for seeing colData names with $ in RStudio
 
