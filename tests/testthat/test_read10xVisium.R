@@ -72,3 +72,33 @@ test_that("adding 'outs/' directory works correctly for one or more samples", {
     expect_identical(x1, x2)
     expect_identical(x1, x3)
 })
+
+test_that(paste0("tissue positions files are read in correct sample order and ", 
+                 "spatial coordinates are in correct order in SPE object", 
+                 "in datasets with multiple samples"), {
+    # read in 4 samples and check spatial coordinates are in correct order
+    # correct sample order is: section1, section2, section1, section2
+    samples <- c(samples, samples)
+    sample_ids <- c(sample_ids, paste0(sample_ids, "rep"))
+    
+    spatial_coords_1 <- spatialCoords(
+      read10xVisium(samples[1], sample_ids[1], type = "sparse", 
+                    data = "raw", images = "lowres", load = FALSE))
+    spatial_coords_2 <- spatialCoords(
+      read10xVisium(samples[2], sample_ids[2], type = "sparse", 
+                    data = "raw", images = "lowres", load = FALSE))
+    
+    spatial_coords_multi <- spatialCoords(
+      read10xVisium(samples, sample_ids, type = "sparse", 
+                    data = "raw", images = "lowres", load = FALSE))
+    
+    # correct number of spatial locations
+    expect_equal(
+        nrow(spatial_coords_multi), 
+        2 * nrow(spatial_coords_1) + 2 * nrow(spatial_coords_2))
+    
+    # spatial coordinates are in correct order
+    expect_identical(
+        spatial_coords_multi, 
+        rbind(spatial_coords_1, spatial_coords_2, spatial_coords_1, spatial_coords_2))
+})
