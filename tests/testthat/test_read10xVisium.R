@@ -100,5 +100,6 @@ test_that(paste0("tissue positions files are read in correct sample order and ",
     # spatial coordinates are in correct order
     expect_identical(
         spatial_coords_multi, 
-        rbind(spatial_coords_1, spatial_coords_2, spatial_coords_1, spatial_coords_2))
+        rbind(spatial_coords_1, spatial_coords_2, 
+              spatial_coords_1, spatial_coords_2))
 })
