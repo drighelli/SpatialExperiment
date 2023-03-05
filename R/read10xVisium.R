@@ -124,11 +124,12 @@ read10xVisium <- function(samples="",
     # otherwise things will fail & give unhelpful error messages
     
     dir <- file.path(samples, "spatial")
+    suffix <- c("", "_list")
     xyz <- file.path(
-        rep(dir, each = length(sids)), 
+        rep(dir, each = length(suffix)), 
         sprintf(
             "tissue_positions%s.csv", 
-            rep(c("", "_list"), length(sids))))
+            rep(suffix, length(sids))))
     xyz <- xyz[file.exists(xyz)]
     sfs <- file.path(dir, "scalefactors_json.json")
     names(xyz) <- names(sfs) <- sids
