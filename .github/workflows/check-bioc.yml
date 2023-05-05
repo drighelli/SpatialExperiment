@@ -202,8 +202,8 @@ jobs:
           ## This pass does not use AnVIL and will thus update any packages
           ## that have seen been updated in Bioconductor
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
-          message("**** gha_repos ****")
-          message(gha_repos)
+          message("**** BiocManager::repositories() ****")
+          message(BiocManager::repositories())
           remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = FALSE, upgrade = TRUE, force = TRUE)
         shell: Rscript {0}
 
