@@ -158,6 +158,7 @@ jobs:
       - name: Set BiocVersion
         run: |
           BiocManager::install(version = "${{ matrix.config.bioc }}", ask = FALSE, force = TRUE)
+          message(paste("**** BiocManager version", BiocManager::version(), "****"))
         shell: Rscript {0}
 
       - name: Install dependencies pass 1
@@ -179,6 +180,7 @@ jobs:
               "AnVIL" = "https://bioconductordocker.blob.core.windows.net/packages/3.18/bioc",
               BiocManager::repositories()
               ) else BiocManager::repositories()
+          message(gha_repos)
 
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
@@ -199,7 +201,7 @@ jobs:
           ## This pass does not use AnVIL and will thus update any packages
           ## that have seen been updated in Bioconductor
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
-          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE, upgrade = TRUE, force = TRUE)
+          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = FALSE, upgrade = TRUE, force = TRUE)
         shell: Rscript {0}
 
       - name: Install BiocGenerics
