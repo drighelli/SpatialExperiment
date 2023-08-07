@@ -34,6 +34,9 @@
 #' @param axis character string specifying whether to mirror 
 #'   horizontally (\code{"h"}) or vertically (\code{"v"}). Applicable for
 #'   \code{mirrorCoords} and \code{mirrorObject} methods.
+#' @param warn Logical value indicating whether to print a warning about
+#'   mismatches between coordinates and images, possible with the spatialCoords
+#'   transformation methods \code{rotateCoords} and \code{mirrorCoords}.
 #' @inheritParams imgData-methods
 #' @param name The name of the \code{colData} column to extract.
 #' 
@@ -77,16 +80,17 @@
 #' 
 #' @section spatialCoords transformation methods:
 #' \describe{
-#' \item{\code{rotateCoords(x, sample_id, degrees)}: }{
+#' \item{\code{rotateCoords(x, sample_id, degrees, warn)}: }{
 #'   Apply a rotation to the \code{spatialCoords} of \code{x}, potentially
 #'   subsetted to sample \code{sample_id} (or without subsetting if
 #'   \code{sample_id} is \code{NULL}), by the specified number of \code{degrees}
-#'   clockwise.}
-#' \item{\code{mirrorCoords(x, sample_id, axis)}: }{
+#'   clockwise. Warn about mismatches with images if \code{warn}.}
+#' \item{\code{mirrorCoords(x, sample_id, axis, warn)}: }{
 #'   Reflect the \code{spatialCoords} of \code{x} across either the horizontal
 #'   or vertical axis, specified by supplying "h" or "v" to the \code{axis}
 #'   argument, respectively. Subset \code{x} to just the sample
-#'   \code{sample_id}, if not \code{NULL}.}
+#'   \code{sample_id}, if not \code{NULL}. Warn about mismatches with images if
+#'   \code{warn}.}
 #' }
 #'
 #' @section SpatialExperiment transformation wrapper methods:
@@ -251,10 +255,11 @@ setMethod("spatialCoords",
     function(x) int_colData(x)$spatialCoords)
 
 #' @rdname SpatialExperiment-methods
+#' @export
 setMethod(
     "rotateCoords",
     "SpatialExperiment",
-    function(x, sample_id = NULL, degrees = 90) {
+    function(x, sample_id = NULL, degrees = 90, warn = TRUE) {
         # 'degrees' should be a single numeric divisible by 90
         stopifnot(
             length(degrees) == 1,
@@ -289,6 +294,16 @@ setMethod(
             x <- x[, colData(x)$sample_id == sample_id]
         }
         
+        if (warn) {
+            warning(
+                paste0(
+                    "Invoking 'rotateCoords' or 'rotateImg' independently may ",
+                    "result in mismatches between coordinates and images. ",
+                    "Please use 'rotateObject' to ensure consistency."
+                )
+            )
+        }
+
         #   Convert degrees to radians. Note that positive angles represent
         #   counter-clockwise rotations
         radians <- degrees * pi / 180
@@ -332,10 +347,11 @@ setMethod(
 )
 
 #' @rdname SpatialExperiment-methods
+#' @export
 setMethod(
     "mirrorCoords",
     "SpatialExperiment",
-    function(x, sample_id = NULL, axis = c("h", "v")) {
+    function(x, sample_id = NULL, axis = c("h", "v"), warn = TRUE) {
         #   Subset by 'sample_id', if supplied
         if (!is.null(sample_id)) {
             #   Ensure the sample is present in the object
@@ -362,6 +378,16 @@ setMethod(
             refl_vec <- c(1, 1)
         } else {
             stop(paste("Invalid 'axis' argument:", axis))
+        }
+
+        if (warn) {
+            warning(
+                paste0(
+                    "Invoking 'mirrorCoords' or 'mirrorImg' independently may ",
+                    "result in mismatches between coordinates and images. ",
+                    "Please use 'mirrorObject' to ensure consistency."
+                )
+            )
         }
         
         #   Perform mirror
@@ -395,7 +421,7 @@ setMethod(
         x <- rotateImg(x, sample_id, image_id, degrees)
         
         #   spatialCoords
-        x <- rotateCoords(x, sample_id, degrees)
+        x <- rotateCoords(x, sample_id, degrees, FALSE)
         
         return(x)
     }
@@ -411,7 +437,7 @@ setMethod(
         x <- mirrorImg(x, sample_id, image_id, axis)
         
         #   spatialCoords
-        x <- mirrorCoords(x, sample_id, axis)
+        x <- mirrorCoords(x, sample_id, axis, FALSE)
         
         return(x)
     }
