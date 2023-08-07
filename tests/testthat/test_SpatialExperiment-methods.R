@@ -49,7 +49,7 @@ test_that("rotateCoords, non-null sample_id", {
     #   Subset followed by identity rotation should be equivalent to simply
     #   subsetting
     id <- unique(colData(spe)$sample_id)[1]
-    x <- rotateCoords(spe, sample_id = id, degrees = 0)
+    x <- rotateCoords(spe, sample_id = id, degrees = 0, warn = FALSE)
     sub_spe <- spe[, colData(spe)$sample_id == id]
     expect_identical(sub_spe, x)
     
@@ -59,13 +59,13 @@ test_that("rotateCoords, non-null sample_id", {
 
 test_that("mirrorCoords, identity mirror", {
     #   Mirroring twice vertically should do nothing
-    x <- mirrorCoords(spe, sample_id = NULL, axis = "v")
-    x <- mirrorCoords(x, sample_id = NULL, axis = "v")
+    x <- mirrorCoords(spe, sample_id = NULL, axis = "v", warn = FALSE)
+    x <- mirrorCoords(x, sample_id = NULL, axis = "v", warn = FALSE)
     expect_identical(spe, x)
     
     #   Mirroring twice horizontally should do nothing
-    x <- mirrorCoords(spe, sample_id = NULL, axis = "h")
-    x <- mirrorCoords(x, sample_id = NULL, axis = "h")
+    x <- mirrorCoords(spe, sample_id = NULL, axis = "h", warn = FALSE)
+    x <- mirrorCoords(x, sample_id = NULL, axis = "h", warn = FALSE)
     expect_identical(spe, x)
 })
 
@@ -73,8 +73,8 @@ test_that("mirrorCoords, non-null sample_id", {
     #   Subset followed by mirror should be equivalent to mirror followed by
     #   subset
     id <- unique(colData(spe)$sample_id)[1]
-    x1 <- mirrorCoords(spe, sample_id = id, axis = "h")
-    x2 <- mirrorCoords(spe, sample_id = NULL, axis = "h")
+    x1 <- mirrorCoords(spe, sample_id = id, axis = "h", warn = FALSE)
+    x2 <- mirrorCoords(spe, sample_id = NULL, axis = "h", warn = FALSE)
     x2 <- x2[, colData(x2)$sample_id == id]
     expect_identical(x1, x2)
     
@@ -112,14 +112,14 @@ test_that("mirrorObject, symmetric composition", {
     
     #   Order: mirrorCoords -> mirrorImg vs. mirrorImg -> mirrorCoords
     x1 <- mirrorObject(spe, sample_id = NULL, axis = "v")
-    x2 <- mirrorCoords(spe, sample_id = NULL, axis = "v")
+    x2 <- mirrorCoords(spe, sample_id = NULL, axis = "v", warn = FALSE)
     x2 <- mirrorImg(x2, sample_id = TRUE, axis = "v")
     
     expect_identical(spatialCoords(x1), spatialCoords(x2))
     expect_identical(imgRaster(x1), imgRaster(x2))
     
     x1 <- mirrorObject(spe, sample_id = NULL, axis = "h")
-    x2 <- mirrorCoords(spe, sample_id = NULL, axis = "h")
+    x2 <- mirrorCoords(spe, sample_id = NULL, axis = "h", warn = FALSE)
     x2 <- mirrorImg(x2, sample_id = TRUE, axis = "h")
     
     expect_identical(spatialCoords(x1), spatialCoords(x2))

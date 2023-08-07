@@ -390,6 +390,10 @@ setMethod(
             )
         }
         
+        #   Get the dimensions of the "rectangle" containing the set of
+        #   spatialCoords within the object
+        dim_max <- dim(imgRaster(x)) / scaleFactors(x)[1]
+
         #   Perform mirror
         new_coords <- refl_vec * t(spatialCoords(x))
         
@@ -399,14 +403,17 @@ setMethod(
         } else if (axis == "h") {
             new_coords <- new_coords + c(0, dim_max[1])
         }
-        
-        new_coords <- t(new_coords)
-        
-        #   Add names to spatialCoords of the new object
-        colnames(new_coords) <- colnames(spatialCoords(x))
+
+        #   Ensure we have integer values for coordinates, and the correct
+        #   dimnames
+        new_coords <- matrix(
+            as.integer(round(t(new_coords))),
+            ncol = 2,
+            dimnames = dimnames(spatialCoords(x))
+        )
         
         #   Return a copy of the SpatialExperiment with the new coordinates
-        spatialCoords(x) <- round(new_coords)
+        spatialCoords(x) <- new_coords
         return(x)
     }
 )
