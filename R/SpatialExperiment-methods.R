@@ -35,6 +35,7 @@
 #'   horizontally (\code{"h"}) or vertically (\code{"v"}). Applicable for
 #'   \code{mirrorCoords} and \code{mirrorObject} methods.
 #' @inheritParams imgData-methods
+#' @param name The name of the \code{colData} column to extract.
 #' 
 #' @details
 #' Additional details for each type of data attribute are provided below.
@@ -491,3 +492,15 @@ setMethod("scaleFactors",
         "Note: spatialData and spatialDataNames have been deprecated; all ", 
         "columns should be stored in colData and spatialCoords"))
 }
+
+#' @export
+#' @importFrom utils .DollarNames
+.DollarNames.SpatialExperiment <- function(x, pattern = "")
+    grep(pattern, names(colData(x)), value = TRUE)
+
+#' @rdname SpatialExperiment-methods
+#' @aliases $,SpatialExperiment-method
+#' @exportMethod $
+setMethod("$", "SpatialExperiment", function(x, name) {
+    colData(x)[[name]]
+})

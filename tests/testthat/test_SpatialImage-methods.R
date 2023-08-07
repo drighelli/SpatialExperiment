@@ -1,3 +1,19 @@
+# dim ----
+
+test_that("dim,Stored-/LoadedSpatialImage is instant", {
+    src <- system.file(
+        "extdata", "10xVisium", "section1", "outs", "spatial", 
+        "tissue_lowres_image.png", package="SpatialExperiment")
+    spi <- SpatialImage(src)
+    src <- normalizePath(src)
+    # dim,VirtualSPI affects cache
+    selectMethod("dim", "VirtualSpatialImage")(spi)
+    expect_true(!is.null(image.cache$cached[[src]]))
+    # dim,StoredSPI does not
+    .flush_cache(); dim(spi)
+    expect_true(is.null(image.cache$cached[[src]]))
+})
+
 # getters ----
 url <- "https://i.redd.it/3pw5uah7xo041.jpg"
 spi <- new("RemoteSpatialImage", url=url)

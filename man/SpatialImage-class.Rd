@@ -8,6 +8,7 @@
 \alias{StoredSpatialImage-class}
 \alias{RemoteSpatialImage-class}
 \alias{dim,VirtualSpatialImage-method}
+\alias{dim,StoredSpatialImage-method}
 \alias{imgRaster}
 \alias{imgRaster,LoadedSpatialImage-method}
 \alias{imgRaster,StoredSpatialImage-method}

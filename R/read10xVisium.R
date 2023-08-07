@@ -30,7 +30,8 @@
 #' The base directory "outs/" from Space Ranger can either be included 
 #' manually in the paths provided in `samples`, or can be ignored; 
 #' if ignored, it will be added automatically. The `.h5` files are 
-#' used if `type = "HDF5"`.
+#' used if `type = "HDF5"`. (Note that `tissue_positions.csv` was 
+#' renamed in Space Ranger v2.0.0.)
 #' 
 #' sample \cr
 #' · | — outs \cr
@@ -42,7 +43,7 @@
 #' · · | — spatial \cr
 #' · · · | — scalefactors_json.json    \cr
 #' · · · | — tissue_lowres_image.png   \cr
-#' · · · | — tissue_positions_list.csv \cr
+#' · · · | — tissue_positions.csv \cr
 #'
 #' @return a \code{\link{SpatialExperiment}} object
 #'
@@ -123,7 +124,13 @@ read10xVisium <- function(samples="",
     # otherwise things will fail & give unhelpful error messages
     
     dir <- file.path(samples, "spatial")
-    xyz <- file.path(dir, "tissue_positions_list.csv")
+    suffix <- c("", "_list")
+    xyz <- file.path(
+        rep(dir, each = length(suffix)), 
+        sprintf(
+            "tissue_positions%s.csv", 
+            rep(suffix, length(sids))))
+    xyz <- xyz[file.exists(xyz)]
     sfs <- file.path(dir, "scalefactors_json.json")
     names(xyz) <- names(sfs) <- sids
     
@@ -186,7 +193,9 @@ read10xVisium <- function(samples="",
         "pxl_row_in_fullres", "pxl_col_in_fullres")
     df <- lapply(seq_along(x), function(i) 
     {
-        df <- read.csv(x[i], header=FALSE, row.names=1, col.names=cnms)
+        df <- read.csv(x[i], 
+            header=!grepl("list", x[i]), 
+            row.names=1, col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep="_")
         if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
         df

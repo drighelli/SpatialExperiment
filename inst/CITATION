@@ -1,0 +1,26 @@
+citHeader("SpatialExperiment is described in the following publication:")
+
+citEntry(
+  entry  = "Article", 
+  title  = "SpatialExperiment: infrastructure for spatially-resolved transcriptomics data in R using Bioconductor", 
+  author = personList(as.person("Dario Righelli"), 
+                      as.person("Lukas M. Weber"), 
+                      as.person("Helena L. Crowell"), 
+                      as.person("Brenda Pardo"), 
+                      as.person("Leonardo Collado-Torres"), 
+                      as.person("Shila Ghazanfar"), 
+                      as.person("Aaron T. L. Lun"), 
+                      as.person("Stephanie C. Hicks"), 
+                      as.person("Davide Risso")), 
+  journal = "Bioinformatics", 
+  year    = 2022, 
+  volume  = 38, 
+  number  = 11, 
+  pages   = 3128-3131, 
+  doi     = "https://doi.org/10.1093/bioinformatics/btac299", 
+  textVersion = paste0(
+    "Righelli, Weber, and Crowell et al. (2022). SpatialExperiment: infrastructure for ", 
+    "spatially-resolved transcriptomics data in R using Bioconductor. Bioinformatics, ", 
+    "38(11), 3128-3131."
+  )
+)
