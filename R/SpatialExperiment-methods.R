@@ -37,7 +37,6 @@
 #' @param warn Logical value indicating whether to print a warning about
 #'   mismatches between coordinates and images, possible with the spatialCoords
 #'   transformation methods \code{rotateCoords} and \code{mirrorCoords}.
-#' @inheritParams imgData-methods
 #' @param name The name of the \code{colData} column to extract.
 #' 
 #' @details
