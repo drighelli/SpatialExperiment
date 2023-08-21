@@ -1,3 +1,6 @@
+changes in version 1.11.1 (2023-08-21)
++ add methods to rotate/mirror spatial coordinates and objects
+
 changes in version 1.9.5 (2023-03-02)
 + bugfix for tissue positions read in incorrect order with read10xVisium() in 
   datasets with multiple samples (bug introduced in version 1.7.1)
