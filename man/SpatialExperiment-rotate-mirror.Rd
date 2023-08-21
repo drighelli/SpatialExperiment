@@ -105,3 +105,6 @@ spe_coords <- mirrorCoords(spe_coords, axis = "v")
 spe_wrapper <- rotateObject(spe, sample_id = "section2", degrees = 180)
 spe_wrapper <- mirrorObject(spe_wrapper, axis = "v")
 }
+\author{
+Nicholas J. Eagles
+}

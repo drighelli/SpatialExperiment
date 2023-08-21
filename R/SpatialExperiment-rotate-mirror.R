@@ -62,6 +62,8 @@
 #' 
 #' @inherit SpatialExperiment-methods return
 #' 
+#' @author Nicholas J. Eagles
+#' 
 #' @examples
 #' example(read10xVisium)
 #' 
