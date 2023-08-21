@@ -23,6 +23,7 @@
 #' @param warn Logical value indicating whether to print a warning about
 #'   mismatches between coordinates and images, possible with the spatialCoords
 #'   transformation methods \code{rotateCoords} and \code{mirrorCoords}.
+#' @inheritParams SpatialExperiment-methods
 #' 
 #' @details
 #' Additional details for each type of data attribute are provided below.

@@ -21,6 +21,11 @@
 \S4method{mirrorObject}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, axis = c("h", "v"))
 }
 \arguments{
+\item{x}{A \code{\link{SpatialExperiment}} object.}
+
+\item{sample_id}{Logical value or character vector specifying sample
+identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
+
 \item{degrees}{single numeric 
 in +/-[0,90,...,360] specifying how many degrees to rotate.
 A negative/positive value corresponds to counter-/clockwise rotation.
@@ -33,6 +38,9 @@ transformation methods \code{rotateCoords} and \code{mirrorCoords}.}
 \item{axis}{character string specifying whether to mirror 
 horizontally (\code{"h"}) or vertically (\code{"v"}). Applicable for
 \code{mirrorCoords} and \code{mirrorObject} methods.}
+
+\item{image_id}{Logical value or character vector specifying image
+identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
 }
 \value{
 Return value varies depending on method, as described below.
