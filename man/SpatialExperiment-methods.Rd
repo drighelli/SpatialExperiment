@@ -8,10 +8,6 @@
 \alias{spatialDataNames<-}
 \alias{spatialCoords}
 \alias{spatialCoords<-}
-\alias{rotateCoords}
-\alias{mirrorCoords}
-\alias{rotateObject}
-\alias{mirrorObject}
 \alias{spatialCoordsNames}
 \alias{spatialCoordsNames<-}
 \alias{imgData}
@@ -24,10 +20,6 @@
 \alias{spatialDataNames<-,SpatialExperiment,character-method}
 \alias{spatialDataNames<-,SpatialExperiment,NULL-method}
 \alias{spatialCoords,SpatialExperiment-method}
-\alias{rotateCoords,SpatialExperiment-method}
-\alias{mirrorCoords,SpatialExperiment-method}
-\alias{rotateObject,SpatialExperiment-method}
-\alias{mirrorObject,SpatialExperiment-method}
 \alias{spatialCoords<-,SpatialExperiment,matrix-method}
 \alias{spatialCoords<-,SpatialExperiment,NULL-method}
 \alias{spatialCoordsNames,SpatialExperiment-method}
@@ -53,14 +45,6 @@
 \S4method{spatialDataNames}{SpatialExperiment,`NULL`}(x) <- value
 
 \S4method{spatialCoords}{SpatialExperiment}(x)
-
-\S4method{rotateCoords}{SpatialExperiment}(x, sample_id = NULL, degrees = 90, warn = TRUE)
-
-\S4method{mirrorCoords}{SpatialExperiment}(x, sample_id = NULL, axis = c("h", "v"), warn = TRUE)
-
-\S4method{rotateObject}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, degrees = 90)
-
-\S4method{mirrorObject}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL, axis = c("h", "v"))
 
 \S4method{spatialCoords}{SpatialExperiment,matrix}(x) <- value
 
@@ -90,19 +74,6 @@
 \item{sample_id}{Logical value or character vector specifying sample
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).}
 
-\item{degrees}{single numeric 
-in +/-[0,90,...,360] specifying how many degrees to rotate.
-A negative/positive value corresponds to counter-/clockwise rotation.
-Applicable for \code{rotateCoords} and \code{rotateObject} methods.}
-
-\item{warn}{Logical value indicating whether to print a warning about
-mismatches between coordinates and images, possible with the spatialCoords
-transformation methods \code{rotateCoords} and \code{mirrorCoords}.}
-
-\item{axis}{character string specifying whether to mirror 
-horizontally (\code{"h"}) or vertically (\code{"v"}). Applicable for
-\code{mirrorCoords} and \code{mirrorObject} methods.}
-
 \item{image_id}{Logical value or character vector specifying image
 identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).}
 
@@ -115,8 +86,8 @@ Return value varies depending on method, as described below.
 The \code{\link{SpatialExperiment}} class provides a family of methods to get
 and set spatial data attributes in \code{\link{SpatialExperiment}} objects.
 Spatial attributes include \code{spatialCoords}, \code{imgData}, and
-\code{scaleFactors}. It also provides methods to rotate and mirror
-\code{\link{SpatialExperiment}} objects and their \code{spatialCoords}.
+\code{scaleFactors}, as well as methods to rotate and mirror
+SpatialExperiment objects and their spatial coordinates.
 }
 \details{
 Additional details for each type of data attribute are provided below.
@@ -128,6 +99,11 @@ have been deprecated. All columns should be stored in either
 or \code{\link{colData}} (all other columns). The
 \code{spatialData}/\code{spatialDataNames} functionality has been retained
 for backward compatibility but may be removed in the future.
+
+See \code{\link{rotateCoords}}, \code{\link{mirrorCoords}},
+\code{\link{rotateObject}}, or \code{\link{mirrorObject}} for details on
+methods to rotate and mirror SpatialExperiment objects and their
+\code{spatialCoords}.
 }
 \section{spatialData and spatialCoords methods}{
 
@@ -157,42 +133,6 @@ for backward compatibility but may be removed in the future.
   spatial coordinates (e.g. \code{c("x", "y")}).}
 \item{\code{spatialCoordsNames(x) <- value}: }{
   Setter to define the names of the spatial coordinate columns.}
-}
-}
-
-\section{spatialCoords transformation methods}{
-
-\describe{
-\item{\code{rotateCoords(x, sample_id, degrees, warn)}: }{
-  Apply a rotation to the \code{spatialCoords} of \code{x}, potentially
-  subsetted to sample \code{sample_id} (or without subsetting if
-  \code{sample_id} is \code{NULL}), by the specified number of \code{degrees}
-  clockwise. Warn about mismatches with images if \code{warn}.}
-\item{\code{mirrorCoords(x, sample_id, axis, warn)}: }{
-  Reflect the \code{spatialCoords} of \code{x} across either the horizontal
-  or vertical axis, specified by supplying "h" or "v" to the \code{axis}
-  argument, respectively. Subset \code{x} to just the sample
-  \code{sample_id}, if not \code{NULL}. Warn about mismatches with images if
-  \code{warn}.}
-}
-}
-
-\section{SpatialExperiment transformation wrapper methods}{
-
-\describe{
-\item{\code{rotateObject(x, sample_id, image_id, degrees)}: }{
-  Apply a rotation to the \code{\link{spatialCoords}} and
-  \code{\link{imgData}} of
-  \code{x}, potentially subsetted to sample \code{sample_id} (or without
-  subsetting if \code{sample_id} is \code{NULL}), by the specified number of
-  \code{degrees} clockwise. Wrapper around \code{rotateCoords} and
-  \code{rotateImg}.}
-\item{\code{mirrorObject(x, sample_id, image_id, axis)}: }{
-  Reflect the \code{\link{spatialCoords}} and \code{\link{imgData}} of \code{x} across
-  either the horizontal or vertical axis, specified by supplying "h" or "v"
-  to the \code{axis} argument, respectively. Subset \code{x} to just the
-  sample \code{sample_id}, if not \code{NULL}. Wrapper around
-  \code{mirrorCoords} and \code{mirrorImg}.}
 }
 }
 
@@ -238,17 +178,4 @@ cd <- colData(spe)
 table(
   in_tissue = cd$in_tissue, 
   sample_id = cd$sample_id)
-
-# rotateCoords(), mirrorCoords(), rotateObject(), and mirrorObject() return a
-# SpatialExperiment, potentially subsetted by sample.
-
-# Subset to just "section1"; rotate coordinates 90 degrees clockwise followed
-# by a reflection across the vertical axis
-spe_coords <- rotateCoords(spe, sample_id = "section1", degrees = 90)
-spe_coords <- mirrorCoords(spe_coords, axis = "v")
-
-# Subset to just "section2"; transform both the imgData() and spatialCoords()
-# by a 180-degree rotation then reflection across the vertical axis
-spe_wrapper <- rotateObject(spe, sample_id = "section2", degrees = 180)
-spe_wrapper <- mirrorObject(spe_wrapper, axis = "v")
 }
