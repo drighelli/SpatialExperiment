@@ -67,3 +67,17 @@ setGeneric("molecules", function(x, ...) standardGeneric("molecules"))
 
 #' @export
 setGeneric("molecules<-", function(x, ..., value) standardGeneric("molecules<-"))
+
+# SpatialExperiment methods to rotate/mirror coordinates -----------------------
+
+#' @export
+setGeneric("rotateCoords", function(x, ...) standardGeneric("rotateCoords"))
+
+#' @export
+setGeneric("mirrorCoords", function(x, ...) standardGeneric("mirrorCoords"))
+
+#' @export
+setGeneric("rotateObject", function(x, ...) standardGeneric("rotateObject"))
+
+#' @export
+setGeneric("mirrorObject", function(x, ...) standardGeneric("mirrorObject"))

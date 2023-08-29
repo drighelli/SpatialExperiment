@@ -1,5 +1,5 @@
 Package: SpatialExperiment
-Version: 1.11.0
+Version: 1.11.1
 Title: S4 Class for Spatially Resolved -omics Data
 Description: Defines an S4 class for storing data from spatial -omics experiments. 
     The class extends SingleCellExperiment to 
@@ -15,7 +15,9 @@ Authors@R: c(
     person("Helena L.", "Crowell", role=c("aut"), 
         email="helena.crowell@uzh.ch"), 
     person("Lukas M.", "Weber", role=c("aut"), 
-        email="lukas.weber.edu@gmail.com"))
+        email="lukas.weber.edu@gmail.com"),
+    person("Nicholas J.", "Eagles", role=c("ctb"),
+        email="nickeagles77@gmail.com"))
 URL: https://github.com/drighelli/SpatialExperiment
 BugReports: https://github.com/drighelli/SpatialExperiment/issues
 License: GPL-3
@@ -49,4 +51,4 @@ Suggests:
     BiocStyle, 
     BumpyMatrix
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
