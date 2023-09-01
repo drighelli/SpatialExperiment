@@ -41,7 +41,6 @@ Imports:
     utils, 
     S4Vectors, 
     SummarizedExperiment, 
-    DropletUtils, 
     BiocGenerics, 
     BiocFileCache
 Suggests: 
@@ -49,6 +48,7 @@ Suggests:
     rmarkdown, 
     testthat, 
     BiocStyle, 
-    BumpyMatrix
+    BumpyMatrix, 
+    DropletUtils
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
