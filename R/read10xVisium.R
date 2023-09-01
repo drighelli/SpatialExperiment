@@ -14,7 +14,7 @@
 #'   ignored if \code{!is.null(names(samples))}
 #' @param type character string specifying 
 #'   the type of format to read count data from
-#'   (see \code{\link{read10xCounts}})
+#'   (see \code{read10xCounts})
 #' @param data character string specifying whether to read in
 #'   filtered (spots mapped to tissue) or raw data (all spots).
 #' @param images character vector specifying which images to include. 
