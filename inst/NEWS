@@ -1,3 +1,6 @@
+changes in version 1.11.2 (2023-09-01)
++ move DropletUtils package to Suggests
+
 changes in version 1.11.1 (2023-08-21)
 + add methods to rotate/mirror spatial coordinates and objects
 
