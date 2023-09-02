@@ -23,7 +23,14 @@
 #'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all samples).
 #' @param image_id Logical value or character vector specifying image
 #'   identifier(s) for \code{scaleFactors}. Default = \code{TRUE} (all images).
+#' @param withDimnames Logical value indicating whether dimnames of the
+#'   \code{spatialExperiment} should be applied or checked against.
+#'   If \code{withDimnames=TRUE}, non-\code{NULL} \code{rownames(value)} 
+#'   are checked against \code{colnames(x)}, and an error occurs if these
+#'   don't match. Else, discrepancies in rownames are ignored.
+#'   (see also \code{\link[SingleCellExperiment]{reducedDims}})
 #' @param name The name of the \code{colData} column to extract.
+#' @param ... Further arguments passed to and from other methods.
 #' 
 #' @details
 #' Additional details for each type of data attribute are provided below.
@@ -187,69 +194,6 @@ setReplaceMethod("spatialDataNames",
     function(x, value) {
         value <- character()
         `spatialDataNames<-`(x, value)
-    }
-)
-
-# spatialCoords ----------------------------------------------------------------
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData<-
-#' @export
-setMethod("spatialCoords", 
-    "SpatialExperiment",
-    function(x) int_colData(x)$spatialCoords)
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData<-
-#' @export
-setReplaceMethod("spatialCoords", 
-    c("SpatialExperiment", "matrix"),
-    function(x, value) {
-        stopifnot(
-            is.numeric(value),
-            nrow(value) == ncol(x))
-        int_colData(x)$spatialCoords <- value
-        return(x)
-    }
-)
-
-#' @rdname SpatialExperiment-methods
-#' @export
-setReplaceMethod("spatialCoords", 
-    c("SpatialExperiment", "NULL"),
-    function(x, value) {
-        value <- matrix(numeric(), ncol(x), 0)
-        `spatialCoords<-`(x, value)
-    }
-)
-
-# spatialCoordsNames -----------------------------------------------------------
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData
-#' @export
-setMethod("spatialCoordsNames", 
-    "SpatialExperiment", 
-    function(x) colnames(int_colData(x)$spatialCoords))
-
-#' @rdname SpatialExperiment-methods
-#' @importFrom SingleCellExperiment int_colData<-
-#' @export
-setReplaceMethod("spatialCoordsNames", 
-    c("SpatialExperiment", "character"), 
-    function(x, value) {
-        colnames(int_colData(x)$spatialCoords) <- value
-        return(x)
-    }
-)
-
-#' @rdname SpatialExperiment-methods
-#' @export
-setReplaceMethod("spatialCoordsNames", 
-    c("SpatialExperiment", "NULL"), 
-    function(x, value) {
-        value <- character()
-        `spatialCoordsNames<-`(x, value)
     }
 )
 

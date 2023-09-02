@@ -8,7 +8,6 @@ test_that("duplicated sample_ids are made unique with a message", {
     expect_true(nrow(new) == nrow(spe))
     expect_true(ncol(new) == 2*ncol(spe))
     expect_identical(rownames(new), rownames(spe))
-    expect_setequal(colnames(new), colnames(spe))
 })
 
 test_that("imgData are combined correctly", {
@@ -32,4 +31,16 @@ test_that("imgData are combined correctly", {
     two <- max(one)+seq(nrow(imgData(spe2)))
     expect_identical(imgData(spe3)[one, ], imgData(spe1))
     expect_identical(imgData(spe3)[two, ], imgData(spe2))
+})
+
+test_that("unique colnames are left asis,", {
+    tmp <- spe
+    colnames(tmp) <- paste0(colnames(tmp), "x")
+    out <- cbind(spe, tmp)
+    expect_false(any(duplicated(colnames(out))))
+})
+
+test_that("duplicated colnames are made unique", {
+    out <- cbind(spe, spe)
+    expect_false(any(duplicated(colnames(out))))
 })

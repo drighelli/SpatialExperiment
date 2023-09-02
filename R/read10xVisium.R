@@ -195,13 +195,11 @@ read10xVisium <- function(samples="",
     cnms <- c(
         "barcode", "in_tissue", "array_row", "array_col", 
         "pxl_row_in_fullres", "pxl_col_in_fullres")
-    df <- lapply(seq_along(x), function(i) 
-    {
-        df <- read.csv(x[i], 
-            header=!grepl("list", x[i]), 
-            row.names=1, col.names=cnms)
+    df <- lapply(seq_along(x), function(i) {
+        df <- read.csv(x[i], header=!grepl("list", x[i]), col.names=cnms)
         if (length(x) > 1) rownames(df) <- paste(i, rownames(df), sep="_")
         if (!is.null(names(x))) cbind(sample_id=names(x)[i], df)
+        rownames(df) <- df$barcode
         df
     })
     df <- do.call(rbind, df)

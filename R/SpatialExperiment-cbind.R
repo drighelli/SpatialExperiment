@@ -103,6 +103,11 @@ setMethod("cbind", "SpatialExperiment", function(..., deparse.level=1) {
     out <- do.call(
         callNextMethod, 
         c(args, list(deparse.level=1)))
+    if (any(duplicated(colnames(out)))) {
+        n <- vapply(args, ncol, integer(1))
+        n <- rep.int(seq_along(args), n)
+        colnames(out) <- paste(n, colnames(out), sep="_")
+    }
     
     # merge 'imgData' from multiple samples
     if (!is.null(imgData(args[[1]]))) { 
