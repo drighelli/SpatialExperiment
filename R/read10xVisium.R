@@ -14,7 +14,7 @@
 #'   ignored if \code{!is.null(names(samples))}
 #' @param type character string specifying 
 #'   the type of format to read count data from
-#'   (see \code{\link{read10xCounts}})
+#'   (see \code{read10xCounts})
 #' @param data character string specifying whether to read in
 #'   filtered (spots mapped to tissue) or raw data (all spots).
 #' @param images character vector specifying which images to include. 
@@ -81,7 +81,6 @@
 #' imgData(spe)
 #' 
 #' @importFrom rjson fromJSON
-#' @importFrom DropletUtils read10xCounts
 #' @importFrom methods as
 #' @importFrom S4Vectors DataFrame 
 #' @importFrom SummarizedExperiment assays rowData
@@ -92,6 +91,11 @@ read10xVisium <- function(samples="",
     data=c("filtered", "raw"),
     images="lowres",
     load=TRUE) {
+    
+    # check if DropletUtils is installed
+    if (!requireNamespace("DropletUtils", quietly = TRUE)) {
+        warning("DropletUtils package must be installed to use read10xVisium()")
+    }
     
     # check validity of input arguments
     type <- match.arg(type)
@@ -124,11 +128,12 @@ read10xVisium <- function(samples="",
     # otherwise things will fail & give unhelpful error messages
     
     dir <- file.path(samples, "spatial")
+    suffix <- c("", "_list")
     xyz <- file.path(
-        rep(dir, each = length(sids)), 
+        rep(dir, each = length(suffix)), 
         sprintf(
             "tissue_positions%s.csv", 
-            rep(c("", "_list"), length(sids))))
+            rep(suffix, length(sids))))
     xyz <- xyz[file.exists(xyz)]
     sfs <- file.path(dir, "scalefactors_json.json")
     names(xyz) <- names(sfs) <- sids
@@ -159,7 +164,7 @@ read10xVisium <- function(samples="",
     # read spatial coordinates
     spel <- lapply(seq_along(counts), function(i) {
         # read count data as 'SingleCellExperiment'
-        sce <- read10xCounts(
+        sce <- DropletUtils::read10xCounts(
             samples=counts[i], 
             sample.names=sids[i],
             col.names=TRUE)

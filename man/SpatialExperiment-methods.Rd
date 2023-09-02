@@ -96,7 +96,8 @@ Return value varies depending on method, as described below.
 The \code{\link{SpatialExperiment}} class provides a family of methods to get
 and set spatial data attributes in \code{\link{SpatialExperiment}} objects.
 Spatial attributes include \code{spatialCoords}, \code{imgData}, and
-\code{scaleFactors}.
+\code{scaleFactors}, as well as methods to rotate and mirror
+SpatialExperiment objects and their spatial coordinates.
 }
 \details{
 Additional details for each type of data attribute are provided below.
@@ -108,6 +109,11 @@ have been deprecated. All columns should be stored in either
 or \code{\link{colData}} (all other columns). The
 \code{spatialData}/\code{spatialDataNames} functionality has been retained
 for backward compatibility but may be removed in the future.
+
+See \code{\link{rotateCoords}}, \code{\link{mirrorCoords}},
+\code{\link{rotateObject}}, or \code{\link{mirrorObject}} for details on
+methods to rotate and mirror SpatialExperiment objects and their
+\code{spatialCoords}.
 }
 \section{spatialData and spatialCoords methods}{
 

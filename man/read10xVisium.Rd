@@ -24,7 +24,7 @@ ignored if \code{!is.null(names(samples))}}
 
 \item{type}{character string specifying 
 the type of format to read count data from
-(see \code{\link{read10xCounts}})}
+(see \code{read10xCounts})}
 
 \item{data}{character string specifying whether to read in
 filtered (spots mapped to tissue) or raw data (all spots).}

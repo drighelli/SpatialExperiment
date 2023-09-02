@@ -3,18 +3,19 @@
 #' @title Methods for spatial attributes
 #' 
 #' @aliases
-#' spatialData spatialData<- 
-#' spatialDataNames spatialDataNames<- 
-#' spatialCoords spatialCoords<- 
-#' spatialCoordsNames spatialCoordsNames<- 
-#' imgData imgData<- 
+#' spatialData spatialData<-
+#' spatialDataNames spatialDataNames<-
+#' spatialCoords spatialCoords<-
+#' spatialCoordsNames spatialCoordsNames<-
+#' imgData imgData<-
 #' scaleFactors
 #' 
 #' @description
 #' The \code{\link{SpatialExperiment}} class provides a family of methods to get
 #' and set spatial data attributes in \code{\link{SpatialExperiment}} objects.
 #' Spatial attributes include \code{spatialCoords}, \code{imgData}, and
-#' \code{scaleFactors}.
+#' \code{scaleFactors}, as well as methods to rotate and mirror
+#' SpatialExperiment objects and their spatial coordinates.
 #' 
 #' @param x A \code{\link{SpatialExperiment}} object.
 #' @param value Replacement value for replacement methods.
@@ -41,6 +42,11 @@
 #' or \code{\link{colData}} (all other columns). The
 #' \code{spatialData}/\code{spatialDataNames} functionality has been retained
 #' for backward compatibility but may be removed in the future.
+#' 
+#' See \code{\link{rotateCoords}}, \code{\link{mirrorCoords}},
+#' \code{\link{rotateObject}}, or \code{\link{mirrorObject}} for details on
+#' methods to rotate and mirror SpatialExperiment objects and their
+#' \code{spatialCoords}.
 #' 
 #' @section spatialData and spatialCoords methods:
 #' \describe{
