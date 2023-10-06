@@ -337,13 +337,14 @@ SpatialExperiment <- function(...,
             image_id <- sub("(.*)\\..*$", "\\1", basename(imageSources))
             image_id <- paste0(sample_id, "_", image_id, seq_along(imageSources))
         } else {
-            stopifnot(length(image_id) != length(imageSources))
+            stopifnot(length(image_id) == length(imageSources))
         }
         for (i in seq_along(imageSources)) {
             scaleFactor <- .get_scaleFactor(scaleFactors, imageSources[i])
             spe <- addImg(spe, 
                 imageSource=imageSources[i], scaleFactor=scaleFactor, 
-                sample_id=sample_id[i], image_id=image_id[i], load=loadImage)
+                sample_id=ifelse(length(sample_id) > 1, sample_id[i], sample_id),
+                image_id=image_id[i], load=loadImage)
         }
     } else {
         imgData(spe) <- NULL
