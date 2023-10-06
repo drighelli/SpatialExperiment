@@ -265,8 +265,7 @@ SpatialExperiment <- function(...,
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
 #' @importFrom purrr discard
-.sce_to_spe <- function(...,
-    sce,
+.sce_to_spe <- function(sce,
     sample_id="sample01", 
     spatialCoordsNames=NULL,
     spatialCoords=NULL,
@@ -276,7 +275,8 @@ SpatialExperiment <- function(...,
     loadImage=TRUE,
     imgData=NULL,
     spatialDataNames=NULL,
-    spatialData=NULL) {
+    spatialData=NULL,
+    ...) {
     
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
