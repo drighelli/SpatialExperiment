@@ -13,8 +13,10 @@
 #' addition, the class supports storage of spatial information via
 #' \code{\link{spatialCoords}} and storage of images via \code{\link{imgData}}.
 #' 
-#' @param ... Arguments passed to the \code{\link{SingleCellExperiment}}
-#'   constructor to fill the slots of the base class.
+#' @param ... Arguments passed either to the \code{\link{SingleCellExperiment}}
+#'   constructor to fill the slots of the base class, or to
+#'   \code{\link{addImg}} for user-defined columns in \code{\link{imgData}} 
+#'   (same length as \code{imageSources}).
 #' @param sample_id A \code{character} sample identifier, which matches the
 #'   \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
 #'   be stored in a new column in \code{\link{colData}}, if not already present.
@@ -202,6 +204,7 @@ NULL
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
+#' @importFrom purrr discard compact
 #' @export
 SpatialExperiment <- function(..., 
     sample_id="sample01",
@@ -214,26 +217,56 @@ SpatialExperiment <- function(...,
     imgData=NULL,
     spatialDataNames=NULL,
     spatialData=NULL) {
+  
+    args <- list(...)
+  
+    # Get names of arguments for parent constructors.
+    p_arg_nms <- unlist(sapply(
+      c("SingleCellExperiment", "SummarizedExperiment"),
+      function(x) discard(names(formals(x)), function(y) y == "..."),
+      simplify = FALSE,
+      USE.NAMES = FALSE
+    ))
     
-    sce <- SingleCellExperiment(...)
-    spe <- .sce_to_spe(sce=sce, 
-        sample_id=sample_id,
-        spatialCoordsNames=spatialCoordsNames,
-        spatialCoords=spatialCoords,
-        scaleFactors=scaleFactors,
-        imageSources=imageSources,
-        image_id=image_id,
-        loadImage=loadImage,
-        imgData=imgData,
-        spatialDataNames=spatialDataNames,
-        spatialData=spatialData)
+    # A list of arguments for parent constructors.
+    p_args <- compact(args[p_arg_nms])
+    
+    # A list of user-defined arguments for `addImg`.
+    other_arg_nms <- discard(names(args), function(x) x %in% p_arg_nms)
+    other_args <- compact(args[other_arg_nms])
+    
+    sce <- do.call(
+      SingleCellExperiment,
+      p_args
+    )
+    spe <- do.call(
+      .sce_to_spe,
+      c(
+        list(
+          sce=sce, 
+          sample_id=sample_id,
+          spatialCoordsNames=spatialCoordsNames,
+          spatialCoords=spatialCoords,
+          scaleFactors=scaleFactors,
+          imageSources=imageSources,
+          image_id=image_id,
+          loadImage=loadImage,
+          imgData=imgData,
+          spatialDataNames=spatialDataNames,
+          spatialData=spatialData
+        ),
+        other_args
+      )
+    )
     return(spe)
 }
 
 #' @importFrom methods new
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
-.sce_to_spe <- function(sce,
+#' @importFrom purrr discard
+.sce_to_spe <- function(...,
+    sce,
     sample_id="sample01", 
     spatialCoordsNames=NULL,
     spatialCoords=NULL,
@@ -333,6 +366,11 @@ SpatialExperiment <- function(...,
         stopifnot(imgData$sample_id %in% spe$sample_id)
         imgData(spe) <- imgData
     } else if (!is.null(imageSources) ){
+        # Handle extra arguments.
+        args <- list(...)
+        arg_lens <- vapply(args, length, FUN.VALUE = integer(1), USE.NAMES = TRUE)
+        stopifnot(all(arg_lens == length(imageSources)))
+      
         if (is.null(image_id)) {
             image_id <- sub("(.*)\\..*$", "\\1", basename(imageSources))
             image_id <- paste0(sample_id, "_", image_id, seq_along(imageSources))
@@ -340,11 +378,25 @@ SpatialExperiment <- function(...,
             stopifnot(length(image_id) == length(imageSources))
         }
         for (i in seq_along(imageSources)) {
-            scaleFactor <- .get_scaleFactor(scaleFactors, imageSources[i])
-            spe <- addImg(spe, 
-                imageSource=imageSources[i], scaleFactor=scaleFactor, 
-                sample_id=ifelse(length(sample_id) > 1, sample_id[i], sample_id),
-                image_id=image_id[i], load=loadImage)
+            scaleFactor <- ifelse(
+              length(scaleFactors) > 1 && is.numeric(scaleFactors),
+              scaleFactors[i],
+              .get_scaleFactor(scaleFactors, imageSources[i])
+            )
+            spe <- do.call(
+              addImg,
+              c(
+                list(
+                  spe,
+                  imageSource=imageSources[i],
+                  scaleFactor=scaleFactor, 
+                  sample_id=ifelse(length(sample_id) > 1,sample_id[i], sample_id),
+                  image_id=image_id[i],
+                  load=loadImage
+                ),
+                lapply(args, `[`, i)
+              )
+            )
         }
     } else {
         imgData(spe) <- NULL

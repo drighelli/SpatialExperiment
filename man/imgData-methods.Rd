@@ -16,7 +16,7 @@
 \usage{
 \S4method{getImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{addImg}{SpatialExperiment}(x, imageSource, scaleFactor, sample_id, image_id, load = TRUE)
+\S4method{addImg}{SpatialExperiment}(x, imageSource, scaleFactor, sample_id, image_id, load = TRUE, ...)
 
 \S4method{rmvImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 

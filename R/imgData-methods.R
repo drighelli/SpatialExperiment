@@ -142,7 +142,7 @@ setMethod("getImg", "SpatialExperiment",
 #' @rdname imgData-methods
 #' @export
 setMethod("addImg", "SpatialExperiment",
-    function(x, imageSource, scaleFactor, sample_id, image_id, load=TRUE) {
+    function(x, imageSource, scaleFactor, sample_id, image_id, load=TRUE, ...) {
         # check validity of input arguments
         stopifnot(
             is.numeric(scaleFactor), 
@@ -182,9 +182,23 @@ setMethod("addImg", "SpatialExperiment",
                     " 'image_id = %s' and 'sample_id = %s'", 
                     dQuote(image_id), dQuote(sample_id)))
         
-        # get & add valid 'imgData' entry
-        df <- .get_imgData(imageSource, scaleFactor, sample_id, image_id, load)
-        imgData(x) <- rbind(imgData(x), df)
+        # current 'imgData' entry
+        img_data <- imgData(x)
+        
+        # get an 'imgData' entry
+        df <- .get_imgData(imageSource, scaleFactor, sample_id, image_id, load, ...)
+        
+        # sanity check: same columns for both 'imgData'
+        if (!is.null(img_data) && prod(dim(img_data)) > 0) {
+          stopifnot(
+            ncol(img_data) == ncol(df),
+            identical(sort(colnames(img_data)), sort(colnames(df)))
+          )
+        }
+        
+        # add to 'imgData' entry
+        imgData(x) <- rbind(img_data, df)
+        
         return(x)
     })
 

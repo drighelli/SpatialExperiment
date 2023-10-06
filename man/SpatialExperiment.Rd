@@ -6,8 +6,10 @@
 \alias{SpatialExperiment}
 \title{The SpatialExperiment class}
 \arguments{
-\item{...}{Arguments passed to the \code{\link{SingleCellExperiment}}
-constructor to fill the slots of the base class.}
+\item{...}{Arguments passed either to the \code{\link{SingleCellExperiment}}
+constructor to fill the slots of the base class, or to
+\code{\link{addImg}} for user-defined columns in \code{\link{imgData}} 
+(same length as \code{imageSources}).}
 
 \item{sample_id}{A \code{character} sample identifier, which matches the
 \code{sample_id} in \code{\link{imgData}}. The \code{sample_id} will also
