@@ -48,6 +48,7 @@
 #'   returns the path to the image's cached file, and FALSE its URL. 
 #'   For \code{Stored/LoadedSpatialImage}s, a path/NA is returned, 
 #'   irrespective of \code{path}.
+#' @param ... Arguments for user-defined columns in \code{\link{imgData}}.
 #' 
 #' @return 
 #' \code{getImg()} returns a single or list of \code{SpatialImage}(s).
