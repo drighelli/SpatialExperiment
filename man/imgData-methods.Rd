@@ -47,6 +47,8 @@ coordinates according to the image's resolution}
 loaded into memory as a \code{raster} object?
 if \code{FALSE}, will store the path/URL instead}
 
+\item{...}{Arguments for user-defined columns in \code{\link{imgData}}.}
+
 \item{path}{logical; for \code{RemoteSpatialImage}s, TRUE 
 returns the path to the image's cached file, and FALSE its URL. 
 For \code{Stored/LoadedSpatialImage}s, a path/NA is returned, 
