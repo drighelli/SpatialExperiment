@@ -204,7 +204,6 @@ NULL
 
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment SingleCellExperiment
-#' @importFrom purrr discard compact
 #' @export
 SpatialExperiment <- function(..., 
     sample_id="sample01",
@@ -223,17 +222,17 @@ SpatialExperiment <- function(...,
     # Get names of arguments for parent constructors.
     p_arg_nms <- unlist(sapply(
       c("SingleCellExperiment", "SummarizedExperiment"),
-      function(x) discard(names(formals(x)), function(y) y == "..."),
+      function(x) names(formals(x))[names(formals(x)) != "..."],
       simplify = FALSE,
       USE.NAMES = FALSE
     ))
     
     # A list of arguments for parent constructors.
-    p_args <- compact(args[p_arg_nms])
+    p_args <- args[p_arg_nms][!sapply(args[p_arg_nms], is.null)]
     
     # A list of user-defined arguments for `addImg`.
-    other_arg_nms <- discard(names(args), function(x) x %in% p_arg_nms)
-    other_args <- compact(args[other_arg_nms])
+    other_arg_nms <- names(args)[!(names(args) %in% p_arg_nms)]
+    other_args <- args[other_arg_nms][!sapply(args[other_arg_nms], is.null)]
     
     sce <- do.call(
       SingleCellExperiment,
@@ -264,7 +263,6 @@ SpatialExperiment <- function(...,
 #' @importFrom methods new
 #' @importFrom S4Vectors DataFrame
 #' @importFrom SingleCellExperiment int_metadata<-
-#' @importFrom purrr discard
 .sce_to_spe <- function(sce,
     sample_id="sample01", 
     spatialCoordsNames=NULL,
