@@ -36,7 +36,6 @@ Depends:
     SingleCellExperiment
 Imports: 
     rjson, 
-    purrr, 
     grDevices, 
     magick, 
     utils, 
