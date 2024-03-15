@@ -189,12 +189,11 @@ setMethod("addImg", "SpatialExperiment",
         # get an 'imgData' entry
         df <- .get_imgData(imageSource, scaleFactor, sample_id, image_id, load, ...)
         
-        # sanity check: same columns for both 'imgData'
+        # check: same columns for both 'imgData' entries
         if (!is.null(img_data) && prod(dim(img_data)) > 0) {
-          stopifnot(
-            ncol(img_data) == ncol(df),
-            identical(sort(colnames(img_data)), sort(colnames(df)))
-          )
+            stopifnot(
+                ncol(img_data) == ncol(df),
+                identical(sort(colnames(img_data)), sort(colnames(df))))
         }
         
         # add to 'imgData' entry
