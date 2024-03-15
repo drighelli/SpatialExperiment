@@ -85,48 +85,48 @@ test_that("imgData", {
     expect_error(validObject(spe))
 })
 
-test_that("imgData_1", {
+test_that("imgData additional columns", {
     # initialize mock SPE
     img <- system.file(
-      "extdata", "10xVisium", "section1", "outs", "spatial", 
-      "tissue_lowres_image.png", package="SpatialExperiment")
+        "extdata", "10xVisium", "section1", "outs", "spatial", 
+        "tissue_lowres_image.png", package="SpatialExperiment")
     spe <- SpatialExperiment(
-      assays=diag(n <- 10),
-      colData=DataFrame(a=seq(n)),
-      sample_id="foo",
-      imageSources=c(img, img),
-      image_id=c("bar_1", "bar_2"),
-      my_col_1=c("foo_bar_1", "foo_bar_2"),
-      my_col_2=c("bar_foo_1", "bar_foo_2")
-    )
+        assays=diag(n <- 10),
+        colData=DataFrame(a=seq(n)),
+        sample_id="foo",
+        imageSources=c(img, img),
+        image_id=c("bar_1", "bar_2"),
+        my_col_1=c("foo_bar_1", "foo_bar_2"),
+        my_col_2=c("bar_foo_1", "bar_foo_2"))
     expect_true(validObject(spe))
+    expect_equal(dim(imgData(spe)), c(2, 6))
     
-    # add another image with the same columns in `imgData`
-    tmp <- addImg(spe,
-                  imageSource=img,
-                  scaleFactor=1,
-                  sample_id="foo",
-                  image_id="bar_3",
-                  load=FALSE,
-                  my_col_2="bar_foo_3",
-                  my_col_1="foo_bar_3"
-    )
-    expect_true(validObject(tmp))
+    # add another image with the same columns in imgData
+    spe1 <- addImg(spe,
+        imageSource=img,
+        scaleFactor=1,
+        sample_id="foo",
+        image_id="bar_3",
+        load=FALSE,
+        my_col_1="foo_bar_3",
+        my_col_2="bar_foo_3")
+    expect_true(validObject(spe1))
+    expect_equal(dim(imgData(spe1)), c(3, 6))
     
-    # add another image with different columns in `imgData`
+    # add another image with different columns in imgData
     expect_error(addImg(spe,
-                  imageSource=img,
-                  scaleFactor=1,
-                  sample_id="foo",
-                  image_id="bar_3",
-                  load=FALSE,
-                  my_col="bar_foo_3", # a new column that does not match the existing one
-                  my_col_1="foo_bar_3"
+        imageSource=img,
+        scaleFactor=1,
+        sample_id="foo",
+        image_id="bar_3",
+        load=FALSE,
+        my_col_1="foo_bar_3",
+        my_col="bar_foo_3"  # new column that does not match existing ones
     ))
     
-    # remove a required column (image_id) in `imgData`
-    tmp <- spe
-    img_data <- imgData(tmp)
+    # remove a required column (image_id) in imgData
+    spe3 <- spe
+    img_data <- imgData(spe3)
     img_data$image_id <- NULL
-    expect_error(imgData(tmp) <- img_data)
+    expect_error(imgData(spe3) <- img_data)
 })
