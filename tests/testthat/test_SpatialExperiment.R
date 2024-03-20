@@ -163,3 +163,39 @@ test_that("deprecated spatialData/Names returns message", {
     expect_message(SpatialExperiment(colData = cd, spatialDataNames = names(cd)))
 })
 
+test_that("Additional arguments for the constructor of SpatialExperiment", {
+  img <- system.file(
+    "extdata", "10xVisium", "section1", "outs", "spatial", 
+    "tissue_lowres_image.png", package="SpatialExperiment")
+  
+  # New columns named by any of "assays, rowData, rowRanges, colData,
+  # metadata, checkDimnames" do not go to imgData.
+  spe_1 <- SpatialExperiment(
+    assays=diag(n <- 10),
+    rowRanges=GRanges(rep("chr1", 10), IRanges(1, 100)),
+    colData=DataFrame(a=seq(n)),
+    metadata=list(),
+    checkDimnames=FALSE,
+    sample_id="foo",
+    imageSources=c(img, img),
+    image_id=c("bar_1", "bar_2"))
+  expect_false(any(
+    c("assays", "rowRanges", "colData", "metadata", "checkDimnames") %in% colnames(imgData(spe_1))
+  ))
+  
+  spe_2 <- SpatialExperiment(
+    assays=diag(n <- 10),
+    rowData=DataFrame(a=seq(n)),
+    colData=DataFrame(b=seq(n)),
+    metadata=list(),
+    checkDimnames=FALSE,
+    sample_id="foo",
+    imageSources=c(img, img),
+    image_id=c("bar_1", "bar_2"),
+    my_col = c("foo_1", "foo_2"))
+  expect_false(any(
+    c("assays", "rowData", "colData", "metadata", "checkDimnames") %in% colnames(imgData(spe_2))
+  ))
+  expect_true("my_col" %in% colnames(imgData(spe_2)))
+})
+

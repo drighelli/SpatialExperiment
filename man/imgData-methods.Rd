@@ -16,7 +16,7 @@
 \usage{
 \S4method{getImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
-\S4method{addImg}{SpatialExperiment}(x, imageSource, scaleFactor, sample_id, image_id, load = TRUE)
+\S4method{addImg}{SpatialExperiment}(x, imageSource, scaleFactor, sample_id, image_id, load = TRUE, ...)
 
 \S4method{rmvImg}{SpatialExperiment}(x, sample_id = NULL, image_id = NULL)
 
@@ -46,6 +46,8 @@ coordinates according to the image's resolution}
 \item{load}{logical; should the image(s) be 
 loaded into memory as a \code{raster} object?
 if \code{FALSE}, will store the path/URL instead}
+
+\item{...}{Arguments for user-defined columns in \code{\link{imgData}}.}
 
 \item{path}{logical; for \code{RemoteSpatialImage}s, TRUE 
 returns the path to the image's cached file, and FALSE its URL. 

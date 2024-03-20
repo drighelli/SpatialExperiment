@@ -36,25 +36,25 @@
 
 \S4method{spatialData}{SpatialExperiment,DFrame}(x) <- value
 
-\S4method{spatialData}{SpatialExperiment,`NULL`}(x) <- value
+\S4method{spatialData}{SpatialExperiment,NULL}(x) <- value
 
 \S4method{spatialDataNames}{SpatialExperiment}(x)
 
 \S4method{spatialDataNames}{SpatialExperiment,character}(x) <- value
 
-\S4method{spatialDataNames}{SpatialExperiment,`NULL`}(x) <- value
+\S4method{spatialDataNames}{SpatialExperiment,NULL}(x) <- value
 
 \S4method{spatialCoords}{SpatialExperiment}(x)
 
 \S4method{spatialCoords}{SpatialExperiment,matrix}(x) <- value
 
-\S4method{spatialCoords}{SpatialExperiment,`NULL`}(x) <- value
+\S4method{spatialCoords}{SpatialExperiment,NULL}(x) <- value
 
 \S4method{spatialCoordsNames}{SpatialExperiment}(x)
 
 \S4method{spatialCoordsNames}{SpatialExperiment,character}(x) <- value
 
-\S4method{spatialCoordsNames}{SpatialExperiment,`NULL`}(x) <- value
+\S4method{spatialCoordsNames}{SpatialExperiment,NULL}(x) <- value
 
 \S4method{scaleFactors}{SpatialExperiment}(x, sample_id = TRUE, image_id = TRUE)
 
@@ -64,7 +64,7 @@
 
 \S4method{imgData}{SpatialExperiment,DataFrame}(x) <- value
 
-\S4method{imgData}{SpatialExperiment,`NULL`}(x) <- value
+\S4method{imgData}{SpatialExperiment,NULL}(x) <- value
 }
 \arguments{
 \item{x}{A \code{\link{SpatialExperiment}} object.}

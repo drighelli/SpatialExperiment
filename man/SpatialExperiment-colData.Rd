@@ -10,7 +10,7 @@
 \usage{
 \S4method{colData}{SpatialExperiment,DataFrame}(x) <- value
 
-\S4method{colData}{SpatialExperiment,`NULL`}(x) <- value
+\S4method{colData}{SpatialExperiment,NULL}(x) <- value
 }
 \arguments{
 \item{x}{a \code{\link{SpatialExperiment}}}
