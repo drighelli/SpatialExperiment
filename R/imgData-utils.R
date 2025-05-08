@@ -53,7 +53,7 @@
 #' @importFrom grDevices as.raster
 #' @importFrom magick image_read
 #' @importFrom S4Vectors DataFrame
-.get_imgData <- function(img, scaleFactor, sample_id, image_id, load=TRUE) {
+.get_imgData <- function(img, scaleFactor, sample_id, image_id, load=TRUE, ...) {
     is_path <- tryCatch(
         error=function(e) e, 
         .path_validity(img))
@@ -76,5 +76,7 @@
         sample_id, 
         image_id,
         data=I(list(spi)),
-        scaleFactor=scaleFactor)
+        scaleFactor=scaleFactor,
+        ...
+    )
 }

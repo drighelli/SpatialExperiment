@@ -7,6 +7,9 @@ changes in version 1.15.1 (2024-06-20)
 changes in version 1.15.0 (2024-05-01)
 + Bioconductor 3.19 release
 
+changes in version 1.13.2 (2024-03-15)
++ enable adding additional columns in imgData
+
 changes in version 1.11.2 (2023-09-01)
 + move DropletUtils package to Suggests
 
