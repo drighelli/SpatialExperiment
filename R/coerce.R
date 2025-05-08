@@ -8,22 +8,20 @@
 #' To do so, we designed two different methods: the traditional \code{as} method
 #' and the \code{toSpatialExperiment} function (recommended).
 #' The \code{as} method checks if the \code{SingleCellExperiment} object has
-#' already populated \code{int_colData} with three elements:
-#' \code{spatialData}, \code{spatialCoords}, and \code{imgData}.
+#' already populated \code{int_colData} with two elements:
+#' \code{spatialCoords} and \code{imgData}.
 #' It also checks if \code{colData} already contains a \code{sample_id}.
 #' In case these checks pass the new \code{SpatialExperiment} will have the same
 #' values as the \code{SingleCellExperiment} passed object.
 #' Otherwise a \code{SpatialExperiment} with default values for these slots
 #' will be created.
 #' 
-#' The \code{toSpatialExperiment} method expects a \code{SingleCellExperiment} object
-#' and additional arguments as explained in the related section of this
+#' The \code{toSpatialExperiment} method expects a \code{SingleCellExperiment} 
+#' object and additional arguments as explained in the related section of this
 #' documentation. In case the \code{SingleCellExperiment} object has already
-#' populated \code{int_colData} with \code{spatialData} and/or
-#' \code{spatialCoords} and/or \code{imgData}, these will be respectively
-#' overwritten in case the arguments \code{spatialData}/\code{spatialDataNames} 
-#' and/or \code{spatialCoords}/\code{spatialCoordsNames} and/or \code{imgData} 
-#' are not \code{NULL}.
+#' populated \code{int_colData} with \code{spatialCoords} and/or \code{imgData}, 
+#' these will be respectively overwritten in case the arguments 
+#' \code{spatialCoords/Names} and/or \code{imgData} are not \code{NULL}.
 #' 
 #' @param sce A \code{\link{SingleCellExperiment}} object.
 #' @param sample_id A \code{character} sample identifier, which matches the
@@ -55,22 +53,6 @@
 #'   \code{imageSources}) containing unique image identifiers.
 #' @param loadImage Logical indicating whether to load image into memory.
 #'   Default = \code{FALSE}.
-#' @param spatialDataNames (Deprecated) A \code{character} vector of column
-#'   names from \code{\link{colData}} to include in \code{\link{spatialData}}.
-#'   Alternatively, the \code{spatialData} argument may be provided. If both are
-#'   provided, \code{spatialDataNames} is given precedence, and a warning is
-#'   returned. (Note: \code{spatialData} and \code{spatialDataNames} have been
-#'   deprecated; \code{colData} and \code{spatialCoords} should be used for all
-#'   columns. The arguments have been retained for backward compatibility but
-#'   may be removed in the future.)
-#' @param spatialData (Deprecated) A \code{\link{DataFrame}} containing columns
-#'   to store in \code{\link{spatialData}}, which must contain at least the
-#'   columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
-#'   be provided. If both are provided, \code{spatialDataNames} is given
-#'   precedence, and a warning is returned. (Note: \code{spatialData} and
-#'   \code{spatialDataNames} have been deprecated; \code{colData} and
-#'   \code{spatialCoords} should be used for all columns. The arguments have
-#'   been retained for backward compatibility but may be removed in the future.)
 
 #' @aliases 
 #' coerce, SingleCellExperiment, SpatialExperiment-method
@@ -128,8 +110,7 @@ setAs(
         spe <- .sce_to_spe(from, 
             sample_id=sample_id,
             spatialCoords=icd$spatialCoords,
-            imgData=icd$imgData,
-            spatialData=icd$spatialData)
+            imgData=icd$imgData)
         return(spe)
     }
 )
@@ -143,18 +124,13 @@ toSpatialExperiment <- function(sce,
     imageSources=NULL,
     image_id=NULL,
     loadImage=TRUE,
-    imgData=NULL,
-    spatialDataNames=NULL,
-    spatialData=NULL) {
+    imgData=NULL) {
     
     stopifnot(is(sce, "SingleCellExperiment"))
     
     ## giving priority to passed arguments
     if (all(is.null(spatialCoords), is.null(spatialCoordsNames))) {
         spatialCoords <- int_colData(sce)$spatialCoords
-    }
-    if (all(is.null(spatialData), is.null(spatialDataNames))) {
-        spatialData <- int_colData(sce)$spatialData
     }
     if (is.null(imgData)) {
         imgData <- int_colData(sce)$imgData
@@ -167,8 +143,6 @@ toSpatialExperiment <- function(sce,
         imageSources = imageSources,
         image_id = image_id,
         loadImage = loadImage,
-        imgData = imgData,
-        spatialDataNames = spatialDataNames,
-        spatialData = spatialData)
+        imgData = imgData)
     return(spe)
 }

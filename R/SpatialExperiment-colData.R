@@ -99,7 +99,6 @@ setReplaceMethod("colData",
 setReplaceMethod("colData",
     c("SpatialExperiment", "NULL"),
     function(x, value) {
-        spatialDataNames(x) <- NULL
         value <- colData(x)["sample_id"]
         colData(x) <- value
         return(x)

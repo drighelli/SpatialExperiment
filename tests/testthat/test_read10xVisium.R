@@ -23,11 +23,6 @@ test_that("data are read correctly", {
     sids <- rep.int(sample_ids, vapply(xyz, nrow, numeric(1)))
     xyz <- data.frame(sample_id=sids, do.call(rbind, xyz))
     xyz$in_tissue <- as.logical(xyz$in_tissue)
-    
-    cd <- cbind(colData(x), spatialData(x))
-    expect_identical(
-        table(cd$sample_id, cd$in_tissue),
-        table(xyz$sample_id, xyz$in_tissue))
 
     sfs <- file.path(samples, "spatial", "scalefactors_json.json")
     sfs <- lapply(sfs, function(.) fromJSON(file=.))

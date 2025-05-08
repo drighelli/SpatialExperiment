@@ -6,7 +6,6 @@ test_that("colData()<-NULL retains only sample_id", {
     colData(tmp) <- NULL
     expect_null(tmp$foo)
     expect_identical(tmp$sample_id, spe$sample_id)
-    expect_identical(spatialDataNames(tmp), character())
 })
 
 test_that("valid colData<- without sample_id field protects sample_id", {

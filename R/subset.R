@@ -35,8 +35,8 @@
 NULL
 
 # we overwrite the default subsetting method
-# to assure that the 'imgData' and 'spatialData' are subsetted if columns/rows 
-# are dropped
+# to assure that the 'imgData' are subsetted
+# if columns/rows are dropped
 
 #' @importFrom methods callNextMethod
 #' @export

@@ -2,10 +2,6 @@
 % Please edit documentation in R/SpatialExperiment-methods.R, R/imgData.R
 \name{SpatialExperiment-methods}
 \alias{SpatialExperiment-methods}
-\alias{spatialData}
-\alias{spatialData<-}
-\alias{spatialDataNames}
-\alias{spatialDataNames<-}
 \alias{spatialCoords}
 \alias{spatialCoords<-}
 \alias{spatialCoordsNames}
@@ -13,12 +9,6 @@
 \alias{imgData}
 \alias{imgData<-}
 \alias{scaleFactors}
-\alias{spatialData,SpatialExperiment-method}
-\alias{spatialData<-,SpatialExperiment,DFrame-method}
-\alias{spatialData<-,SpatialExperiment,NULL-method}
-\alias{spatialDataNames,SpatialExperiment-method}
-\alias{spatialDataNames<-,SpatialExperiment,character-method}
-\alias{spatialDataNames<-,SpatialExperiment,NULL-method}
 \alias{spatialCoords,SpatialExperiment-method}
 \alias{spatialCoords<-,SpatialExperiment,matrix-method}
 \alias{spatialCoords<-,SpatialExperiment,NULL-method}
@@ -32,18 +22,6 @@
 \alias{imgData<-,SpatialExperiment,NULL-method}
 \title{Methods for spatial attributes}
 \usage{
-\S4method{spatialData}{SpatialExperiment}(x)
-
-\S4method{spatialData}{SpatialExperiment,DFrame}(x) <- value
-
-\S4method{spatialData}{SpatialExperiment,NULL}(x) <- value
-
-\S4method{spatialDataNames}{SpatialExperiment}(x)
-
-\S4method{spatialDataNames}{SpatialExperiment,character}(x) <- value
-
-\S4method{spatialDataNames}{SpatialExperiment,NULL}(x) <- value
-
 \S4method{spatialCoords}{SpatialExperiment}(x)
 
 \S4method{spatialCoords}{SpatialExperiment,matrix}(x) <- value
@@ -92,26 +70,14 @@ SpatialExperiment objects and their spatial coordinates.
 \details{
 Additional details for each type of data attribute are provided below.
 
-Note: \code{\link{spatialData}} and \code{\link{spatialDataNames}}
-(previously used to store a subset of columns from \code{\link{colData}})
-have been deprecated. All columns should be stored in either
-\code{\link{spatialCoords}} (numeric matrix containing spatial coordinates)
-or \code{\link{colData}} (all other columns). The
-\code{spatialData}/\code{spatialDataNames} functionality has been retained
-for backward compatibility but may be removed in the future.
-
 See \code{\link{rotateCoords}}, \code{\link{mirrorCoords}},
 \code{\link{rotateObject}}, or \code{\link{mirrorObject}} for details on
 methods to rotate and mirror SpatialExperiment objects and their
 \code{spatialCoords}.
 }
-\section{spatialData and spatialCoords methods}{
+\section{spatialCoords methods}{
 
 \describe{
-\item{\code{spatialData(x) <- value}: }{
-  The \code{spatialData} setter expects a \code{DataFrame}. 
-  If the input does not contain an \code{in_tissue} column, 
-  this will be included with a default value of \code{1}.}
 \item{\code{spatialCoords(x)}: }{
   Getter for numeric matrix of spatial coordinates.}
 \item{\code{spatialCoords(x) <- value}: }{
@@ -119,15 +85,9 @@ methods to rotate and mirror SpatialExperiment objects and their
 }
 }
 
-\section{spatialDataNames and spatialCoordsNames methods}{
+\section{spatialCoordsNames methods}{
 
 \describe{
-\item{\code{spatialDataNames(x)}: }{
-  Returns the names of the \code{colData} associated with the 
-  spatial information, which are stored in the \code{int_metadata}.}
-\item{\code{spatialDataNames(x) <- value}: }{
-  Setter to replace column names
-  in the \code{spatialData} \code{DataFrame}.}
 \item{\code{spatialCoordsNames(x)}: }{
   Returns the defined names of the
   spatial coordinates (e.g. \code{c("x", "y")}).}

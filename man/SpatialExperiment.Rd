@@ -45,24 +45,6 @@ sources.}
 
 \item{loadImage}{Logical indicating whether to load image into memory.
 Default = \code{FALSE}.}
-
-\item{spatialDataNames}{(Deprecated) A \code{character} vector of column
-names from \code{\link{colData}} to include in \code{\link{spatialData}}.
-Alternatively, the \code{spatialData} argument may be provided. If both are
-provided, \code{spatialDataNames} is given precedence, and a warning is
-returned. (Note: \code{spatialData} and \code{spatialDataNames} have been
-deprecated; \code{colData} and \code{spatialCoords} should be used for all
-columns. The arguments have been retained for backward compatibility but
-may be removed in the future.)}
-
-\item{spatialData}{(Deprecated) A \code{\link{DataFrame}} containing columns
-to store in \code{\link{spatialData}}, which must contain at least the
-columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
-be provided. If both are provided, \code{spatialDataNames} is given
-precedence, and a warning is returned. (Note: \code{spatialData} and
-\code{spatialDataNames} have been deprecated; \code{colData} and
-\code{spatialCoords} should be used for all columns. The arguments have
-been retained for backward compatibility but may be removed in the future.)}
 }
 \value{
 A \code{SpatialExperiment} object.

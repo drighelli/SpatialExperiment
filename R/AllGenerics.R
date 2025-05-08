@@ -36,18 +36,6 @@ setGeneric("mirrorImg", function(x, ...) standardGeneric("mirrorImg"))
 # SpatialExperiment methods ----------------------------------------------------
 
 #' @export
-setGeneric("spatialData", function(x, ...) standardGeneric("spatialData"))
-
-#' @export
-setGeneric("spatialData<-", function(x, value) standardGeneric("spatialData<-"))
-
-#' @export
-setGeneric("spatialDataNames", function(x) standardGeneric("spatialDataNames"))
-
-#' @export
-setGeneric("spatialDataNames<-", function(x, value) standardGeneric("spatialDataNames<-"))
-
-#' @export
 setGeneric("spatialCoords", function(x, ...) standardGeneric("spatialCoords"))
 
 #' @export

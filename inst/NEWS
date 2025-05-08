@@ -1,5 +1,6 @@
 changes in version 1.15.2 (2024-06-21)
 + deprecation of read10xVisium() in favor of VisiumIO's TENxVisiumList()
++ removal of all spatialData-related documentation, code & comments
 
 changes in version 1.15.1 (2024-06-20)
 + bug fix (#151): getImg now handles non-character sample and image IDs

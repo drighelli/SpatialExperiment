@@ -46,24 +46,6 @@ sources.}
 
 \item{loadImage}{Logical indicating whether to load image into memory.
 Default = \code{FALSE}.}
-
-\item{spatialDataNames}{(Deprecated) A \code{character} vector of column
-names from \code{\link{colData}} to include in \code{\link{spatialData}}.
-Alternatively, the \code{spatialData} argument may be provided. If both are
-provided, \code{spatialDataNames} is given precedence, and a warning is
-returned. (Note: \code{spatialData} and \code{spatialDataNames} have been
-deprecated; \code{colData} and \code{spatialCoords} should be used for all
-columns. The arguments have been retained for backward compatibility but
-may be removed in the future.)}
-
-\item{spatialData}{(Deprecated) A \code{\link{DataFrame}} containing columns
-to store in \code{\link{spatialData}}, which must contain at least the
-columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
-be provided. If both are provided, \code{spatialDataNames} is given
-precedence, and a warning is returned. (Note: \code{spatialData} and
-\code{spatialDataNames} have been deprecated; \code{colData} and
-\code{spatialCoords} should be used for all columns. The arguments have
-been retained for backward compatibility but may be removed in the future.)}
 }
 \description{
 The \code{SpatialExperiment} class inherits from the
@@ -72,22 +54,20 @@ classes.
 To do so, we designed two different methods: the traditional \code{as} method
 and the \code{toSpatialExperiment} function (recommended).
 The \code{as} method checks if the \code{SingleCellExperiment} object has
-already populated \code{int_colData} with three elements:
-\code{spatialData}, \code{spatialCoords}, and \code{imgData}.
+already populated \code{int_colData} with two elements:
+\code{spatialCoords} and \code{imgData}.
 It also checks if \code{colData} already contains a \code{sample_id}.
 In case these checks pass the new \code{SpatialExperiment} will have the same
 values as the \code{SingleCellExperiment} passed object.
 Otherwise a \code{SpatialExperiment} with default values for these slots
 will be created.
 
-The \code{toSpatialExperiment} method expects a \code{SingleCellExperiment} object
-and additional arguments as explained in the related section of this
+The \code{toSpatialExperiment} method expects a \code{SingleCellExperiment} 
+object and additional arguments as explained in the related section of this
 documentation. In case the \code{SingleCellExperiment} object has already
-populated \code{int_colData} with \code{spatialData} and/or
-\code{spatialCoords} and/or \code{imgData}, these will be respectively
-overwritten in case the arguments \code{spatialData}/\code{spatialDataNames} 
-and/or \code{spatialCoords}/\code{spatialCoordsNames} and/or \code{imgData} 
-are not \code{NULL}.
+populated \code{int_colData} with \code{spatialCoords} and/or \code{imgData}, 
+these will be respectively overwritten in case the arguments 
+\code{spatialCoords/Names} and/or \code{imgData} are not \code{NULL}.
 }
 \examples{
 dir <- system.file(

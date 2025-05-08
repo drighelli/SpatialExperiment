@@ -3,7 +3,6 @@
 #   @colData<- instead of colData<-
 #   in_metadata$imgData<- instead of imgData<-
 #   int_colData$spatialCoords <- instead of spatialCoords<-
-#   int_metadata$spatialDataNames instead of spatialDataNames<-
 
 test_that("colData", {
     # initialize mock SPE
@@ -32,19 +31,6 @@ test_that("colData", {
     tmp <- spe
     tmp@colData$sample_id <- "x"
     expect_error(validObject(tmp))
-})
-
-test_that("SpatialDataNames", {
-    # initialize mock SPE
-    spe <- SpatialExperiment(
-        assays=diag(n <- 10),
-        colData=DataFrame(a=seq(n), b=seq(n)))
-    # valid replacements
-    int_metadata(spe)$spatialDataNames <- "a"
-    expect_true(validObject(spe)) 
-    # invalid replacements
-    int_metadata(spe)$spatialDataNames <- "c"
-    expect_error(validObject(spe)) 
 })
 
 test_that("spatialCoords", {

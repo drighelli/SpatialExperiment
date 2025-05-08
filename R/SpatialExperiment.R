@@ -44,22 +44,6 @@
 #'   \code{imageSources}) containing unique image identifiers.
 #' @param loadImage Logical indicating whether to load image into memory.
 #'   Default = \code{FALSE}.
-#' @param spatialDataNames (Deprecated) A \code{character} vector of column
-#'   names from \code{\link{colData}} to include in \code{\link{spatialData}}.
-#'   Alternatively, the \code{spatialData} argument may be provided. If both are
-#'   provided, \code{spatialDataNames} is given precedence, and a warning is
-#'   returned. (Note: \code{spatialData} and \code{spatialDataNames} have been
-#'   deprecated; \code{colData} and \code{spatialCoords} should be used for all
-#'   columns. The arguments have been retained for backward compatibility but
-#'   may be removed in the future.)
-#' @param spatialData (Deprecated) A \code{\link{DataFrame}} containing columns
-#'   to store in \code{\link{spatialData}}, which must contain at least the
-#'   columns of spatial coordinates. Alternatively, \code{spatialDataNames} may
-#'   be provided. If both are provided, \code{spatialDataNames} is given
-#'   precedence, and a warning is returned. (Note: \code{spatialData} and
-#'   \code{spatialDataNames} have been deprecated; \code{colData} and
-#'   \code{spatialCoords} should be used for all columns. The arguments have
-#'   been retained for backward compatibility but may be removed in the future.)
 #' 
 #' @details
 #' In this class, rows represent genes, and columns represent spots (for
@@ -217,9 +201,7 @@ SpatialExperiment <- function(...,
     imageSources=NULL,
     image_id=NULL,
     loadImage=FALSE,
-    imgData=NULL,
-    spatialDataNames=NULL,
-    spatialData=NULL) {
+    imgData=NULL) {
     
     sce <- SingleCellExperiment(...)
     spe <- .sce_to_spe(sce=sce, 
@@ -230,9 +212,7 @@ SpatialExperiment <- function(...,
         imageSources=imageSources,
         image_id=image_id,
         loadImage=loadImage,
-        imgData=imgData,
-        spatialDataNames=spatialDataNames,
-        spatialData=spatialData)
+        imgData=imgData)
     return(spe)
 }
 
@@ -247,9 +227,7 @@ SpatialExperiment <- function(...,
     imageSources=NULL,
     image_id=NULL,
     loadImage=TRUE,
-    imgData=NULL,
-    spatialDataNames=NULL,
-    spatialData=NULL) {
+    imgData=NULL) {
     
     old <- S4Vectors:::disableValidity()
     if (!isTRUE(old)) {
@@ -270,19 +248,14 @@ SpatialExperiment <- function(...,
         sample_id <- unique(sce$sample_id)
     }
     
-    if (!is.null(spatialData) || !is.null(spatialDataNames)) {
-      .msg_spatialData()
-    }
-    
     spe <- new("SpatialExperiment", sce)
 
     # in the following code chunk, we give precedence 
-    # to spatialData/CoordsNames over spatialData/Coords
-    #   where spatialDataNames should be in colData,
-    #   and spatialCoordsNames can be in both colData and spatialData
-    # if both spatialData/Coords and -Names are supplied
+    # to spatialCoordsNames over spatialCoords
+    #   where spatialCoordsNames should be in colData
+    # if both spatialCoords and -Names are supplied
     #   we give an informative warning notifying the user
-    #   that spatialData/CoordsNames will be used 
+    #   that spatialCoordsNames will be used 
     
     msg <- function(.) message(sprintf(                
         "Both '%s' and '%sNames'  have been supplied;\nusing '%s'. ", ., ., .),
@@ -290,8 +263,7 @@ SpatialExperiment <- function(...,
     
     if (!is.null(spatialCoordsNames)) {
         stopifnot(is.character(spatialCoordsNames),
-            all(spatialCoordsNames %in% names(colData(spe)))
-            || all(spatialCoordsNames %in% names(spatialData)))
+            all(spatialCoordsNames %in% names(colData(spe))))
         if (!is.null(spatialCoords))
             msg("spatialCoords")
         if (all(spatialCoordsNames %in% names(colData(spe)))) {
@@ -299,11 +271,6 @@ SpatialExperiment <- function(...,
             j <- setdiff(names(colData(spe)), i)
             spatialCoords(spe) <- as.matrix(colData(spe)[i])
             colData(spe) <- colData(spe)[j]
-        } else {
-            i <- spatialCoordsNames
-            j <- setdiff(names(spatialData), i)
-            spatialCoords(spe) <- as.matrix(spatialData[i])
-            spatialData <- spatialData[j]
         }
     } else if (!is.null(spatialCoords)) {
         stopifnot(
@@ -313,26 +280,6 @@ SpatialExperiment <- function(...,
         spatialCoords(spe) <- spatialCoords
     } else {
         spatialCoords(spe) <- NULL
-    }
-
-    if (!is.null(spatialDataNames)) {
-        stopifnot(
-            is.character(spatialDataNames), 
-            spatialDataNames %in% names(colData(spe)))
-        if (!is.null(spatialData)) 
-            msg("spatialData")
-        i <- spatialDataNames
-        j <- setdiff(names(colData(spe)), i)
-        spd <- colData(spe)[i]
-        colData(spe) <- colData(spe)[j]
-        spatialData(spe) <- spd
-    } else if (!is.null(spatialData)) {
-        stopifnot(
-            is(spatialData, "DFrame"),
-            nrow(spatialData) == ncol(spe))
-        spatialData(spe) <- spatialData
-    } else {
-        spatialData(spe) <- NULL
     }
 
     if (!is.null(imgData)) {
