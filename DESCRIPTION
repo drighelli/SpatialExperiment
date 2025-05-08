@@ -1,5 +1,5 @@
 Package: SpatialExperiment
-Version: 1.15.2
+Version: 1.19.1
 Title: S4 Class for Spatially Resolved -omics Data
 Description: Defines an S4 class for storing data from spatial -omics experiments. 
     The class extends SingleCellExperiment to 
@@ -18,7 +18,7 @@ Authors@R: c(
         email="helena.crowell@cnag.eu",
         comment=c(ORCID="0000-0002-4801-1767")), 
     person("Lukas M.", "Weber", role=c("aut"), 
-        email="lmweberedu@gmail.com",
+        email="lmweb012@gmail.com",
         comment=c(ORCID="0000-0002-3282-1730")), 
     person("Nicholas J.", "Eagles", role=c("ctb"),
         email="nickeagles77@gmail.com"))
