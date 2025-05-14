@@ -98,13 +98,18 @@ setValidity2("SpatialExperiment", .spe_validity)
 
 # SpatialImage validity --------------------------------------------------------
 
+.ALLOWED_FORMATS <- c("png", "jpg", "jpeg", "tif", "tiff")
+
 .path_validity <- function(x) {
+    
+    ext <- tools::file_ext(x) |> tolower()
+    
     is_valid <- all(c(
         length(x) == 1,
         is.character(x),
         file.exists(x),
-        # TODO: any other possible image formats? 
-        grepl("(\\.png|\\.jpg|\\.tif)$", x)))
+        ext %in% .ALLOWED_FORMATS
+    )) 
     
     if (!is_valid)
         stop("'path' should be a length-one character",
