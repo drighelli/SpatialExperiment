@@ -1,0 +1,7 @@
+title: SpatialExperiment
+url: https://drighelli.github.io/SpatialExperiment
+
+template:
+  bootstrap: 5
+  params:
+    bootswatch: flatly
