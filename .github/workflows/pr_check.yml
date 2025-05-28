@@ -28,7 +28,7 @@ jobs:
 
       - name: Copy .github and _pkgdown.yml
         run: |
-          git config --global --add safe.directory /__w/SpatialExperiment/SpatialExperiment
+          git config --global --add safe.directory /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}
           git fetch origin pkgdown
           git checkout origin/pkgdown -- .github
           git checkout origin/pkgdown -- _pkgdown.yml
